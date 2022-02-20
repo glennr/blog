@@ -1,0 +1,26 @@
+# If NPM crashes, it generates a log, let's ignore it too.
+npm-debug.log
+
+# The directory NPM downloads your dependencies sources to.
+node_modules/
+
+# Hugo stuff
+/resources
+/output
+/public
+/themes
+hugo_stats.json
+
+.hugo_build.lock
+
+# In case executable added to repository
+hugo.exe
+hugo.darwin
+hugo.linux
+
+# large binaries
+*.gz
+*.zip
+
+.vscode
+
