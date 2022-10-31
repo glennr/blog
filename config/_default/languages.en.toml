@@ -8,15 +8,14 @@ rtl = false
 title = "Glenn Roberts"
 # logo = "img/logo.jpg"
 # description = "My awesome website"
-# copyright = "Copy, _right?_ :thinking_face:"
-
+copyright = "© 2022 Glenn Roberts - All rights reserved."
 dateFormat = "2 January 2006"
 
 [author]
   name = "Glenn Roberts"
   image = "images/glenn.jpg"
   # headline = "I'm only human"
-  bio = "Husband. Father. Startup guy"
+  bio = "Elixir, Full-stack, DevSecOps, K8s"
   links = [
   #  { email = "mailto:hello@glenn-roberts.com" },
   #   { link = "https://link-to-some-website.com/" },

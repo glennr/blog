@@ -1,8 +1,8 @@
 ---
-title: "Personal Website of Glenn Roberts"
+title: "Glenn Roberts' blog"
 ---
 
 {{<lead>}}
-Some guy with opinions about stuff
+Elixir, Full-stack, DevSecOps, K8s
 {{</lead>}}
 
