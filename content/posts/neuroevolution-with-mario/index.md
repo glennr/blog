@@ -1,5 +1,5 @@
 ---
-title: "NeuroEvolution with MarI/O"
+title: "NeuroEvolution with MarIO"
 description: ""
 date: 2015-07-08
 categories:

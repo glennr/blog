@@ -1,10 +1,9 @@
 ---
-title: "Testing Liveview With K6"
+title: "How to test your Phoenix LiveView apps with k6."
 date: 2022-10-25T23:09:24+10:00
 draft: true
+showTableOfContents: true
 ---
-
-# How to test your Phoenix LiveView apps with k6.
 
 Elixir and Phoenix tout high performance with [low hardware
 requirements](https://freecontent.manning.com/ride-the-phoenix/), and
