@@ -2,6 +2,11 @@
 title: "K6 Soak Tests Too Many Open Files"
 date: 2022-10-26T23:21:33+10:00
 draft: true
+categories:
+- load-testing
+tags:
+- linux
+- k6
 ---
 
 Soak testing k6
