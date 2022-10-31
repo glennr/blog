@@ -25,6 +25,7 @@ enableCodeCopy = true
   showRecent = false
 
 [article]
+  showComments = true
   showDate = true
   showDateUpdated = false
   showAuthor = true
