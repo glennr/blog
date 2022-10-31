@@ -18,3 +18,11 @@ outputs:
     - HTML
     - RSS
     - JSON
+
+# https://github.com/gohugoio/hugo/issues/9811
+security:
+  exec:
+    osEnv:
+      - '(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$'
+      - ^ASDF_DIR$
+      - ^HOME$
