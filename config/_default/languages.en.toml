@@ -31,7 +31,7 @@ dateFormat = "2 January 2006"
   #   { flickr = "https://www.flickr.com/photos/username/" },
   #   { foursquare = "https://foursquare.com/username" },
     { github = "https://github.com/glennr" },
-    { gitlab = "https://gitlab.com/glennr" },
+  # { gitlab = "https://gitlab.com/glennr" },
   #   { google = "https://www.google.com/" },
   #   { instagram = "https://instagram.com/username" },
     { keybase = "https://keybase.io/glennrob" },
@@ -52,7 +52,7 @@ dateFormat = "2 January 2006"
   #   { tiktok = "https://tiktok.com/@username" },
   #   { tumblr = "https://username.tumblr.com" },
   #   { twitch = "https://twitch.tv/username" },
-  #   { twitter = "https://twitter.com/username" },
+    { twitter = "https://twitter.com/glennrob" },
   #   { whatsapp = "https://wa.me/phone-number" },
   #   { youtube = "https://youtube.com/username" },
   ]
