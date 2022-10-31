@@ -6,7 +6,7 @@ services:
   server:
     image: klakegg/hugo:0.104.3-ext-alpine
     #image: klakegg/hugo:0.92.1-ext-alpine-onbuild
-    command: server
+    command: server -D
     # Override entrypoint so we can install npm modules first
     #entrypoint: ./entrypoint.sh
     volumes:
