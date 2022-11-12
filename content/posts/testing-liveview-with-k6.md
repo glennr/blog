@@ -4,19 +4,16 @@ date: 2022-10-25T23:09:24+10:00
 draft: true
 showTableOfContents: true
 categories:
-- load-testing
+  - load-testing
 tags:
-- elixir
-- k6
-- liveview
+  - elixir
+  - k6
+  - liveview
 ---
 
 Elixir and Phoenix tout high performance with [low hardware
 requirements](https://freecontent.manning.com/ride-the-phoenix/), and
-[microsecond (μs) response
-times](https://medium.com/pinterest-engineering/introducing-new-open-source-tools-for-the-elixir-community-2f7bb0bb7d8c).
-
-Of course Elixir and Phoenix are only one part of your (production) stack, and thus only only part of the whole story.
+[microsecond (μs) response times](https://medium.com/pinterest-engineering/introducing-new-open-source-tools-for-the-elixir-community-2f7bb0bb7d8c). Of course Elixir and Phoenix are only one part of your (production) stack, and thus tell only part of the whole story.
 
 How well does your Phoenix LiveView app perform under stress?
 
@@ -24,34 +21,28 @@ How do you baseline performance, and how do you measure the impact of changes on
 
 Given LiveView relies on websocket communication, how do you test that?
 
-Opening N browser windows on your laptop is probably not the way...
+(Opening N browser windows on your laptop is probably not The Way...)
 
 I recently had to answer these questions for [Bramble](www.brmbl.io) which is an
-app we built with Phoenix LiveView.
-
-I needed something to simulate http and websocket traffic with spikey and sustained workloads.
+app we built with Phoenix LiveView. I needed something to simulate http and websocket traffic with spikey and sustained workloads.
 
 ## Enter k6
 
-In the past I might have reached for good old [Apache JMeter](https://jmeter.apache.org), but in my travels I discovered the new shiny, [k6](https://k6.io).
+In the past I might have reached for good old [Apache JMeter](https://jmeter.apache.org), but in my travels I discovered the new shiny, [k6](https://k6.io). `k6` is an open-source load testing tool written by the folks over at Grafana Labs.
 
-`k6` is an open-source load testing tool written by the folks over at Grafana Labs.
-
-My initial impression was good.
-
-You write your tests in Javascript, using a simple API:
+My initial impression was good. You write your tests in Javascript, using a simple API:
 
 ```javascript
-import http from 'k6/http';
-import { sleep } from 'k6';
+import http from "k6/http";
+import { sleep } from "k6";
 
 export default function () {
-  http.get('https://test.k6.io');
+  http.get("https://test.k6.io");
   sleep(1);
 }
 ```
 
-But k6 doesn't run those tests in a browser or in a NodeJS runtime.
+What's more, k6 doesn't run those tests in a browser or in a NodeJS runtime.
 
 Rather, k6 ships as a Go binary, and is optimized for minimal resource consumption.
 
@@ -63,7 +54,7 @@ k6 run --vus 10 --duration 30s script.js
 
 The above command simulates 10 Virtual Users (VUs) over a sustained period of 30 seconds.
 
-And it's *fast*.
+And it's _fast_.
 
 This efficiency is important for a load testing tool, as it means I didn't need to rent half of AWS to saturate my endpoints.
 
@@ -112,7 +103,6 @@ LiveBeats has two main URLs we are interested in for this load test:
 Let's start our k6 test script, and make it hit just the Settings page first.
 
 ```javascript {filename="test/k6/load-test.js"}
-
 import http from "k6/http";
 
 import { sleep, check } from "k6";
@@ -317,7 +307,7 @@ import ws from "k6/ws";
 
 const cookie = __ENV.LIVEBEATS_COOKIE;
 
-export default function() {
+export default function () {
   const host = "localhost:4000";
   const origin = `http://${host}`;
   const wsProtocol = "ws";
@@ -405,7 +395,7 @@ function checkLiveViewUpgrade(
         Origin: testHost,
       },
     },
-    function(socket) {
+    function (socket) {
       socket.on("open", () => {
         socket.send(joinMsg);
         if (debug) console.log(`websocket open: phx_join topic: ${topic}`);
@@ -434,7 +424,6 @@ function checkLiveViewUpgrade(
 Helper functions are omitted for brevity, but the [source code is here](https://github.com/glennr/live_beats/tree/gr/k6-websockets)
 
 Note: `checkLiveViewUpgrade` only tests the websocket is connected - it doesn't test the contents of the websocket message (like if the `phx_reply` rendered some expected HTML.)
-
 
 ### Socket to me
 
@@ -504,7 +493,6 @@ The main benefit however, is that you are now simulating a more realistic load o
 
 ## Where to from here?
 
-
 Its possible with `k6/ws` to simulate navigation within the LiveView (by keeping the websocket open and sending `redirect` or `patch` messages).
 
 With this approach you should see more accurate resource memory consumption (in particular any memory overhead) on your servers.
@@ -514,4 +502,3 @@ If your app uses LiveView almost exclusively, your load scripts will use [k6/ws]
 However if `k6/http` provides you with a 'good enough' load test, I would recommend starting there, as the API is simpler, and your load scripts will be easier to grok.
 
 I recommend also checking out some of the [various test types](https://k6.io/docs/test-types/introduction/) that k6 has to offer, e.g. ramping stress tests.
-

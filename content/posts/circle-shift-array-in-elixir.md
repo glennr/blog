@@ -3,18 +3,18 @@ title: "Circle Shift an Array in Elixir"
 description: ""
 date: 2020-09-27
 categories:
-- algortihms
+  - algortihms
 tags:
-- elixir
+  - elixir
 ---
 
-I recently came across a problem in Elixir where I needed to shift a list of items by a given offset aka an "Array Circular shift".
+I recently came across a problem in Elixir where I needed to shift a list of items by a given offset aka an "Array Circular shift."
 
-I found other language solutions for this described [on Stackoverflow](https://stackoverflow.com/questions/876293/fastest-algorithm-for-circle-shift-n-sized-array-for-m-position) and [TheoryApp](http://theoryapp.com/array-circular-shift/).
+Other language solutions for this are described [on StackOverflow](https://stackoverflow.com/questions/876293/fastest-algorithm-for-circle-shift-n-sized-array-for-m-position) and [TheoryApp](http://theoryapp.com/array-circular-shift/).
 
 These appear to be implementations of Jon Bentley's algorithm in [Programming Pearls 2nd Edition](https://www.oreilly.com/library/view/programming-pearls-second/9780134498058/), which solves the problem in O(n) time.
 
-Here's my Elixir implementation which uses [Enum.reverse_slice/3](https://hexdocs.pm/elixir/Enum.html#reverse_slice/3)
+wrote an Elixir implementation using [Enum.reverse_slice/3](https://hexdocs.pm/elixir/Enum.html#reverse_slice/3)
 
 ```elixir
   defmodule ListShift do
