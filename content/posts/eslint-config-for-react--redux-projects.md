@@ -6,19 +6,19 @@ categories:
   - web development
 tags:
   - tooling
-  - js
-  - react
-  - redux
+  - JavaScript
+  - ReactJS
+  - Redux
   - static-analysis
 ---
 
-In my ongoing love affair with static code analysis tools, I wanted to find a good code linter for Javascript, to use with Sublime. More specifically, a React.js project, with Mocha for tests, and of course using the awesome ES6 syntax (with Babel).
+In my ongoing love affair with static code analysis tools, I wanted to find a good code linter for JavaScript, to use with Sublime. More specifically, a ReactJS project, with Mocha for tests, and of course using the awesome ES6 syntax (with Babel).
 
-With a background in Ruby and Go, I'm used to some great tooling like Rubocop/BeautifyRuby/govet/gofmt/golint. I enjoy the tight feedback loop of running a linter (i.e. automatically on saving a file). A team discussing+agreeing+following+evolving the same coding style on a project is a good thing, and fun process to be a part of.
+With a background in Ruby and Go, I'm used to some great tooling like Rubocop/BeautifyRuby/govet/gofmt/golint. There is a tight feedback loop when running a linter (automatically on saving a file). A team discussing+agreeing+following+evolving the same coding style on a project is a good thing, and fun process to be a part of.
 
 Also, if you're relatively new to a language, code linters can be a great source of learning to avoid common mistakes.
 
-In terms of Javascript, there are some decent JS linter tools out there, for example;
+In terms of JavaScript, there are some decent JS linter tools out there, for example;
 
 - [JSLint](http://www.jslint.com/)
 - [JSCS](http://jscs.info/)
@@ -31,7 +31,7 @@ My current .eslintrc looks like this;
 
 <script src="https://gist.github.com/glennr/6070f2c5a28ac397572b.js"></script>
 
-Some of the main style points I adopt are;
+Main style points include;
 
 - 2-space indentation
 - [dangling comma's OK](http://eslint.org/docs/rules/comma-dangle.html)

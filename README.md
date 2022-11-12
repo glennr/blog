@@ -8,7 +8,7 @@ pip install proselint
 vale sync
 ```
 
-Run the hugo dev server with
+Run the Hugo dev server with
 
 ```
 make dcup

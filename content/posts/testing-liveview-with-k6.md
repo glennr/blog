@@ -6,29 +6,27 @@ showTableOfContents: true
 categories:
   - load-testing
 tags:
-  - elixir
+  - Elixir
   - k6
-  - liveview
+  - LiveView
 ---
 
 Elixir and Phoenix tout high performance with [low hardware
 requirements](https://freecontent.manning.com/ride-the-phoenix/), and
 [microsecond (μs) response times](https://medium.com/pinterest-engineering/introducing-new-open-source-tools-for-the-elixir-community-2f7bb0bb7d8c). Of course Elixir and Phoenix are only one part of your (production) stack, and thus tell only part of the whole story.
 
-How well does your Phoenix LiveView app perform under stress?
+How well does your Phoenix LiveView app, and infrastructure, perform under stress?
 
 How do you baseline performance, and how do you measure the impact of changes on that performance?
 
-Given LiveView relies on websocket communication, how do you test that?
-
-(Opening N browser windows on your laptop is probably not The Way...)
+Given LiveView relies on websocket communication, how do you test that? How memory hungry are your views?
 
 I recently had to answer these questions for [Bramble](www.brmbl.io) which is an
-app we built with Phoenix LiveView. I needed something to simulate http and websocket traffic with spikey and sustained workloads.
+app built with Phoenix LiveView. I needed something to simulate HTTP and websocket traffic with spiky and sustained workloads.
 
 ## Enter k6
 
-In the past I might have reached for good old [Apache JMeter](https://jmeter.apache.org), but in my travels I discovered the new shiny, [k6](https://k6.io). `k6` is an open-source load testing tool written by the folks over at Grafana Labs.
+In the past I might have reached for good old [Apache JMeter](https://jmeter.apache.org), but the new shiny appears to be [k6](https://k6.io), an open-source load testing tool written by the folks over at Grafana Labs.
 
 My initial impression was good. You write your tests in Javascript, using a simple API:
 
@@ -42,21 +40,15 @@ export default function () {
 }
 ```
 
-What's more, k6 doesn't run those tests in a browser or in a NodeJS runtime.
-
-Rather, k6 ships as a Go binary, and is optimized for minimal resource consumption.
-
-To run a load test from the command line:
+What's more, k6 doesn't run those tests in a browser or in a NodeJS runtime. Rather, k6 ships as a Go binary, optimized for minimal resource consumption. To run a load test, your invoke `k6` from the command line:
 
 ```bash
 k6 run --vus 10 --duration 30s script.js
 ```
 
-The above command simulates 10 Virtual Users (VUs) over a sustained period of 30 seconds.
+This simulates 10 Virtual Users (VUs) over a sustained period of 30 seconds.
 
-And it's _fast_.
-
-This efficiency is important for a load testing tool, as it means I didn't need to rent half of AWS to saturate my endpoints.
+K6 is _fast_. Efficiency is important in a load testing tool, as it means you don't need to rent half of AWS to saturate your application endpoints.
 
 The icing on the cake is I didn't have to install any plugins as [websockets are
 already supported](https://k6.io/docs/using-k6/protocols/websockets/).
