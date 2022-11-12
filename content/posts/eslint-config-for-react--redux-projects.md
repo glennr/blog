@@ -3,8 +3,9 @@ title: "ESLint config for React + Redux projects"
 description: ""
 date: 2015-11-19
 categories:
-- tooling
+- web development
 tags:
+- tooling
 - js
 - react
 - redux

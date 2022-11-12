@@ -9,7 +9,6 @@ tags:
 - elixir
 - k6
 - liveview
-- phoenix
 ---
 
 Elixir and Phoenix tout high performance with [low hardware
