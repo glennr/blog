@@ -14,7 +14,7 @@ Other language solutions for this exist [on StackOverflow](https://stackoverflow
 
 These appear to be implementations of Jon Bentley's algorithm in [Programming Pearls 2nd Edition](https://www.oreilly.com/library/view/programming-pearls-second/9780134498058/), which solves the problem in O(n) time.
 
-wrote an Elixir implementation using [Enum.reverse_slice/3](https://hexdocs.pm/elixir/Enum.html#reverse_slice/3)
+I wrote an Elixir implementation using [Enum.reverse_slice/3](https://hexdocs.pm/elixir/Enum.html#reverse_slice/3)
 
 ```elixir
   defmodule ListShift do
