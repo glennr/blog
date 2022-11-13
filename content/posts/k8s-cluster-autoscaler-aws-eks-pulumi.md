@@ -11,7 +11,7 @@ tags:
   - Pulumi
 ---
 
-AWS recommends installing this example from the repo:
+AWS recommends installing this example from the repo
 
 https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
 
