@@ -10,3 +10,9 @@ dcup:
 	@echo "Stays in foreground. ^C to stop containers. ^C twice to kill containers"
 	@echo
 	docker-compose up
+
+test:
+	@echo
+	@echo "Launching htmltest"
+	@echo
+	docker run --network host -v $(shell pwd):/test --rm wjdp/htmltest ./public -s -c .htmltest.yml
