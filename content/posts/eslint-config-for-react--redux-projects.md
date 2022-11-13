@@ -10,6 +10,7 @@ tags:
   - ReactJS
   - Redux
   - static-analysis
+  - SCA
 ---
 
 In my ongoing love affair with static code analysis tools, I wanted to find a good code linter for JavaScript, to use with Sublime. More specifically, a ReactJS project, with Mocha for tests, and of course using the awesome ES6 syntax (with Babel).

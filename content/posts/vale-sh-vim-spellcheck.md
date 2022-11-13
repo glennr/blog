@@ -1,7 +1,6 @@
 ---
 title: "Vale.sh Vim Spellcheck"
 date: 2022-11-13T10:32:39+10:00
-draft: true
 categories:
   - blogging
 tags:
@@ -12,9 +11,9 @@ tags:
 
 [Vale.sh](https://vale.sh/) is a great tool for enforcing a writing style in your documents.
 
-My vale.sh setup follows the one described in [Writing like a pro with vale & neovim](https://bhupesh.me/writing-like-a-pro-with-vale-and-neovim/), (albeit with my preferred [LunarVim](https://www.lunarvim.org/)).
+My vale.sh setup follows the one described in [Writing like a pro with vale & Neovim](https://bhupesh.me/writing-like-a-pro-with-vale-and-neovim/), (albeit with my preferred [LunarVim](https://www.lunarvim.org/)).
 
-Once you've got Vale up and running, both it and neovim spell checking will complain about the same things. Technical terms often appear as false positives, so the [`zg`](https://neovim.io/doc/user/spell.html#spell-quickstart) shortcut is handy. (`zg` adds the word under the cursor as a good word to your spellfile.) However Vale.sh still complains about the spelling you just whitelisted:
+Once you've got Vale up and running, both it and Neovim spell checking will complain about the same things. Technical terms often appear as false positives, so the [`zg`](https://neovim.io/doc/user/spell.html#spell-quickstart) shortcut is handy. (`zg` adds the word under the cursor as a good word to your spellfile.) However Vale.sh still complains about the spelling you just whitelisted:
 
 ```
   Did you really mean 'blargh'? vale (Vale.Spelling) [17, 139]
@@ -53,4 +52,4 @@ Then symlink the [Vale `accept.txt`](https://vale.sh/docs/topics/vocab/#file-for
 lrwxrwxrwx 1 g g 39 Nov 12 17:51 styles/Vocab/Blog/accept.txt -> /home/g/.config/lvim/spell/en.utf-8.add
 ```
 
-Now if you mark a word as 'good' in neovim, Vale will accept it too.
+Now if you mark a word as 'good' in Neovim, Vale will accept it too.

@@ -3,12 +3,12 @@ title: "K8s Cluster Autoscaler Aws Eks Pulumi"
 date: 2022-11-11T12:03:01+10:00
 draft: true
 categories:
-  - devops
+  - DevOps
 tags:
-  - k8s
-  - aws
-  - eks
-  - pulumi
+  - K8s
+  - AWS
+  - EKS
+  - Pulumi
 ---
 
 AWS recommends installing this example from the repo

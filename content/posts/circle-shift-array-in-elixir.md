@@ -3,9 +3,9 @@ title: "Circle Shift an Array in Elixir"
 description: ""
 date: 2020-09-27
 categories:
-  - algortihms
+  - Algorithms
 tags:
-  - elixir
+  - Elixir
 ---
 
 I recently came across a problem in Elixir where I needed to shift a list of items by a given offset aka an "Array Circular shift."
