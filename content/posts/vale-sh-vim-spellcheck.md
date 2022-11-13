@@ -14,21 +14,21 @@ tags:
 
 My vale.sh setup follows the one described in [Writing like a pro with vale & neovim](https://bhupesh.me/writing-like-a-pro-with-vale-and-neovim/), (albeit with my preferred [LunarVim](https://www.lunarvim.org/)).
 
-In neovim, executing [`zg`)[https://neovim.io/doc/user/spell.html#spell-quickstart] adds the word under the cursor as a good word to your spellfile. However Vale.sh still complains about the spelling with:
+Once you've got Vale up and running, both it and neovim spell checking will complain about the same things. Technical terms often appear as false positives, so the [`zg`](https://neovim.io/doc/user/spell.html#spell-quickstart) shortcut is handy. (`zg` adds the word under the cursor as a good word to your spellfile.) However Vale.sh still complains about the spelling you just whitelisted:
 
 ```
   Did you really mean 'blargh'? vale (Vale.Spelling) [17, 139]
 ```
 
-A neat trick is to link [Vale Vocabularies accept.txt](https://vale.sh/docs/topics/vocab/) to your vim spellfile.
+A neat workaround is to link [Vale Vocabularies accept.txt](https://vale.sh/docs/topics/vocab/) to your vim spellfile.
 
-First, set up a Vocab folder per the link above.
+First, set up a Vale Vocab folder
 
 ```
 mkdir -p styles/Vocab/Blog/
 ```
 
-And configure Vale to use it:
+And configure Vale to use it
 
 ```git
 diff --git a/.vale.ini b/.vale.ini
@@ -52,3 +52,5 @@ Then symlink the [Vale `accept.txt`](https://vale.sh/docs/topics/vocab/#file-for
 % ll styles/Vocab/Blog/accept.txt
 lrwxrwxrwx 1 g g 39 Nov 12 17:51 styles/Vocab/Blog/accept.txt -> /home/g/.config/lvim/spell/en.utf-8.add
 ```
+
+Now if you mark a word as 'good' in neovim, Vale will accept it too.
