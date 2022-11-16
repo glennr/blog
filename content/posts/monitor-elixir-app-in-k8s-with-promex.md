@@ -33,49 +33,46 @@ new k8s.networking.v1.Ingress('nginx-ingress',
       spec: ...
 ```
 
+Here we'll expose the
+
 ```typescript
 new k8s.core.v1.Secret("app-secrets", {
   stringData: {
-    GRAFANA_HOST: "http://grafana.cluster-svcs.svc.cluster.local",
+    GRAFANA_HOST: "http://grafana.default.svc.cluster.local",
     GRAFANA_ADMIN_USERNAME: "grafana-admin",
     GRAFANA_ADMIN_PASSWORD: config.requireSecret("GRAFANA_ADMIN_PASSWORD"),
   },
 });
 ```
 
+Ensure
+
 ```typescript
   return new k8s.apps.v1.Deployment(
     'my-app',
     {
       spec: {
-        replicas,
         template: {
           metadata: {
             labels,
-            annotations: {
-              // Auto scrape the route that PromEx exposes
-              'prometheus.io/scrape': 'true',
-              'prometheus.io/port': '8080',
-            },
++           annotations: {
++             // Auto scrape the route that PromEx exposes
++             'prometheus.io/scrape': 'true',
++             'prometheus.io/port': '8080',
++           },
             namespace,
           },
           spec: {
-            restartPolicy: 'Always',
             containers: [
               {
-                envFrom: [
-                  {
-                    secretRef: {
-                      name: secrets.metadata.name,
-                    },
-                  },
-                ],
-                name: `my-app`,
++               // Expose ENV vars to the app a la 12Factor
++               envFrom: [ { secretRef: { name: secrets.metadata.name } } ],
+                name: 'my-app',
                 image: ...
-                ports: [{ name: 'http', containerPort }],
               },
             ],
           },
+          replicas: ...
         },
       },
     },
