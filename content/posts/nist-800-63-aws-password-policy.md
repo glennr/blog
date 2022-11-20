@@ -19,8 +19,6 @@ tags:
 - No password hints.
 - disallow passwords from data breaches, dictionary or context-specific words, or repetitive or sequential characters
 
-(and several more things like expiry, rate limiting and MFA which I won't discuss here)
-
 {{< alert >}}
 **Warning!** This list excludes several important recommendations like expiry, rate limiting and MFA.
 {{< /alert >}}
