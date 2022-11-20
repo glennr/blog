@@ -1,6 +1,6 @@
 ---
 title: "ESLint config for React + Redux projects"
-description: ""
+description: "ESLint config for React + Redux projects"
 date: 2015-11-19
 categories:
   - web development

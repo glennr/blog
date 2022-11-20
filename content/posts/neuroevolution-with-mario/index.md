@@ -1,6 +1,6 @@
 ---
 title: "NeuroEvolution with MarIO"
-description: ""
+description: "How to get MarIO up and running on OSX."
 date: 2015-07-08
 categories:
   - ml

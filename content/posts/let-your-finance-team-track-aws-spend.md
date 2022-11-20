@@ -1,5 +1,6 @@
 ---
 title: "Let Your Finance Team Track AWS Spend"
+description: "Let Your Finance Team Track AWS Spend"
 date: 2022-11-16T22:02:59+10:00
 draft: true
 categories:

@@ -1,5 +1,6 @@
 ---
-title: "K8s Cluster Autoscaler Aws Eks Pulumi"
+title: "K8s Cluster Autoscaler on AWS EKS with Pulumi"
+description: "K8s Cluster Autoscaler on AWS EKS with Pulumi"
 date: 2022-11-11T12:03:01+10:00
 draft: true
 categories:

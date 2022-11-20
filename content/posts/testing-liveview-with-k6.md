@@ -1,5 +1,6 @@
 ---
 title: "How to test your Elixir Phoenix LiveView apps with k6."
+description: "How to test your Elixir Phoenix LiveView apps with k6."
 date: 2022-10-25T23:09:24+10:00
 showTableOfContents: true
 categories:

@@ -1,5 +1,6 @@
 ---
 title: "Glenn Roberts' blog"
+description: "Musings on Elixir, Full-stack, DevSecOps."
 ---
 
 {{<lead>}}

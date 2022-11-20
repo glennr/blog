@@ -1,5 +1,6 @@
 ---
 title: "Monitor Elixir App in K8s With Promex"
+description: "Monitor Elixir App in K8s With Promex"
 date: 2022-11-16T22:41:25+10:00
 draft: true
 categories:

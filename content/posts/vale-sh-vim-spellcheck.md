@@ -1,5 +1,6 @@
 ---
 title: "Vale.sh Vim Spellcheck"
+description: "Vale.sh Vim Spellcheck"
 date: 2022-11-13T10:32:39+10:00
 categories:
   - blogging

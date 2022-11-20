@@ -1,5 +1,6 @@
 ---
 title: "K6 Soak Tests: Too Many Open Files"
+description: "ESLint config for React + Redux projects"
 date: 2022-10-26T23:21:33+10:00
 categories:
   - DevOps
