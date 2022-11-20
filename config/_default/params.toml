@@ -16,6 +16,9 @@ enableCodeCopy = true
 # mainSections = ["section1", "section2"]
 # robots = ""
 
+# GA version 4
+googleAnalytics = "UA-64960058-1"
+
 [footer]
   showAppearanceSwitcher = true
   showScrollToTop = true
@@ -56,7 +59,7 @@ enableCodeCopy = true
 [taxonomy]
   showTermCount = true
 
-[fathomAnalytics]
+# [fathomAnalytics]
   # site = "ABC12345"
   # domain = "llama.yoursite.com"
 
