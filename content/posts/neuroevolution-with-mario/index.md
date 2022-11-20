@@ -16,7 +16,7 @@ Seth's implementation (in Lua) is based on the concept of NeuroEvolution of Augm
 
 ![marI/O](mario-screen.png "Image caption")
 
-For another example of why this field is incredibly exciting, [watch this amazing video of Google's DeepMind learning and mastering space invaders](https://www.youtube.com/watch?v=rbsqaJwpu6A&t=10m33s). How good is that clutch shot at the end?!
+For another example of why this field is incredibly exciting, [watch this amazing video of Google's DeepMind learning and mastering space invaders](https://www.youtube.com/watch?v=rbsqaJwpu6A&t=10m33s). How good is that clutch shot at the end!
 
 Seth's MarI/O can play both Super Mario World (SNES), and Super Mario Bros (NES). If you want to try it out yourself, read on.
 
