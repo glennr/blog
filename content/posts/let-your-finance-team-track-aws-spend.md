@@ -114,4 +114,4 @@ IaC gives you a number of benefits. You have an excellent audit trail, since all
 
 When you add IaC to your CI/CD pipeline, your cloud infrastructure stays in sync with your definitions. With a tool like Pulumi you also get a [web-based dashboard](https://app.pulumi.com/) a history of all updates applied to your cloud infrastructure.
 
-(While it sounds like I'm affiliated with Pulumi, I'm simply a happy user of their product!)
+(While it sounds like I'm affiliated with Pulumi, I'm not. I am however happy user of their product!)
