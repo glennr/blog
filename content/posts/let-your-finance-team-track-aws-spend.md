@@ -2,7 +2,6 @@
 title: "Let Your Finance Team Track AWS Spend"
 description: "Let Your Finance Team Track AWS Spend"
 date: 2022-11-16T22:02:59+10:00
-draft: true
 categories:
   - DevOps
 tags:
@@ -12,8 +11,6 @@ tags:
 ---
 
 Need to delegate access to your AWS billing dashboard to folks in your finance team? Here's how you can define the necessary policies using Pulumi for your Infrastructure As Code (IaC).
-
-Using IaC gives you a number of benefits. You have an excellent audit trail, since all policy versions are in a git repository. Your infrastructure code can be expressed using the same languages and toolchains your DevOps team already uses daily. You can integrate with your preferred CI/CD pipeline, ensuring your cloud infrastructure stays in sync with the code. With a tool like Pulumi you also get a [web-based dashboard](https://app.pulumi.com/) showing all the updates that were applied.
 
 First, create an [IAM Group](https://www.pulumi.com/registry/packages/aws/api-docs/iam/group/):
 
@@ -112,3 +109,9 @@ new aws.iam.GroupPolicyAttachment("attach-full-billing", {
 Now all the IAM users you add to this group will be able to access the these billing permissions.
 
 AWS provides [plenty of billing examples](https://docs.aws.amazon.com/awsaccountbilling/latest/aboutv2/billing-example-policies.html), and it's a simple matter of copying the JSON policy into your Pulumi definitions, using the typescript template above. As an added bonus, if you're using Typescript, your editor should autoformat the JSON definition for you.
+
+IaC gives you a number of benefits. You have an excellent audit trail, since all policy versions are in a git repository. Your infrastructure is expressed using a familiar, Turing-complete programming language. You manage and deploy code using the same toolchains your DevOps team uses daily.
+
+When you add IaC to your CI/CD pipeline, your cloud infrastructure stays in sync with your definitions. With a tool like Pulumi you also get a [web-based dashboard](https://app.pulumi.com/) a history of all updates applied to your cloud infrastructure.
+
+(While it sounds like I'm affiliated with Pulumi, I'm simply a happy user of their product!)
