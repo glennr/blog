@@ -1,6 +1,5 @@
 ---
 title: "NIST and AWS Password Policies"
-description: "NIST and AWS Password Policies"
 date: 2022-11-16T21:11:32+10:00
 categories:
   - Security

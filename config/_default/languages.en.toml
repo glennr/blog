@@ -7,7 +7,9 @@ rtl = false
 
 title = "Glenn Roberts"
 # logo = "img/logo.jpg"
-# description = "My awesome website"
+# Leave description - and see extend-page-head partial for how
+# the meta tag is set from article frontmatter, or summary
+# description = "A blog about Elixir and full-stack web development."
 copyright = "© 2022 Glenn Roberts - All rights reserved."
 dateFormat = "2 January 2006"
 
