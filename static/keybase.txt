@@ -1,0 +1,56 @@
+==================================================================
+https://keybase.io/glennrob
+--------------------------------------------------------------------
+
+I hereby claim:
+
+  * I am an admin of https://www.glenn-roberts.com
+  * I am glennrob (https://keybase.io/glennrob) on keybase.
+  * I have a public key ASAcJhHERZDq6DyWNpmd92VMhAtKVtMP4SQIIdQ64OhLVQo
+
+To do so, I am signing this object:
+
+{
+  "body": {
+    "key": {
+      "eldest_kid": "012068b280292fe66aaf610bd29b3b810c96bace19531eee17c163d69c7751e642950a",
+      "host": "keybase.io",
+      "kid": "01201c2611c44590eae83c9636999df7654c840b4a56d30fe1240821d43ae0e84b550a",
+      "uid": "b372102d11f43cccd96562eb8e4b7b19",
+      "username": "glennrob"
+    },
+    "merkle_root": {
+      "ctime": 1671069133,
+      "hash": "3ab9d08131365e0898869630d242534884c813c5992459db7375819a124e8aff0aff6e9c48aaf9bcc4dea3daf9cfd590e6545952b095164a73467b8a5771d5fb",
+      "hash_meta": "b94d1d0c57fdcca4af6c82a972b8bab7ec01d585e00aa70aad396a12e10de2bc",
+      "seqno": 23717029
+    },
+    "service": {
+      "entropy": "HScnoEx4ehzwc4QYX621YObe",
+      "hostname": "www.glenn-roberts.com",
+      "protocol": "https:"
+    },
+    "type": "web_service_binding",
+    "version": 2
+  },
+  "client": {
+    "name": "keybase.io go client",
+    "version": "6.0.2"
+  },
+  "ctime": 1671069151,
+  "expire_in": 504576000,
+  "prev": "9ee5136d7f648b0d28dc7c5fee37e29f6509c05ad9ed68355072140b2f44817f",
+  "seqno": 79,
+  "tag": "signature"
+}
+
+which yields the signature:
+
+hKRib2R5hqhkZXRhY2hlZMOpaGFzaF90eXBlCqNrZXnEIwEgHCYRxEWQ6ug8ljaZnfdlTIQLSlbTD+EkCCHUOuDoS1UKp3BheWxvYWTESpcCT8QgnuUTbX9kiw0o3Hxf7jfin2UJwFrZ7Wg1UHIUCy9EgX/EIC/nFSPuid07jaSpZbyogzxTMzrgf26Ureii89UzqgS/AgHCo3NpZ8RA6f1l8RlObU6C9+j30JiZ5nk6AUoObg37v1+b9BTqWhxfBqR/VhHJwvIJYgWtqjCYFrVwlKhxiZhc9kvUP+CjB6hzaWdfdHlwZSCkaGFzaIKkdHlwZQildmFsdWXEIEoKgLZBEIZsOAphlE0C3iQv/r1+rkfO3uYQ23E2gg9mo3RhZ80CAqd2ZXJzaW9uAQ==
+
+And finally, I am proving ownership of this host by posting or
+appending to this document.
+
+View my publicly-auditable identity here: https://keybase.io/glennrob
+
+==================================================================
