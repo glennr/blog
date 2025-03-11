@@ -1,4 +1,4 @@
-golang 1.19.2
-hugo 0.104.3
-nodejs 19.0.1
+golang 1.24.0
+hugo 0.145.0
+nodejs 23.8.0
 vale 2.21.0

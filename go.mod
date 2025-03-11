@@ -1,5 +1,5 @@
 module github.com/glennr/blog
 
-go 1.17
+go 1.24
 
-require github.com/jpanther/congo/v2 v2.3.1 // indirect
+require github.com/jpanther/congo/v2 v2.11.0

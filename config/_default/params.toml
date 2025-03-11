@@ -11,10 +11,13 @@ autoSwitchAppearance = true
 
 enableSearch = true
 enableCodeCopy = true
+enableImageWebp = false
 
-# logo = "/images/glenn.jpg"
 # mainSections = ["section1", "section2"]
 # robots = ""
+
+# [header]
+#   logo = "/images/glenn.jpg"
 
 # GA version 4
 googleAnalytics = "UA-64960058-1"
@@ -51,7 +54,7 @@ googleAnalytics = "UA-64960058-1"
   showBreadcrumbs = false
   showSummary = false
   showTableOfContents = false
-  groupByYear = true
+  groupByYear = false
 
 [sitemap]
   excludedKinds = ["taxonomy", "term"]

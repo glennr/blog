@@ -1,19 +1,18 @@
 languageCode = "en"
 languageName = "English"
-displayName = "EN"
-isoCode = "en"
 weight = 1
-rtl = false
+languageDirection = "ltr"
 
 title = "Glenn Roberts"
-# logo = "img/logo.jpg"
 # Leave description - and see extend-page-head partial for how
 # the meta tag is set from article frontmatter, or summary
 # description = "A blog about Elixir and full-stack web development."
-copyright = "© 2022 Glenn Roberts - All rights reserved."
-dateFormat = "2 January 2006"
 
-[author]
+[params]
+  dateFormat = "2 January 2006"
+  copyright = "© 2022 Glenn Roberts - All rights reserved."
+
+[params.author]
   name = "Glenn Roberts"
   image = "images/glenn.jpg"
   # headline = "I'm only human"
@@ -53,7 +52,7 @@ dateFormat = "2 January 2006"
   #   { tiktok = "https://tiktok.com/@username" },
   #   { tumblr = "https://username.tumblr.com" },
   #   { twitch = "https://twitch.tv/username" },
-    { twitter = "https://twitter.com/glennrob" },
+    { bluesky = "https://bsky.app/profile/glennrob.bsky.social" },
   #   { whatsapp = "https://wa.me/phone-number" },
   #   { youtube = "https://youtube.com/username" },
   ]
