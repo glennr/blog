@@ -9,7 +9,7 @@ dcup:
 	@echo
 	@echo "Stays in foreground. ^C to stop containers. ^C twice to kill containers"
 	@echo
-	docker-compose up
+	docker compose up
 
 test:
 	@echo
