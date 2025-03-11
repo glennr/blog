@@ -13,7 +13,7 @@ tags:
 Imagine this: you're happily typing away in Neovim, living your best dev life,
 and suddenly you see an error message like this:
 
-```
+```shell
 mise ERROR No version is set for shim: node
 Set a global default version with one of the following:
 mise use -g node@latest
@@ -37,7 +37,7 @@ astray, and the eventual fix that saved my Neovim setup from imploding.
 - Running `:!mise doctor` inside Neovim might still show `shims_on_path: yes`, implying it *does* find the shims.
 - However, any configured tools (like Node or Python versions) aren't actually recognised.
 - If you run `mise doctor` **in Neovim** and see:
-  ```
+  ```toml
   ignored_config_files:
     ~/.config/mise/config.toml
   ```
@@ -108,7 +108,7 @@ get Schrödinger's config—both "tracked" and "ignored," which effectively mean
 
 Here's what I found when I looked at my own setup:
 
-```
+```shell
 ❯ ls -al ~/.local/state/mise/ignored-configs/
 Permissions Size User Date Modified Name
 lrwxrwxrwx     - g    27 Nov  2024   mise-config.toml-506ade9caf4d46ff -> /home/g/.config/mise/config.toml
@@ -153,7 +153,7 @@ Then re-run `mise doctor` or `mise use -g ...` so Mise can rebuild everything.
 
 After that, if you run `mise doctor`, you should see something like:
 
-```
+```toml
 shims_on_path: yes
 
 config_files: ~/.config/mise/config.toml
