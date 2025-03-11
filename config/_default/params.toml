@@ -54,7 +54,7 @@ googleAnalytics = "UA-64960058-1"
   showBreadcrumbs = false
   showSummary = false
   showTableOfContents = false
-  groupByYear = true
+  groupByYear = false
 
 [sitemap]
   excludedKinds = ["taxonomy", "term"]
