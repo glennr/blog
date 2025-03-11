@@ -97,7 +97,7 @@ syntax. Another suspect ruled out.
 
 Deep inside Mise's labyrinthine innards, you'll find two directories:
 
-- ~/.local/state/mise/tracked-configs/  
+- ~/.local/state/mise/tracked-configs/
 - ~/.local/state/mise/ignored-configs/
 
 They're basically two lists of symlinks: one for config files Mise actively
@@ -121,7 +121,7 @@ lrwxrwxrwx     - g    10 Oct  2024   506ade9caf4d46ff -> /home/g/.config/mise/co
 
 Notice the exact same hash identifier (`506ade9caf4d46ff`) appearing in both directories? That's the smoking gun. My config.toml contained simple version settings:
 
-### **But…why?**  
+### **But…why?**
 
 You might have told Mise to "ignore" that config at some point (maybe after a
 prompt to trust or not trust the config?), and then later on you or Mise tried
@@ -132,22 +132,22 @@ to track it again. Now Mise is confused, sees it in both lists, and the
 
 ## 4. Fixing It
 
-1. **Remove the Symlink in `ignored-configs/`.** 
+1. **Remove the Symlink in `ignored-configs/`.**
 
-```bash 
-cd ~/.local/state/mise/ignored-configs 
-ls -l # find something referencing ~/.config/mise/config.toml 
+```bash
+cd ~/.local/state/mise/ignored-configs
+ls -l # find something referencing ~/.config/mise/config.toml
 rm mise-config.toml-<some-hash>
 ```
 
 2. **Check `tracked-configs/`.** Make sure your config is still there. If it's
    missing, Mise may recreate it once you run `mise doctor` or another command.
 
-3. **(Optional) Wipe All Mise State.** If you want a truly clean slate: 
+3. **(Optional) Wipe All Mise State.** If you want a truly clean slate:
 
 ```bash
 rm -rf ~/.local/state/mise
-``` 
+```
 
 Then re-run `mise doctor` or `mise use -g ...` so Mise can rebuild everything.
 
@@ -158,7 +158,7 @@ shims_on_path: yes
 
 config_files: ~/.config/mise/config.toml
 
-ignored_config_files: (none) 
+ignored_config_files: (none)
 ```
 
 And—finally—Neovim's LSP or plugins will finally respect your global config's
