@@ -1,3 +1,18 @@
 html {
   font-size: 14pt;
 }
+
+/* Override backticks on all code elements with higher specificity */
+html body .prose :where(code):not(:where([class~="not-prose"] *))::before,
+html body .prose :where(code):not(:where([class~="not-prose"] *))::after {
+  content: none !important;
+}
+
+/* If you still want backticks for inline code but not in code blocks */
+html body .prose :where(p code):not(:where([class~="not-prose"] *))::before {
+  content: "`";
+}
+
+html body .prose :where(p code):not(:where([class~="not-prose"] *))::after {
+  content: "`";
+}
