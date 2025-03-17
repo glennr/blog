@@ -1,6 +1,6 @@
 ---
-title: "How to test your Elixir Phoenix LiveView apps with k6."
-description: "How to test your Elixir Phoenix LiveView apps with k6."
+title: "How to test your Elixir Phoenix LiveView apps with k6"
+description: "How to test your Elixir Phoenix LiveView apps with k6"
 date: 2022-10-25T23:09:24+10:00
 showTableOfContents: true
 categories:
@@ -22,7 +22,7 @@ How do you baseline performance, and how do you measure the impact of changes on
 
 Given LiveView relies on websocket communication, how do you test that? How memory hungry are your views?
 
-I recently had to answer these questions for [Bramble](www.brmbl.io) which is an
+I recently had to answer these questions for [Bramble](https://www.brmbl.io) which is an
 app built with Phoenix LiveView. I needed something to simulate HTTP and websocket traffic with spikey and sustained workloads.
 
 ## Enter k6
@@ -63,7 +63,7 @@ For a production setup, you'll likely run the tests against a staging or pre-pro
 
 ### Install k6
 
-First, install k6 per [their instructions](https://k6.io/docs/getting-started/installation/. ASDF users can try https://github.com/grimoh/asdf-k6
+First, install k6 per [their instructions](https://k6.io/docs/getting-started/installation/). ASDF users can try [asdf-k6](https://github.com/grimoh/asdf-k6).
 
 ### Set up a LiveView project
 
