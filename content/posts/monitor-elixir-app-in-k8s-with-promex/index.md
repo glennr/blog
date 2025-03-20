@@ -1,6 +1,6 @@
 ---
 title: "Monitor Elixir App in K8s With Promex"
-date: 2022-11-16T22:41:25+10:00
+date: 2025-11-24T20:02:47+10:00
 draft: true
 categories:
   - DevOps
