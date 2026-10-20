@@ -9,6 +9,8 @@ tags:
   - backblaze
 ---
 
+EDIT: pacman's `python` has since moved to [`3.14.8`](https://www.python.org/downloads/release/python-3148/), and `b2` still runs.
+
 `uv tool install` builds the tool environment against the system Python unless a uv-managed Python is already installed. I moved the [Backblaze `b2` CLI](https://github.com/Backblaze/B2_Command_Line_Tool) off `pipx` so a pacman `python` bump could not break the backup push, and it changed nothing:
 
 ```console
