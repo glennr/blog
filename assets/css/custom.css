@@ -613,6 +613,27 @@ html.dark .prose .highlight-wrapper .codeblock-title {
   text-transform: none;
 }
 
+/* -- Consulting note -------------------------------------------------------
+   One short paragraph after a post, under the author card. */
+
+.post-cta a {
+  color: var(--site-brand);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.post-cta {
+  margin-top: 1.5rem;
+  padding: 1rem 1.25rem;
+  border-left: 3px solid var(--site-brand);
+  background: var(--site-row-hover);
+  font-size: 0.95rem;
+}
+
+.post-cta p {
+  margin: 0;
+}
+
 /* -- Contents --------------------------------------------------------------
    The theme puts the contents above the article on a narrow screen, where
    they push the TL;DR off the first screen. They are for the wide column. */
