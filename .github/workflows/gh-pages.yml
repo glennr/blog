@@ -20,6 +20,13 @@ jobs:
           submodules: true # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
 
+      # The dates check measures the branch against master. A pull request
+      # checks out its merge commit and leaves master only as origin/master,
+      # so name it here; a push to master already has it.
+      - name: Name master for the branch checks
+        if: ${{ github.event_name == 'pull_request' }}
+        run: git branch master origin/master
+
       # Every tool the checks need is pinned in .tool-versions, so the runner
       # runs the versions this machine does. Adding a tool there is the whole
       # of adding it to CI. It replaces a hand-rolled Vale download and a Hugo
