@@ -10,7 +10,12 @@ jobs:
   build:
     runs-on: ubuntu-24.04
     steps:
-      - uses: actions/checkout@v4
+      # Checkout runs `git init`, and git now hints that its default branch
+      # name will change. Naming the branch this repository uses settles it.
+      - name: Set the default branch name
+        run: git config --global init.defaultBranch master
+
+      - uses: actions/checkout@v7
         with:
           submodules: true # Fetch Hugo themes (true OR recursive)
           fetch-depth: 0 # Fetch all history for .GitInfo and .Lastmod
@@ -48,7 +53,7 @@ jobs:
       # custom domain lives in the repository's Pages settings.
       - name: Upload the site
         if: ${{ github.ref == 'refs/heads/master' }}
-        uses: actions/upload-pages-artifact@v3
+        uses: actions/upload-pages-artifact@v5
         with:
           path: ./build
 
@@ -68,4 +73,4 @@ jobs:
     steps:
       - name: Deploy
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
