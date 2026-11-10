@@ -1,0 +1,15 @@
+{{/* An item's text from data/work.toml as HTML, with its `link` phrase made
+     a link to its `post`. Used by the `work` shortcode and the home page.
+     Fails the build if the post or the phrase is missing, so a reworded
+     text cannot quietly drop its link. */}}
+{{ $html := .text | markdownify }}
+{{ with .post }}
+  {{ $page := site.GetPage . }}
+  {{ if not $page }}{{ errorf "data/work.toml: no page at %q" . }}{{ end }}
+  {{ if not (strings.Contains $html $.link) }}
+    {{ errorf "data/work.toml: link %q is not in the text %q" $.link $.text }}
+  {{ end }}
+  {{ $a := printf "<a href=%q>%s</a>" $page.RelPermalink $.link }}
+  {{ $html = replace $html $.link $a 1 }}
+{{ end }}
+{{ return (safeHTML $html) }}

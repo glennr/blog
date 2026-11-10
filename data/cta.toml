@@ -1,18 +1,16 @@
 # The consulting box at the end of every post and TIL note
 # (layouts/partials/author.html). The first topic whose tags meet the page's
 # tags supplies the line; tags compare in lower case. A page with none of
-# them gets the default line.
-
-default = "I take on fractional and project work on web apps, agentic systems and the platforms they run on."
+# them shows no box, so a hobby note does not end with a pitch.
 
 [[topics]]
   tags = ["claude-code", "ai", "agents", "llm", "mcp"]
-  text = "I build agentic systems: the orchestration layer that runs AI agents and flows, in your product or for your team. Fractional or by the project."
+  text = "I build agent features on your real data and permissions, with tests and evals, and leave your team able to change them. Fractional or by the project."
 
 [[topics]]
   tags = ["elixir", "phoenix", "liveview", "ecto", "oban"]
-  text = "Elixir and Phoenix are my first choice for web apps. I take on fractional and project work on them, with your team or from a blank page."
+  text = "I do this kind of work with other teams too, on Elixir and Phoenix apps in production. If yours could use a hand, tell me what you're building."
 
 [[topics]]
   tags = ["k8s", "kubernetes", "aws", "eks", "pulumi", "devops", "ci"]
-  text = "I build and run the cloud, Kubernetes and CI/CD platforms under web apps. Fractional or by the project."
+  text = "I build the cloud, Kubernetes and CI/CD under web apps, and hand your team a platform it can run and change. Fractional or by the project."

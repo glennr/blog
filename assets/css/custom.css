@@ -374,10 +374,45 @@ section.space-y-10
   letter-spacing: -0.02em;
 }
 
+/* The intro is the page's main prose, so it is larger and darker than the
+   section leads below it. */
 .home-hero__lead {
   margin-top: 1.5rem;
   max-width: 65ch;
+  font-size: 1.25rem;
+  line-height: 1.55;
+}
+
+.home-hero__lead p {
+  color: rgb(var(--color-neutral-800));
+}
+
+html.dark .home-hero__lead p {
+  color: rgb(var(--color-neutral-200));
+}
+
+/* The fallback address line under the hero buttons, for a visitor whose
+   Email me click opens no mail app. */
+.home-hero__fallback {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
   color: var(--site-ink-soft);
+}
+
+/* About's portrait, floated beside the intro. */
+.about-portrait {
+  float: right;
+  width: 6rem;
+  height: auto;
+  margin: 0.25rem 0 1rem 1.25rem !important;
+  border-radius: 9999px;
+  border: 2px solid var(--site-hairline);
+}
+
+@media (min-width: 853px) {
+  .about-portrait {
+    width: 10rem;
+  }
 }
 
 .home-hero__lead > :first-child {
@@ -713,7 +748,6 @@ html.dark .prose .highlight-wrapper .codeblock-title {
   margin-top: 2rem;
   border: 1px solid var(--site-hairline);
   border-top: 3px solid var(--site-brand);
-  border-radius: 0.375rem;
   padding: 1.25rem 1.5rem 1.5rem;
   background: var(--site-row-hover);
 }
@@ -722,8 +756,14 @@ html.dark .prose .highlight-wrapper .codeblock-title {
   margin: 0;
 }
 
+/* Serif like the article above it, so the box reads as part of the post. */
+.post-cta__title,
+.post-cta__text {
+  font-family: var(--site-serif);
+}
+
 .post-cta__title {
-  font-size: 1.125rem;
+  font-size: 1.25rem;
   font-weight: 700;
 }
 
@@ -795,38 +835,74 @@ html.dark #mobile-menu-dialog a[href$="#working-together"]:hover {
   margin: 0.75rem 0 0;
   max-width: 65ch;
   color: var(--site-ink-soft);
+  text-wrap: pretty;
 }
 
-/* How I work: the principles, two to a row on a wide screen. */
-.home-principles {
+/* No lone last words in prose or list items, no ragged headings. */
+.article-content :where(p, li) {
+  text-wrap: pretty;
+}
+
+:where(.home, .article-content) :where(h2, h3) {
+  text-wrap: balance;
+}
+
+/* "Where I can help" cards, numbered 01, 02... from the list's own counter. */
+.home-cards {
   display: grid;
-  gap: 1.5rem 2.5rem;
-  margin-top: 1.5rem;
+  gap: 1.25rem 2rem;
+  margin: 1.5rem 0 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: home-item;
+}
+
+.home-cards > li {
+  counter-increment: home-item;
+}
+
+.home-cards > li::before {
+  content: counter(home-item, decimal-leading-zero);
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--site-brand);
 }
 
 @media (min-width: 853px) {
-  .home-principles {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .home-cards {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
-.home-principle p {
+.home-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--site-hairline);
+  border-top: 3px solid var(--site-brand);
+  padding: 1.25rem;
+}
+
+.home-card p {
   margin: 0.5rem 0 0;
   color: var(--site-ink-soft);
 }
 
-.home-principle__title {
+.home-card__title {
   margin: 0;
   font-family: var(--site-serif);
   font-size: 1.25rem;
   font-weight: 600;
 }
 
-.home-principle__posts {
-  font-size: 0.9rem;
+/* The outcome line under a problem card's title. */
+.home-card p.home-card__fix {
+  font-weight: 600;
+  color: inherit;
 }
 
-.home-principle__posts a {
+.home-card p a {
   color: var(--site-brand);
   text-decoration: underline;
   text-underline-offset: 0.15em;
@@ -1091,4 +1167,15 @@ html:not(.dark) .text-primary-500 {
   #scroll-to-top {
     display: none;
   }
+}
+
+/* About's lists: each item opens with a bold lead-in.
+   Markup: layouts/shortcodes/work.html */
+.work-list__lead {
+  font-weight: 700;
+  color: rgb(var(--color-neutral-900));
+}
+
+html.dark .work-list__lead {
+  color: rgb(var(--color-neutral-100));
 }

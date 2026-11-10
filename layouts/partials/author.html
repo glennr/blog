@@ -56,8 +56,9 @@
   </div>
 </div>
 {{/* The theme's author card, plus a consulting box under it on posts, TIL
-     notes included. The box's line depends on the page's tags; data/cta.toml holds the
-     lines and the tags that pick them. */}}
+     notes included. The box's line depends on the page's tags; data/cta.toml
+     holds the lines and the tags that pick them. A post whose tags match no
+     topic gets no box. */}}
 {{ if eq $.Type "posts" }}
   {{ $cta := hugo.Data.cta }}
   {{ $tags := slice }}
@@ -66,9 +67,11 @@
   {{ range $cta.topics }}
     {{ if and (not $line) (intersect .tags $tags) }}{{ $line = .text }}{{ end }}
   {{ end }}
+  {{ with $line }}
   <aside class="post-cta" aria-labelledby="post-cta-title">
     <p class="post-cta__title" id="post-cta-title">Work with me</p>
-    <p class="post-cta__text">{{ $line | default $cta.default }}</p>
-    <a class="post-cta__button" href="{{ "about/#working-together" | relLangURL }}">How we'd work together</a>
+    <p class="post-cta__text">{{ . }}</p>
+    <a class="post-cta__button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ hugo.Data.work.emailUser }}">Email me</a>
   </aside>
+  {{ end }}
 {{ end }}

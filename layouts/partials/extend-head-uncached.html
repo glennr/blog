@@ -5,6 +5,21 @@
      before the page body, so a flag set by the render hook would come too
      late. Reading the source is order-free. The bundle is the theme's own
      mermaid plus assets/js/mermaid.js. */}}
+{{/* An "Email me" link carries data-mail-user and goes to About without
+     JavaScript. With it, the link becomes a mailto at emailDomain in
+     data/work.toml, joined only on click, so no page prints a whole address
+     for a scraper to find. The domain is fixed, not the page's host, so a
+     preview on another host still mails the real address. */}}
+<script>
+  document.addEventListener("DOMContentLoaded", () =>
+    document.querySelectorAll("a[data-mail-user]").forEach((a) =>
+      a.addEventListener("click", (event) => {
+        event.preventDefault();
+        location.href = "mailto:" + a.dataset.mailUser + "@" + {{ hugo.Data.work.emailDomain }};
+      }),
+    ),
+  );
+</script>
 {{ if and (not (.HasShortcode "mermaid")) (strings.Contains .RawContent "```mermaid") }}
   {{ $lib := resources.Get "lib/mermaid/mermaid.min.js" }}
   {{ $config := resources.Get "js/mermaid.js" | resources.Minify }}

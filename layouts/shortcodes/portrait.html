@@ -1,0 +1,9 @@
+{{/* The author portrait, floated beside About's intro so the page has a face.
+     Usage: {{< portrait >}}. The image is the author image in
+     config/_default/languages.en.toml; styles under .about-portrait in
+     assets/css/custom.css. */}}
+{{ $src := site.Params.Author.image }}
+{{ $img := resources.Get $src }}
+{{ if not $img }}{{ errorf "portrait shortcode: no asset at %q (%s)" $src .Position }}{{ end }}
+{{ $img = $img.Fill "320x320 Center webp q90" }}
+<img class="about-portrait nozoom not-prose" src="{{ $img.RelPermalink }}" alt="{{ site.Params.Author.name }}" width="160" height="160" />

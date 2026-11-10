@@ -11,19 +11,9 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-  name = "Writing"
+  name = "Blog"
   pageRef = "posts"
   weight = 10
-
-[[main]]
-  name = "LinkedIn"
-  url = "https://linkedin.com/in/glennrob"
-  weight = 20
-
-[[main]]
-  name = "GitHub"
-  url = "https://github.com/glennr"
-  weight = 30
 
 # The consulting call to action, styled as a button in assets/css/custom.css.
 [[main]]

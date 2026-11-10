@@ -18,7 +18,7 @@ title = "Glenn Roberts"
 [params.author]
   name = "Glenn Roberts"
   image = "images/glenn.jpg"
-  bio = "Engineer and builder. Shipping products with AI agents in the loop."
+  bio = "Hands-on engineer and former CTO. I help companies build with AI."
   links = [
     { github = "https://github.com/glennr" },
     { gitlab = "https://gitlab.com/glennr" },

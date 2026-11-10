@@ -1,7 +1,7 @@
 ---
 title: "About"
 date: 2026-11-10
-description: "Glenn Roberts builds software products and runs them in production, lately with AI agents in the loop. He takes on fractional and project work."
+description: "Glenn Roberts is a hands-on engineer who helps companies build and ship with AI. He takes on fractional and project work on web apps, agentic systems and the platforms they run on."
 showDate: false
 showReadingTime: false
 showAuthor: false
@@ -10,36 +10,28 @@ showBreadcrumbs: false
 showPagination: false
 menus:
   main:
-    weight: 17
+    weight: 5
 ---
 
-I build software products and run them in production. Lately most of that
-involves AI agents, in the product and in how the team ships it.
+{{< portrait >}}
 
-Most recently I co-founded an enterprise SaaS and ran its engineering as CTO:
-the Phoenix app, the AWS platform, SOC 2, hiring and the team. Before that I was
-an engineer at a customer-support SaaS, and before that I ran a web development
-consultancy.
+I'm Glenn. I've written code my whole career, including as a co-founder and
+CTO, and I still do. I build the systems, platforms, APIs and integrations a
+product grows on, and I've learned the hard way what keeps them running.
 
-This blog is where I write up what I learn, mostly Elixir, PostgreSQL,
-Kubernetes and working with coding agents.
+I've worked with Ericsson, Accenture, Hetzner, USAID and Groove, and partnered
+with some of the largest banks and insurers in Australia and the US.
 
-## Some of the results
-
-As CTO, selling to insurers, banks and utilities in the US and Australia:
-
-{{< work results >}}
-
-Before that, I grew the consultancy from just me to a team with two offices,
-and wrote code alongside them.
-
-## Working together
-
-I take on consulting work on web apps, agentic systems and the platforms they run
-on, fractional or by the project:
+## What I do
 
 {{< work offers >}}
 
-If that sounds like what you need, email me at hello@ this domain. (Any
-address here reaches me, so pick one you'll remember.) A paragraph on what you're
-building and where it's stuck is plenty to start with.
+## My background
+
+{{< work background >}}
+
+## Working together
+
+Email me a paragraph on what you're building and we'll find a time to talk.
+
+{{< work email >}}

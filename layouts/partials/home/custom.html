@@ -1,32 +1,27 @@
 {{/* Home page.
 
      It leads with the consulting work. Top to bottom: a hero with the intro
-     and the line to email on the left and the portrait on the right, how I
-     work, results, what I take on, then recent posts (TIL notes among
-     them, marked TIL) and the projects. Each list row
-     carries a title and a date, the posts a description too, and the whole
-     row is one click target.
+     and the line to email on the left and the portrait on the right, the
+     problems I help with as numbered cards, how I work, a closing call to email, then recent writing.
 
-     The consulting copy (principles, results, offers, the email user) lives
-     in data/work.toml, which About shares through the `work` shortcode.
-
-     The page never prints a whole email address, so a scraper finds none:
-     the text says "hello@ this domain", and the Email me buttons build the
-     mailto link from the user and the page's own host when clicked. Without
-     JavaScript they go to About. The rest comes from content/_index.md. Its body is the intro
-     prose, and these front matter fields control the rest:
+     The consulting copy (problems, principles, the reply line,
+     the email user) lives in
+     data/work.toml, which About shares through the `work` shortcode. The rest
+     comes from content/_index.md. Its body is the intro prose, and these
+     front matter fields control the rest:
 
        heroTitle        the h1, defaults to the author name
        heroLinks        the author links to show as icons, by name, in order;
                         defaults to all of them
-       resultsLead      the line above the results list
+       bio              the paragraph above the principles
        writingLead      the line under the "Recent writing" heading
-       recentPostCount  rows in the posts list, TIL notes included, defaults
-                        to 5
-       projects         a list of {name, url, description}, one card each
-       projectsHeading  the label above the cards, defaults to "Open source"
+       recentPostCount  rows in the posts list, defaults to 5
 
-     The projects section only appears when the projects list has an entry.
+     The page never prints a whole email address, so a scraper finds none:
+     the fallback line says "hello@ this domain", and the Email me buttons build the
+     mailto link from the user and emailDomain in data/work.toml when
+     clicked. Without
+     JavaScript they go to About.
 
      The rows come from partials/post-row.html, which the section lists use
      too. The styles live in assets/css/custom.css under the .home- and
@@ -42,16 +37,16 @@
   <section class="home-hero">
     <div class="home-hero__text">
       <h1 class="home-hero__title">
-        {{ .Params.heroTitle | default .Site.Params.Author.name | default .Site.Title | emojify }}
+        {{ .Params.heroTitle | default .Site.Params.Author.name | default .Site.Title | markdownify | emojify }}
       </h1>
       <div class="home-hero__lead prose dark:prose-invert">
         {{ .Content }}
-        <p>Want help? Email me: {{ $work.emailUser }}@ this domain.</p>
       </div>
       <div class="home-hero__actions">
         <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ $work.emailUser }}">Email me</a>
-        <a class="home-hero__secondary" href="#how-i-work">How I work</a>
+        <a class="home-hero__secondary" href="#where-i-help">Where I can help</a>
       </div>
+      <p class="home-hero__fallback">No mail app? Write to {{ $work.emailUser }}@ this domain.</p>
       {{ $show := .Params.heroLinks }}
       {{ with .Site.Params.Author.links }}
         <ul class="home-hero__links">
@@ -102,47 +97,34 @@
     {{ end }}
   </section>
 
-  <section class="home-section" id="how-i-work">
-    <h2 class="home-section__title">How I work</h2>
-    <div class="home-principles">
-      {{ range $work.principles }}
-        <div class="home-principle">
-          <h3 class="home-principle__title">{{ .title }}</h3>
-          <p>{{ .text | markdownify }}</p>
-          {{ with .posts }}
-            <p class="home-principle__posts">
-              Read:
-              {{ range $i, $path := . }}
-                {{- with site.GetPage $path -}}
-                  {{- if $i }}, {{ end -}}
-                  <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
-                {{- else -}}
-                  {{- errorf "data/work.toml: no page at %q" $path -}}
-                {{- end -}}
-              {{ end }}
-            </p>
-          {{ end }}
-        </div>
+  <section class="home-section" id="where-i-help">
+    <h2 class="home-section__title">Where I can help</h2>
+    <ol class="home-cards">
+      {{ range $work.problems }}
+        <li class="home-card">
+          <h3 class="home-card__title">{{ .title | markdownify }}</h3>
+          {{ with .fix }}<p class="home-card__fix">{{ . }}</p>{{ end }}
+          <p>{{ partial "work-text.html" . }}</p>
+        </li>
       {{ end }}
-    </div>
+    </ol>
   </section>
 
   <section class="home-section">
-    <h2 class="home-section__title">Some of the results</h2>
-    {{ with .Params.resultsLead }}<p class="home-section__lead">{{ . | markdownify }}</p>{{ end }}
+    <h2 class="home-section__title">How I work</h2>
+    {{ with .Params.bio }}<p class="home-section__lead">{{ . | markdownify }}</p>{{ end }}
     <ul class="home-list">
-      {{ range $work.results }}<li>{{ .text | markdownify }}</li>{{ end }}
+      {{ range $work.principles }}<li><span class="work-list__lead">{{ .title }}</span>: {{ partial "work-text.html" . }}</li>{{ end }}
     </ul>
+    <a class="home-button" href="{{ "about/" | relLangURL }}">More about me</a>
   </section>
 
-  <section class="home-section">
-    <h2 class="home-section__title">What I take on</h2>
-    <ul class="home-list">
-      {{ range $work.offers }}<li>{{ .text | markdownify }}</li>{{ end }}
-    </ul>
+  <section class="home-section home-close">
+    <h2 class="home-section__title">Want help?</h2>
+    <p class="home-section__lead">{{ "Email me a paragraph on what you're building and what you need. That's plenty to start with." | markdownify }}</p>
     <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ $work.emailUser }}">Email me</a>
+    <p class="home-section__lead">{{ $work.reply | markdownify }}</p>
   </section>
-
 
   {{ $posts := where .Site.RegularPages "Type" "posts" }}
   {{ with first $postCount $posts }}
@@ -158,29 +140,5 @@
     </section>
   {{ end }}
 
-  {{ with .Params.projects }}
-    <section class="home-section home-projects">
-      <h2 class="home-section__title">{{ $.Params.projectsHeading | default "Open source" }}</h2>
-      <div class="home-projects__grid">
-        {{ range . }}
-          <div class="home-project">
-            <h3 class="home-project__title">
-              <a href="{{ .url }}">{{ .name }}</a>
-              <span aria-hidden="true" class="post-row__arrow">&#8599;&#xFE0E;</span>
-            </h3>
-            <p class="home-project__description">{{ .description | markdownify }}</p>
-          </div>
-        {{ end }}
-      </div>
-    </section>
-  {{ end }}
 </article>
 
-<script>
-  document.querySelectorAll("a[data-mail-user]").forEach((a) =>
-    a.addEventListener("click", (event) => {
-      event.preventDefault();
-      location.href = "mailto:" + a.dataset.mailUser + "@" + location.hostname.replace(/^www\./, "");
-    }),
-  );
-</script>

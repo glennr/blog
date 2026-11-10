@@ -1,53 +1,72 @@
 # The consulting copy shared by the home page (layouts/partials/home/custom.html)
-# and About (the `work` shortcode). Text is Markdown. A principle's `posts` are
-# content paths; each becomes an inline link to that post, by its title.
+# and About (the `work` shortcode). Text is Markdown. In a problem, `link` is
+# a phrase from its text that becomes a link to `post`, a content path
+# (layouts/partials/work-text.html).
 
-# The user part of the address the home page asks readers to email, at the
-# site's own domain. The page never prints the whole address.
+# The address the Email me buttons mail, in two parts that the page joins
+# only on click (layouts/partials/extend-head-uncached.html). The home page says
+# "hello@ this domain", so keep emailDomain the site's own domain.
 emailUser = "hello"
+emailDomain = "glenn-roberts.com"
 
-[[principles]]
-  title = "Ship small, and often"
-  text = "A change that reaches production the same day is cheap to get wrong. At the SaaS we shipped about 50 times a month, under SOC 2 change controls, because the tests and the pipeline earned that trust. I still check that they do."
-  posts = ["posts/fast-tests-and-mutation-testing-in-elixir"]
-
-[[principles]]
-  title = "Run what you build"
-  text = "I've owned the incident response, the pentests and the disaster recovery, so I ask the production questions early: how you'll watch it, what it costs and where it breaks."
-  posts = ["posts/monitor-elixir-app-in-k8s-with-promex", "posts/let-your-finance-team-track-aws-spend"]
-
-[[principles]]
-  title = "Let the build enforce it"
-  text = "A convention holds until the first deadline. Where the design matters, I'd rather the compiler or CI say no than a reviewer remember to."
-  posts = ["posts/enforce-phoenix-contexts-with-boundary", "posts/make-the-phoenix-scope-the-first-argument"]
-
-[[principles]]
-  title = "Agents in the loop"
-  text = "I ship with coding agents every day, and I build products that agents can work with. The judgment stays with you and your team."
-  posts = ["posts/mcp-before-rest-when-the-caller-is-an-agent", "posts/let-claude-code-design-in-the-running-app"]
-
-# As CTO of an enterprise SaaS, selling to insurers, banks and utilities in the
-# US and Australia.
-[[results]]
-  text = "Moved the platform from single-tenant AWS accounts to three regional Kubernetes clusters, with 60% fewer cloud resources."
-
-[[results]]
-  text = "Cut build and deploy from about 45 minutes to about 10, while customer environments held 99.9%+ measured availability."
-
-[[results]]
-  text = "Took the company through SOC 2 Type 2, and owned incident response, the annual pentests and disaster recovery."
-
-[[results]]
-  text = "Built the engineering team and a delivery system that shipped to production about 50 times a month under SOC 2 change controls."
+# Under each Email me button at the close of the home page and About.
+reply = "I reply within two working days. If I'm not the right fit, I'll say so and point you to someone who is."
 
 [[offers]]
-  text = "Building a product from an idea to production, with the design, engineering and practices that let a team ship quickly and keep shipping."
+  title = "Web apps"
+  text = "New products, or the app you already run, in whatever stack your team uses."
 
 [[offers]]
-  text = "Working on an existing web app with your team. (Elixir and Phoenix are my first choice, not my only one.)"
+  title = "Agentic systems"
+  text = "Agents in your product that plan, call your app's tools and act for a user (with evals and guardrails)."
 
 [[offers]]
-  text = "Agentic systems: the orchestration layer that runs AI agents and flows, in your product or for your team."
+  title = "APIs and integrations"
+  text = "APIs, data integrations and single sign-on between your product and your customers' systems."
 
 [[offers]]
-  text = "The cloud, Kubernetes and CI/CD platform under all of it."
+  title = "Cloud platforms"
+  text = "AWS, Kubernetes, infrastructure as code and CI/CD that are cheap to run and easy to change."
+
+# The home page's "How I work": the standard I hold, as a client lives it.
+[[principles]]
+  title = "Shipped means in production"
+  text = "What we build goes live for your customers, not into a demo or a branch that sits."
+
+[[principles]]
+  title = "Tests and security in the same PR"
+  text = "Every change ships with its tests and a security review, not as a follow-up ticket."
+
+[[principles]]
+  title = "Your team keeps it"
+  text = "Plain code, written docs, and I explain the decisions as we go, so nothing depends on me."
+
+# The home page's "Where I can help" cards, in order: the symptom as the
+# title, the outcome as `fix`, then what I do about it.
+[[problems]]
+  title = "You want agents in the product"
+  fix = "Agents that do the work."
+  text = "I build agents that plan, use your app's tools and check each other's work, with evals so you can see how often they get it right."
+
+[[problems]]
+  title = "You need someone senior who still writes code"
+  fix = "I do the building."
+  text = "I co-founded an enterprise SaaS and hand-wrote over half its code as CTO. I join your team and build the system, platform or API you need next."
+
+[[problems]]
+  title = "You'd like a second opinion before you commit"
+  fix = "Talk it through first."
+  text = "I've been the CTO making these calls, and I've worked with Ericsson, Accenture, Hetzner, USAID and Groove. Send me what you're weighing up and I'll tell you what I'd do."
+
+# The background, told as what a client got from it: About's "My background".
+[[background]]
+  title = "Built what enterprises need"
+  text = "I built the data integrations, API access and SSO that banks and insurers needed before they'd go live."
+
+[[background]]
+  title = "Wrote the code as CTO"
+  text = "I co-founded an enterprise SaaS and hand-wrote over half its code."
+
+[[background]]
+  title = "Ran the platform too"
+  text = "I cut build and deploy from about 45 minutes to 10, trimmed cloud resources by 60% and took the company through SOC 2 Type 2."

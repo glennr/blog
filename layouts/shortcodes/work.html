@@ -1,8 +1,27 @@
 {{/* A list from data/work.toml, so About and the home page say the same thing.
-     Usage: {{< work results >}} or {{< work offers >}}. */}}
+     Usage: {{< work offers >}} or {{< work background >}}.
+
+     Each item is one bullet. An item with a title opens with it as a bold
+     lead-in (.work-list__lead in assets/css/custom.css), which Glenn asked
+     for on About; the lead-in is markup, so no `**` reaches the prose lint.
+     An item's `link` phrase links to its `post`. `{{< work email >}}` is
+     the Email me button instead, which mails `emailUser` at
+     `emailDomain`, with a no-mail-app fallback and the `reply` line under it. */}}
 {{ $name := .Get 0 }}
-{{ $items := index hugo.Data.work $name }}
+{{ $data := hugo.Data.work }}
+{{ if eq $name "email" }}
+  <p class="not-prose"><a class="home-hero__cta-button" href="#working-together" data-mail-user="{{ $data.emailUser }}">Email me</a></p>
+  <p class="home-hero__fallback">No mail app? Write to {{ $data.emailUser }}@ this domain.</p>
+  <p>{{ $data.reply | markdownify }}</p>
+{{ else }}
+{{ $items := index $data $name }}
 {{ if not $items }}{{ errorf "work shortcode: no list %q in data/work.toml (%s)" $name .Position }}{{ end }}
-<ul>
-  {{ range $items }}<li>{{ .text | markdownify }}</li>{{ end }}
+<ul class="work-list">
+  {{ range $items }}
+    <li>
+      {{- with .title }}<span class="work-list__lead">{{ . }}</span>: {{ end -}}
+      {{ partial "work-text.html" . }}
+    </li>
+  {{ end }}
 </ul>
+{{ end }}
