@@ -10,6 +10,8 @@
 
        heroTitle        the h1, defaults to the author name
        heroTopics       one line under the intro naming what the posts cover
+       heroCta          the consulting line under the topics, with a "Work
+                        with me" button to the About page; left out when unset
        heroLinks        the author links to show as icons, by name, in order;
                         defaults to all of them
        recentPostCount  rows in the posts list, defaults to 5
@@ -38,6 +40,12 @@
       <div class="home-hero__lead prose dark:prose-invert">{{ .Content }}</div>
       {{ with .Params.heroTopics }}
         <p class="home-hero__topics">{{ . | markdownify }}</p>
+      {{ end }}
+      {{ with .Params.heroCta }}
+        <div class="home-hero__cta">
+          <p>{{ . | markdownify }}</p>
+          <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}">Work with me</a>
+        </div>
       {{ end }}
       {{ $show := .Params.heroLinks }}
       {{ with .Site.Params.Author.links }}

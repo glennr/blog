@@ -55,13 +55,20 @@
     <div class="text-2xl sm:text-lg">{{ partialCached "author-links.html" . }}</div>
   </div>
 </div>
-{{/* The theme's author card, plus a consulting note under it on posts. */}}
-{{ if eq $.Type "posts" }}
-  <aside class="post-cta">
-    <p>
-      I take on fractional and fixed-scope work on web apps, agentic systems and
-      the platforms they run on.
-      <a href="{{ "about/#working-together" | relLangURL }}">Working together</a>
-    </p>
+{{/* The theme's author card, plus a consulting box under it on posts and TIL
+     notes. The box's line depends on the page's tags; data/cta.toml holds the
+     lines and the tags that pick them. */}}
+{{ if in (slice "posts" "til") $.Type }}
+  {{ $cta := hugo.Data.cta }}
+  {{ $tags := slice }}
+  {{ range $.Params.tags }}{{ $tags = $tags | append (lower .) }}{{ end }}
+  {{ $line := "" }}
+  {{ range $cta.topics }}
+    {{ if and (not $line) (intersect .tags $tags) }}{{ $line = .text }}{{ end }}
+  {{ end }}
+  <aside class="post-cta" aria-labelledby="post-cta-title">
+    <p class="post-cta__title" id="post-cta-title">Work with me</p>
+    <p class="post-cta__text">{{ $line | default $cta.default }}</p>
+    <a class="post-cta__button" href="{{ "about/#working-together" | relLangURL }}">How we'd work together</a>
   </aside>
 {{ end }}

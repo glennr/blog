@@ -24,6 +24,22 @@ consultancy.
 This blog is where I write up what I learn, mostly Elixir, PostgreSQL,
 Kubernetes and working with coding agents.
 
+## Some of the results
+
+As CTO, selling to insurers, banks and utilities in the US and Australia:
+
+- Moved the platform from single-tenant AWS accounts to three regional
+  Kubernetes clusters, with 60% fewer cloud resources.
+- Cut build and deploy from about 45 minutes to about 10, while customer
+  environments held 99.9%+ measured availability.
+- Took the company through SOC 2 Type 2, and owned incident response, the
+  annual pentests and disaster recovery.
+- Built the engineering team and a delivery system that shipped to production
+  about 50 times a month under SOC 2 change controls.
+
+Before that, I grew the consultancy from just me to a team with two offices,
+and wrote code alongside them.
+
 ## Working together
 
 I take on consulting work on web apps, agentic systems and the platforms they run
@@ -35,8 +51,7 @@ on, fractional or as a fixed-scope piece:
   first choice, not my only one.)
 - Agentic systems: the orchestration layer that runs AI agents and flows, in
   your product or for your team.
-- Setting your team up to ship with coding agents.
-- The cloud, Kubernetes and CI platform under all of it.
+- The cloud, Kubernetes and CI/CD platform under all of it.
 
 If that sounds like what you need, email me at glenn@ this domain. (Any
 address here reaches me, so pick one you'll remember.) A paragraph on what you're

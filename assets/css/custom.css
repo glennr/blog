@@ -616,21 +616,80 @@ html.dark .prose .highlight-wrapper .codeblock-title {
 /* -- Consulting note -------------------------------------------------------
    One short paragraph after a post, under the author card. */
 
-.post-cta a {
-  color: var(--site-brand);
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
+/* The consulting box under the author card on posts and TIL notes. */
 .post-cta {
-  margin-top: 1.5rem;
-  padding: 1rem 1.25rem;
-  border-left: 3px solid var(--site-brand);
+  margin-top: 2rem;
+  border: 1px solid var(--site-hairline);
+  border-top: 3px solid var(--site-brand);
+  border-radius: 0.375rem;
+  padding: 1.25rem 1.5rem 1.5rem;
   background: var(--site-row-hover);
-  font-size: 0.95rem;
 }
 
 .post-cta p {
+  margin: 0;
+}
+
+.post-cta__title {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.post-cta__text {
+  margin-top: 0.5rem !important;
+  max-width: 60ch;
+}
+
+/* The one solid button on the site: the consulting link in the box, the
+   header and the home hero. */
+.post-cta__button,
+.home-hero__cta-button {
+  display: inline-block;
+  margin-top: 1rem;
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  background: var(--site-brand);
+  color: rgb(var(--color-neutral-50));
+}
+
+html.dark .post-cta__button,
+html.dark .home-hero__cta-button {
+  color: rgb(var(--color-neutral-900));
+}
+
+.post-cta__button:hover,
+.home-hero__cta-button:hover {
+  filter: brightness(1.1);
+}
+
+/* "Work with me" in the header menu, outlined so it reads as the one action. */
+.main-menu a[href$="#working-together"],
+#mobile-menu-dialog a[href$="#working-together"] {
+  border: 1px solid var(--site-brand);
+  border-radius: 0.375rem;
+  padding: 0.25rem 0.75rem;
+  color: var(--site-brand);
+}
+
+.main-menu a[href$="#working-together"]:hover,
+#mobile-menu-dialog a[href$="#working-together"]:hover {
+  background: var(--site-brand);
+  color: rgb(var(--color-neutral-50));
+}
+
+html.dark .main-menu a[href$="#working-together"]:hover,
+html.dark #mobile-menu-dialog a[href$="#working-together"]:hover {
+  color: rgb(var(--color-neutral-900));
+}
+
+/* The consulting line in the home hero, under the topics. */
+.home-hero__cta {
+  margin: 1.25rem 0 0;
+}
+
+.home-hero__cta p {
   margin: 0;
 }
 

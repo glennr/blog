@@ -30,6 +30,12 @@
   url = "https://github.com/glennr"
   weight = 30
 
+# The consulting call to action, styled as a button in assets/css/custom.css.
+[[main]]
+  name = "Work with me"
+  url = "/about/#working-together"
+  weight = 40
+
 
   # -- Footer Menu --
   # The footer menu is displayed at the bottom of the page, just before
