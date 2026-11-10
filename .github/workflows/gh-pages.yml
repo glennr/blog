@@ -7,7 +7,7 @@ on:
   pull_request:
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
@@ -44,10 +44,28 @@ jobs:
       - name: Check
         run: mise run check
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v4
+      # Pages serves this artifact rather than a gh-pages branch, so the
+      # custom domain lives in the repository's Pages settings.
+      - name: Upload the site
         if: ${{ github.ref == 'refs/heads/master' }}
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build
-          cname: glenn-roberts.com
+          path: ./build
+
+  deploy:
+    if: ${{ github.ref == 'refs/heads/master' }}
+    needs: build
+    runs-on: ubuntu-24.04
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
