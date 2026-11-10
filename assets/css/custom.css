@@ -684,13 +684,71 @@ html.dark #mobile-menu-dialog a[href$="#working-together"]:hover {
   color: rgb(var(--color-neutral-900));
 }
 
-/* The consulting line in the home hero, under the topics. */
-.home-hero__cta {
-  margin: 1.25rem 0 0;
+/* The hero's two actions: the solid email button and a quiet text link. */
+.home-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  margin-top: 0.5rem;
 }
 
-.home-hero__cta p {
+.home-hero__secondary {
+  margin-top: 1rem;
+  font-weight: 600;
+  color: var(--site-brand);
+}
+
+.home-section__lead {
+  margin: 0.75rem 0 0;
+  max-width: 65ch;
+  color: var(--site-ink-soft);
+}
+
+/* How I work: the principles, two to a row on a wide screen. */
+.home-principles {
+  display: grid;
+  gap: 1.5rem 2.5rem;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 853px) {
+  .home-principles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.home-principle p {
+  margin: 0.5rem 0 0;
+  color: var(--site-ink-soft);
+}
+
+.home-principle__title {
   margin: 0;
+  font-family: var(--site-serif);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.home-principle__posts {
+  font-size: 0.9rem;
+}
+
+.home-principle__posts a {
+  color: var(--site-brand);
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+.home-list {
+  margin: 1rem 0 0;
+  padding-inline-start: 1.25rem;
+  max-width: 65ch;
+  list-style: disc;
+}
+
+.home-list li + li {
+  margin-top: 0.5rem;
 }
 
 /* -- Contents --------------------------------------------------------------

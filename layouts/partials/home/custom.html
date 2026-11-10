@@ -1,19 +1,26 @@
 {{/* Home page.
 
-     Top to bottom: a hero that puts the intro on the left and the portrait on
-     the right, a list of recent posts, a shorter list of recent TIL notes, and
-     the projects. Each list row carries a title and a date, the posts a
-     description too, and the whole row is one click target.
+     It leads with the consulting work. Top to bottom: a hero with the intro
+     and the line to email on the left and the portrait on the right, how I
+     work, results, what I take on, then recent posts, recent TIL notes and
+     the projects. Each list row
+     carries a title and a date, the posts a description too, and the whole
+     row is one click target.
 
-     The words come from content/_index.md. Its body is the intro prose, and
-     these front matter fields control the rest:
+     The consulting copy (principles, results, offers, the email user) lives
+     in data/work.toml, which About shares through the `work` shortcode.
+
+     The page never prints a whole email address, so a scraper finds none:
+     the text says "hello@ this domain", and the Email me buttons build the
+     mailto link from the user and the page's own host when clicked. Without
+     JavaScript they go to About. The rest comes from content/_index.md. Its body is the intro
+     prose, and these front matter fields control the rest:
 
        heroTitle        the h1, defaults to the author name
-       heroTopics       one line under the intro naming what the posts cover
-       heroCta          the consulting line under the topics, with a "Work
-                        with me" button to the About page; left out when unset
        heroLinks        the author links to show as icons, by name, in order;
                         defaults to all of them
+       resultsLead      the line above the results list
+       writingLead      the line under the "Recent writing" heading
        recentPostCount  rows in the posts list, defaults to 5
        recentTilCount   rows in the TIL list, defaults to 5
        projects         a list of {name, url, description}, one card each
@@ -30,6 +37,7 @@
 {{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
 {{ $postCount := .Params.recentPostCount | default 5 }}
 {{ $tilCount := .Params.recentTilCount | default 5 }}
+{{ $work := hugo.Data.work }}
 
 <article class="home">
   <section class="home-hero">
@@ -37,16 +45,14 @@
       <h1 class="home-hero__title">
         {{ .Params.heroTitle | default .Site.Params.Author.name | default .Site.Title | emojify }}
       </h1>
-      <div class="home-hero__lead prose dark:prose-invert">{{ .Content }}</div>
-      {{ with .Params.heroTopics }}
-        <p class="home-hero__topics">{{ . | markdownify }}</p>
-      {{ end }}
-      {{ with .Params.heroCta }}
-        <div class="home-hero__cta">
-          <p>{{ . | markdownify }}</p>
-          <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}">Work with me</a>
-        </div>
-      {{ end }}
+      <div class="home-hero__lead prose dark:prose-invert">
+        {{ .Content }}
+        <p>Want help? Email me: {{ $work.emailUser }}@ this domain.</p>
+      </div>
+      <div class="home-hero__actions">
+        <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ $work.emailUser }}">Email me</a>
+        <a class="home-hero__secondary" href="#how-i-work">How I work</a>
+      </div>
       {{ $show := .Params.heroLinks }}
       {{ with .Site.Params.Author.links }}
         <ul class="home-hero__links">
@@ -97,10 +103,53 @@
     {{ end }}
   </section>
 
+  <section class="home-section" id="how-i-work">
+    <h2 class="home-section__title">How I work</h2>
+    <div class="home-principles">
+      {{ range $work.principles }}
+        <div class="home-principle">
+          <h3 class="home-principle__title">{{ .title }}</h3>
+          <p>{{ .text | markdownify }}</p>
+          {{ with .posts }}
+            <p class="home-principle__posts">
+              Read:
+              {{ range $i, $path := . }}
+                {{- with site.GetPage $path -}}
+                  {{- if $i }}, {{ end -}}
+                  <a href="{{ .RelPermalink }}">{{ .LinkTitle }}</a>
+                {{- else -}}
+                  {{- errorf "data/work.toml: no page at %q" $path -}}
+                {{- end -}}
+              {{ end }}
+            </p>
+          {{ end }}
+        </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <section class="home-section">
+    <h2 class="home-section__title">Some of the results</h2>
+    {{ with .Params.resultsLead }}<p class="home-section__lead">{{ . | markdownify }}</p>{{ end }}
+    <ul class="home-list">
+      {{ range $work.results }}<li>{{ .text | markdownify }}</li>{{ end }}
+    </ul>
+  </section>
+
+  <section class="home-section">
+    <h2 class="home-section__title">What I take on</h2>
+    <ul class="home-list">
+      {{ range $work.offers }}<li>{{ .text | markdownify }}</li>{{ end }}
+    </ul>
+    <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ $work.emailUser }}">Email me</a>
+  </section>
+
+
   {{ $posts := where .Site.RegularPages "Type" "posts" }}
   {{ with first $postCount $posts }}
     <section class="home-section">
       <h2 class="home-section__title">Recent writing</h2>
+      {{ with $.Params.writingLead }}<p class="home-section__lead">{{ . | markdownify }}</p>{{ end }}
       <div class="post-list">
         {{ range . }}
           {{ partial "post-row.html" (dict "page" . "showSummary" true) }}
@@ -140,3 +189,12 @@
     </section>
   {{ end }}
 </article>
+
+<script>
+  document.querySelectorAll("a[data-mail-user]").forEach((a) =>
+    a.addEventListener("click", (event) => {
+      event.preventDefault();
+      location.href = "mailto:" + a.dataset.mailUser + "@" + location.hostname.replace(/^www\./, "");
+    }),
+  );
+</script>

@@ -3,16 +3,16 @@
 # tags supplies the line; tags compare in lower case. A page with none of
 # them gets the default line.
 
-default = "I take on fractional and fixed-scope work on web apps, agentic systems and the platforms they run on."
+default = "I take on fractional and project work on web apps, agentic systems and the platforms they run on."
 
 [[topics]]
   tags = ["claude-code", "ai", "agents", "llm", "mcp"]
-  text = "I build agentic systems: the orchestration layer that runs AI agents and flows, in your product or for your team. Fractional or fixed-scope."
+  text = "I build agentic systems: the orchestration layer that runs AI agents and flows, in your product or for your team. Fractional or by the project."
 
 [[topics]]
   tags = ["elixir", "phoenix", "liveview", "ecto", "oban"]
-  text = "Elixir and Phoenix are my first choice for web apps. I take on fractional and fixed-scope work on them, with your team or from a blank page."
+  text = "Elixir and Phoenix are my first choice for web apps. I take on fractional and project work on them, with your team or from a blank page."
 
 [[topics]]
   tags = ["k8s", "kubernetes", "aws", "eks", "pulumi", "devops", "ci"]
-  text = "I build and run the cloud, Kubernetes and CI/CD platforms under web apps. Fractional or fixed-scope."
+  text = "I build and run the cloud, Kubernetes and CI/CD platforms under web apps. Fractional or by the project."

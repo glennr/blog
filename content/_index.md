@@ -1,9 +1,9 @@
 ---
 title: "Glenn Roberts"
-description: "Engineer and builder, shipping products with AI agents in the loop. Writing on Elixir, PostgreSQL, Kubernetes and building with AI."
-heroTitle: "Hi, I'm Glenn."
-heroTopics: "Writing on Elixir, PostgreSQL, Kubernetes and building with AI."
-heroCta: "I take on fractional and fixed-scope work on web apps, agentic systems and the platforms they run on."
+description: "Glenn Roberts builds web apps, agentic systems and the platforms they run on, and takes on fractional and project work. Writing on Elixir, PostgreSQL, Kubernetes and building with AI."
+heroTitle: "I build web apps, agentic systems and the platforms they run on."
+resultsLead: "Some of what I've delivered as an engineer, consultancy founder and SaaS CTO:"
+writingLead: "I write up what I learn, mostly Elixir, PostgreSQL, Kubernetes and building with AI."
 heroLinks: [github, bluesky]
 recentPostCount: 3
 recentTilCount: 5
@@ -23,6 +23,6 @@ projects:
       out of this repository.
 ---
 
-I build products, the systems under them, and the AI tooling that helps me ship
-them. I prefer Elixir and functional languages, or whatever
-is best for the job.
+Hi, I'm Glenn. I've run a web consultancy, worked as an engineer at a SaaS,
+and co-founded an enterprise SaaS where I ran engineering as CTO. Now I take on
+that work for other teams, fractional or by the project.

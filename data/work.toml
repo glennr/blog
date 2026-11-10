@@ -1,0 +1,53 @@
+# The consulting copy shared by the home page (layouts/partials/home/custom.html)
+# and About (the `work` shortcode). Text is Markdown. A principle's `posts` are
+# content paths; each becomes an inline link to that post, by its title.
+
+# The user part of the address the home page asks readers to email, at the
+# site's own domain. The page never prints the whole address.
+emailUser = "hello"
+
+[[principles]]
+  title = "Ship small, and often"
+  text = "A change that reaches production the same day is cheap to get wrong. At the SaaS we shipped about 50 times a month, under SOC 2 change controls, because the tests and the pipeline earned that trust. I still check that they do."
+  posts = ["posts/fast-tests-and-mutation-testing-in-elixir"]
+
+[[principles]]
+  title = "Run what you build"
+  text = "I've owned the incident response, the pentests and the disaster recovery, so I ask the production questions early: how you'll watch it, what it costs and where it breaks."
+  posts = ["posts/monitor-elixir-app-in-k8s-with-promex", "posts/let-your-finance-team-track-aws-spend"]
+
+[[principles]]
+  title = "Let the build enforce it"
+  text = "A convention holds until the first deadline. Where the design matters, I'd rather the compiler or CI say no than a reviewer remember to."
+  posts = ["posts/enforce-phoenix-contexts-with-boundary", "posts/make-the-phoenix-scope-the-first-argument"]
+
+[[principles]]
+  title = "Agents in the loop"
+  text = "I ship with coding agents every day, and I build products that agents can work with. The judgment stays with you and your team."
+  posts = ["posts/mcp-before-rest-when-the-caller-is-an-agent", "posts/let-claude-code-design-in-the-running-app"]
+
+# As CTO of an enterprise SaaS, selling to insurers, banks and utilities in the
+# US and Australia.
+[[results]]
+  text = "Moved the platform from single-tenant AWS accounts to three regional Kubernetes clusters, with 60% fewer cloud resources."
+
+[[results]]
+  text = "Cut build and deploy from about 45 minutes to about 10, while customer environments held 99.9%+ measured availability."
+
+[[results]]
+  text = "Took the company through SOC 2 Type 2, and owned incident response, the annual pentests and disaster recovery."
+
+[[results]]
+  text = "Built the engineering team and a delivery system that shipped to production about 50 times a month under SOC 2 change controls."
+
+[[offers]]
+  text = "Building a product from an idea to production, with the design, engineering and practices that let a team ship quickly and keep shipping."
+
+[[offers]]
+  text = "Working on an existing web app with your team. (Elixir and Phoenix are my first choice, not my only one.)"
+
+[[offers]]
+  text = "Agentic systems: the orchestration layer that runs AI agents and flows, in your product or for your team."
+
+[[offers]]
+  text = "The cloud, Kubernetes and CI/CD platform under all of it."

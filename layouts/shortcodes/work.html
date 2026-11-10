@@ -1,0 +1,8 @@
+{{/* A list from data/work.toml, so About and the home page say the same thing.
+     Usage: {{< work results >}} or {{< work offers >}}. */}}
+{{ $name := .Get 0 }}
+{{ $items := index hugo.Data.work $name }}
+{{ if not $items }}{{ errorf "work shortcode: no list %q in data/work.toml (%s)" $name .Position }}{{ end }}
+<ul>
+  {{ range $items }}<li>{{ .text | markdownify }}</li>{{ end }}
+</ul>
