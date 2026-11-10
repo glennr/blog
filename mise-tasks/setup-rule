@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#MISE description="Install the private styles/Security/Infra.yml from the main checkout"
+#
+# The rule holds the real host, network and device names, so it is gitignored
+# and a new worktree starts without it. The main checkout holds the one real
+# copy; every worktree copies it from there. The committed example is not a
+# stand-in: it has the structural patterns and none of the names, so a
+# worktree seeded from it lints as if nothing were private.
+set -euo pipefail
+
+rule=styles/Security/Infra.yml
+example=styles/Security/Infra.yml.example
+
+if [ -f "$rule" ] && ! cmp -s "$rule" "$example"; then
+  exit 0
+fi
+
+main=$(git worktree list --porcelain | sed -n '1s/^worktree //p')
+source="$main/$rule"
+
+if [ ! -f "$source" ] || cmp -s "$source" "$example"; then
+  cat >&2 <<MSG
+$rule is missing or is only the example, and the main checkout has no real
+one to copy: $source
+
+It is private, so no commit carries it. Create it in the main checkout from
+$example, add the real host, network and device names, run
+\`mise run push-secret\`, then re-run \`mise run setup\` here.
+MSG
+  exit 1
+fi
+
+cp "$source" "$rule"
+echo "installed $rule from $source"

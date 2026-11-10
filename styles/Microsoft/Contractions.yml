@@ -1,6 +1,6 @@
 extends: substitution
 message: "Use '%s' instead of '%s'."
-link: https://docs.microsoft.com/en-us/style-guide/word-choice/use-contractions
+link: https://learn.microsoft.com/en-us/style-guide/word-choice/use-contractions
 level: error
 ignorecase: true
 action:
@@ -22,7 +22,7 @@ swap:
 
   should not: shouldn't
 
-  'that is(?!\.)': that's
+  "that is(?![.,])": that's
   'that''s(?=\.)': that is
 
   'they are(?!\.)': they're

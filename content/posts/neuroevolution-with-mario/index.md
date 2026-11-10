@@ -2,6 +2,7 @@
 title: "NeuroEvolution with MarIO"
 description: "How to get MarIO up and running on OSX."
 date: 2015-07-08
+format: guide
 categories:
   - ml
 tags:
@@ -46,7 +47,7 @@ To evolve your own ANN with MarI/O that can play Super Mario World, here's how t
 
 ### Initial State Setup
 
-We need an initial/fresh game state that gets loaded for each genome. In other words, we need to save the ROM state at the start of the desired level we want MarI/O to learn.
+We need an initial/fresh game state that gets loaded for each genome: the ROM state saved at the start of the level we want MarI/O to learn.
 
 1. Load the Super Mario World (USA).sfc ROM.
 
@@ -77,7 +78,7 @@ MarI/O saves the genomes of a given generation in a .pool file. The current gene
 If your computer melts, and you need to restart MarI/O;
 
 1. Delete temp.pool
-1. Copy the desired generation .pool file to DP1.state.pool
+1. Copy the generation .pool file you want to DP1.state.pool
 1. In the MarI/O 'Fitness' window, load the DP1.state.pool
 1. MarI/O should resume from the latest complete generation.
 
@@ -114,8 +115,6 @@ A similar error - try the solution above, and failing that;
 ### 'Parameter name: source' error
 
       "System.ArgumentNullException: Value cannot be null. Parameter name: source"
-
-Are you running MarI/O in a VM? Check out my notes on [running MarI/O on OSX](/posts/tech/2015/07/08/mario-on-osx.html)
 
 ## Resources
 

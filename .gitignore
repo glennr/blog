@@ -8,6 +8,7 @@ node_modules/
 /resources
 /output
 /public
+/build
 /themes
 hugo_stats.json
 
@@ -24,3 +25,11 @@ hugo.linux
 
 .vscode
 
+/.worktrees
+
+# htmltest link cache
+/tmp/.htmltest
+
+# The security rule names this machine. Its example is committed; the real one
+# never is. `mise run setup` copies it into a worktree from the main checkout.
+/styles/Security/Infra.yml

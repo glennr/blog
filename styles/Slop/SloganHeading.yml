@@ -1,0 +1,13 @@
+# A heading that is a catchphrase rather than the method. Glenn's examples:
+# "Announce ids, not rows", "One writer, one feed", "Thin events are a
+# choice". House.HeadingLength keeps headings short; this keeps them plain.
+extends: existence
+message: "Slogan heading: '%s'. Name the method the section shows."
+level: error
+scope: heading
+ignorecase: false
+nonword: true
+tokens:
+  - '^[^,]+,\s+not\s+[^,]+$'
+  - '^(?:One|No)\s+[\w-]+,\s+(?:one|no|then)\s+[\w\s-]+$'
+  - '\b(?:is|are)\s+a\s+choice$'

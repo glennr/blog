@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="prettier over the css, yaml and json, read-only"
+#MISE sources=[".prettierignore", ".htmltest.yml", ".markdownlint-cli2.jsonc", "*.json", "*.yaml", "*.yml", "{assets,config,i18n,.github}/**/*.{css,yaml,yml,json}", "mise-tasks/lint-prettier"]
+#MISE outputs={ auto = true }
+#
+# The sources are the set of files prettier owns here. `mise-tasks/fix`
+# narrows its arguments to the same set; keep the two together.
+set -euo pipefail
+
+prettier --check .

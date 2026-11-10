@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+#MISE description="Apply prettier and taplo, to the whole tree or to the paths given"
+#MISE alias="format-fix"
+#USAGE arg "[files]" var=#true help="Paths to format. None means the whole tree."
+#
+# The only task that writes to the tree. `lint-format` is the same run,
+# read-only.
+#
+# `fix` and `format-fix` are the same task under two names. `fix` is the one
+# an editor or a commit hook calls, because it is the name every project of
+# mine uses for "repair what a formatter can repair"; `format-fix` is what this
+# one was called first and the docs still say.
+#
+# It is written to be safe to run unattended, before `check`, so that a
+# formatting difference is repaired rather than reported. That rests on prettier
+# and taplo being idempotent: a tool here that rewrote differently on a second
+# pass could not be run this way.
+#
+# Paths narrow it to a list, which is what `pre-commit` passes so that it
+# restages exactly what it rewrote and nothing else. With none, it is the
+# whole tree. The intersection with the set `lint-format` reads is the
+# definition of what this repository can format rather than a silent skip: a
+# staged post is not in it because prose is markdownlint's and Vale's, and
+# `.prettierignore` excludes `*.md`. The case statement below is that set;
+# the sources of `mise-tasks/lint-prettier` and `mise-tasks/lint-taplo` are
+# the same list as globs. Keep the three together.
+#
+# No stamp: prettier is 216ms over the tree, it is idempotent, and a stamp
+# would be a second copy of the source list for the sake of it.
+#
+# Split by tool: prettier has no TOML parser and errors on a .toml handed to
+# it by name. A path with a space arrives intact: mise hands the arguments
+# over shell-escaped in one variable, and `eval` reads them back as an array.
+set -euo pipefail
+
+if [ -z "${usage_files:-}" ]; then
+  prettier --write .
+  taplo fmt
+  exit 0
+fi
+
+eval "files=($usage_files)"
+rest=()
+toml=()
+for f in "${files[@]}"; do
+  case "$f" in
+    # A source of lint-prettier, since it changes what is checked, but not a
+    # file prettier can parse.
+    .prettierignore) continue ;;
+    .taplo.toml | .htmltest.yml | .markdownlint-cli2.jsonc) ;;
+    assets/* | config/* | i18n/* | .github/*)
+      case "$f" in
+        *.css | *.yaml | *.yml | *.json | *.toml) ;;
+        *) continue ;;
+      esac
+      ;;
+    */*) continue ;;
+    *.json | *.yaml | *.yml) ;;
+    *) continue ;;
+  esac
+  case "$f" in
+    *.toml) toml+=("$f") ;;
+    *) rest+=("$f") ;;
+  esac
+done
+
+[ "${#rest[@]}" -eq 0 ] || prettier --write "${rest[@]}"
+[ "${#toml[@]}" -eq 0 ] || taplo fmt "${toml[@]}"

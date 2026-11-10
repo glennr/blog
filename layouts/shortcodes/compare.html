@@ -1,0 +1,18 @@
+{{- /* Two things side by side: before and after, option A and option B.
+  Holds two side shortcodes. Under 640px they stack.
+
+    {{< compare >}}
+    {{< side title="Before" verdict="bad" >}}
+    ```elixir
+    ...
+    ```
+    {{< /side >}}
+    {{< side title="After" verdict="good" >}}
+    ...
+    {{< /side >}}
+    {{< /compare >}}
+
+  Styles: .compare in custom.css. */ -}}
+<div class="compare">
+  {{ .Inner }}
+</div>

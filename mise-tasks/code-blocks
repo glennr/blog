@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#MISE description="No code block in a draft runs past 30 lines"
+#MISE sources=["content/**", "mise-tasks/code-blocks"]
+#MISE outputs={ auto = true }
+#
+# Signal over detail: a block that long is a module's setup or a whole
+# script, and the reader loses the point in it. Glenn: "too much code not
+# enough signal". Show the lines the point rests on and link the rest. Only
+# posts marked `draft: true` are checked, because published posts are never
+# reworded. A mermaid diagram is not code.
+set -euo pipefail
+
+max=30
+mapfile -d '' -t files < <(find content -name '*.md' ! -name '_index.md' -print0 | sort -z)
+[ "${#files[@]}" -gt 0 ] || { echo "no content files under content/" >&2; exit 1; }
+
+hits=$(awk -v max="$max" '
+  FNR == 1 { fm = ($0 == "---"); draft = 0; fence = 0; next }
+  fm && $0 == "---" { fm = 0; next }
+  fm { if ($0 ~ /^draft: *true *$/) draft = 1; next }
+  !draft { next }
+  /^ *```/ {
+    if (fence) { if (!mermaid && n > max) printf "%s:%d: code block of %d lines, more than %d\n", FILENAME, start, n, max; fence = 0 }
+    else { fence = 1; n = 0; start = FNR; mermaid = ($0 ~ /mermaid/) }
+    next
+  }
+  fence { n++ }' "${files[@]}")
+[ -z "$hits" ] || { printf '%s\n' "$hits"; echo "Show the lines the point rests on, and link the rest."; exit 1; }
+echo "No draft carries a code block past $max lines."

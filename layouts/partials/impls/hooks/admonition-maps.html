@@ -1,0 +1,41 @@
+{{- /* Override of the theme's admonition maps.
+
+  The theme already renders GitHub alerts, `> [!NOTE]` and the rest, through
+  its own render-blockquote.html. This file only changes one entry: the theme
+  folds `[!TLDR]` into `abstract`, which titles it "Abstract" in cyan. Here it
+  is its own type, so it gets the "TL;DR" title from i18n/en.yaml and the
+  site's violet from assets/css/custom.css. Every other entry is the theme's.
+*/ -}}
+{{- return dict
+  "typeMap" (dict
+    "attention" "warning"
+    "check" "success"
+    "cite" "quote"
+    "done" "success"
+    "error" "danger"
+    "fail" "failure"
+    "faq" "question"
+    "hint" "tip"
+    "help" "question"
+    "missing" "failure"
+    "summary" "abstract"
+  )
+  "iconMap" (dict
+    "abstract" "file-lines"
+    "bug" "bug"
+    "caution" "fire"
+    "danger" "fire"
+    "example" "list-ol"
+    "failure" "xmark"
+    "important" "star"
+    "info" "circle-info"
+    "note" "circle-info"
+    "success" "check"
+    "todo" "list-check"
+    "tip" "lightbulb"
+    "tldr" "mug-hot"
+    "question" "circle-question"
+    "quote" "quote-left"
+    "warning" "triangle-exclamation"
+  )
+-}}

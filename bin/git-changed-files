@@ -1,0 +1,45 @@
+#!/usr/bin/env bash
+# Print the files that differ from the last commit, NUL-separated.
+#
+#   --changed   tracked files modified against HEAD, plus untracked files that
+#               .gitignore does not cover. Everything the working tree has that
+#               the last commit did not.
+#   --staged    what is in the index.
+#
+# Anything that acts on "what changed" needs the same two git invocations, and
+# a list derived three slightly different ways is three slightly different
+# answers. This is the one implementation.
+#
+# NUL-separated because a path may contain a space. Read it with
+# `mapfile -d ''` or `xargs -0`.
+set -euo pipefail
+
+mode="${1:-}"
+case "$mode" in
+  --changed | --staged) ;;
+  *)
+    echo "usage: git-changed-files --changed|--staged" >&2
+    exit 1
+    ;;
+esac
+
+# Outside a repository there is nothing to compare against, so the answer is an
+# empty list rather than an error.
+git rev-parse --show-toplevel >/dev/null 2>&1 || exit 0
+cd "$(git rev-parse --show-toplevel)"
+
+if [ "$mode" = "--staged" ]; then
+  git diff --cached --name-only -z --diff-filter=ACMR
+  exit 0
+fi
+
+# Before the first commit there is no HEAD to diff against, and `git diff` alone
+# reports nothing for a file that is staged but never committed. There, the
+# index is the whole of the tracked set.
+if git rev-parse --verify --quiet HEAD >/dev/null; then
+  git diff --name-only -z --diff-filter=ACMR HEAD
+else
+  git diff --cached --name-only -z --diff-filter=ACMR
+fi
+
+git ls-files --others --exclude-standard -z

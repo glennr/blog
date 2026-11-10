@@ -2,6 +2,7 @@
 title: "Let Your Finance Team Track AWS Spend"
 description: "Let Your Finance Team Track AWS Spend"
 date: 2022-11-16T22:02:59+10:00
+format: guide
 categories:
   - DevOps
 tags:
@@ -10,7 +11,7 @@ tags:
   - IaC
 ---
 
-Need to delegate access to your AWS billing dashboard to folks in your finance team? Here's how you can define the necessary policies using Pulumi for your Infrastructure As Code (IaC).
+Need to delegate access to your AWS billing dashboard to folks in your finance team? Here's how you can define read-only billing policies using Pulumi for your Infrastructure As Code (IaC).
 
 First, create an [IAM Group](https://www.pulumi.com/registry/packages/aws/api-docs/iam/group/):
 
@@ -97,7 +98,7 @@ function billingReadOnlyPolicy() {
 }
 ```
 
-Attach the desired policy to the Finance group you created.
+Attach the billing policy to the Finance group you created.
 
 ```typescript
 new aws.iam.GroupPolicyAttachment("attach-full-billing", {

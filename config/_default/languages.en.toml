@@ -1,58 +1,28 @@
-languageCode = "en"
-languageName = "English"
+locale = "en"
+label = "English"
 weight = 1
-languageDirection = "ltr"
+direction = "ltr"
 
 title = "Glenn Roberts"
-# Leave description - and see extend-page-head partial for how
-# the meta tag is set from article frontmatter, or summary
-# description = "A blog about Elixir and full-stack web development."
+# Leave description unset. The seo.metaDescriptionOrder parameter in
+# params.toml decides where the meta description comes from.
 
 [params]
+  displayName = "EN"
+  isoCode = "en"
+  rtl = false
   dateFormat = "2 January 2006"
-  copyright = "© 2022 Glenn Roberts - All rights reserved."
+  # The theme replaces "{ year }" with the year of the build.
+  copyright = "© { year } Glenn Roberts - All rights reserved."
 
 [params.author]
   name = "Glenn Roberts"
   image = "images/glenn.jpg"
-  # headline = "I'm only human"
-  bio = "Elixir, Full-stack, DevSecOps, Gluer of Things."
+  bio = "Engineer and builder. Shipping products with AI agents in the loop."
   links = [
-  #  { email = "mailto:hello@glenn-roberts.com" },
-  #   { link = "https://link-to-some-website.com/" },
-  #   { amazon = "https://www.amazon.com/hz/wishlist/ls/wishlist-id" },
-  #   { apple = "https://www.apple.com" },
-  #   { blogger = "https://username.blogspot.com/" },
-  #   { codepen = "https://codepen.io/username" },
-  #   { dev = "https://dev.to/username" },
-  #   { discord = "https://discord.gg/invitecode" },
-  #   { dribbble = "https://dribbble.com/username" },
-  #   { facebook = "https://facebook.com/username" },
-  #   { flickr = "https://www.flickr.com/photos/username/" },
-  #   { foursquare = "https://foursquare.com/username" },
     { github = "https://github.com/glennr" },
     { gitlab = "https://gitlab.com/glennr" },
-  #   { google = "https://www.google.com/" },
-  #   { instagram = "https://instagram.com/username" },
     { keybase = "https://keybase.io/glennrob" },
-  #   { kickstarter = "https://www.kickstarter.com/profile/username" },
-  #   { lastfm = "https://lastfm.com/user/username" },
     { linkedin = "https://linkedin.com/in/glennrob" },
-  #   { mastodon = "https://mastodon.instance/@username" },
-  #   { medium = "https://medium.com/username" },
-  #   { microsoft = "https://www.microsoft.com/" },
-  #   { patreon = "https://www.patreon.com/username" },
-  #   { pinterest = "https://pinterest.com/username" },
-  #   { reddit = "https://reddit.com/user/username" },
-  #   { slack = "https://workspace.url/team/userid" },
-  #   { snapchat = "https://snapchat.com/add/username" },
-  #   { soundcloud = "https://soundcloud.com/username" },
-  #   { steam = "https://steamcommunity.com/profiles/userid" },
-  #   { telegram = "https://t.me/username" },
-  #   { tiktok = "https://tiktok.com/@username" },
-  #   { tumblr = "https://username.tumblr.com" },
-  #   { twitch = "https://twitch.tv/username" },
     { bluesky = "https://bsky.app/profile/glennrob.bsky.social" },
-  #   { whatsapp = "https://wa.me/phone-number" },
-  #   { youtube = "https://youtube.com/username" },
   ]

@@ -1,0 +1,14 @@
+# Five words is the maximum for a heading.
+#
+# The house rule is that a heading names the method. A heading that runs long
+# is a sentence, and a sentence in a heading is the section's first paragraph
+# in the wrong place.
+#
+# The token counts a contraction such as "can't" as one word, so the
+# apostrophe (straight or curly) is part of the word character class.
+extends: occurrence
+message: "Headings are five words or fewer. Name the method."
+level: error
+scope: heading
+max: 5
+token: '\b[\w''’-]+\b'

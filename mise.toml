@@ -1,0 +1,146 @@
+# The tasks this repository runs, in two places:
+#
+#   - Here, when a task is one command, or only a list of tasks to run: the
+#     tool and nothing to decide.
+#   - Under mise-tasks/, when a task has logic. Each is an executable script
+#     with its own `#MISE` header carrying the description, the sources, the
+#     outputs and the dependencies, so the check and the rule for when it
+#     runs are one file rather than a target here wrapping a script
+#     elsewhere. `mise tasks` lists both kinds together.
+#
+# A task here never carries a second command. Two commands that do not need
+# each other are two tasks, and mise runs them in parallel; two that do are
+# a file task. Nothing here prints on its own behalf either: mise prints the
+# command it runs, `sources up-to-date, skipping` for a task it does not, and
+# `Finished in` at the end, so a warm run still reads as a suite that ran.
+#
+# `mise run check` runs on every commit and again in CI, and most of those
+# runs change nothing it reads. Each check names its `sources`, and mise
+# skips it when every output is newer than every source and the set of files
+# the sources match has not changed. A check that produces no file declares
+# `outputs = { auto = true }`: mise keeps a stamp for it in its own state
+# directory, per checkout, and writes it only when the task succeeds. The
+# checkout carries no stamps. `mise run bench` prints the numbers.
+#
+# Rules for the `sources` lists:
+#
+#   - `dir/**`, never a fixed-depth glob. A missed input is a change that
+#     never invalidates the stamp. A deletion is caught too: mise records the
+#     matched set per task, and a file leaving it is a change.
+#   - The script a check runs is one of its sources. An inline task here is
+#     re-run once after its definition changes, for the same reason.
+#
+# `mise run --force check` is the cold run: it ignores every stamp. Verify a
+# change to a `sources` list with it, and by touching one watched file and
+# confirming the task it belongs to re-runs.
+#
+# mise renders every inline `run` string here as a template, so one cannot
+# contain `{{`, `{%` or `{#`. Anything that needs them is a file task.
+
+# core.hooksPath is per clone, so a fresh checkout commits without the checks
+# until this runs. The two halves do not need each other.
+[tasks.setup]
+description = "Install the private security rule and point git at .githooks"
+depends = ["setup-rule", "setup-hooks"]
+
+[tasks.setup-hooks]
+description = "Point git at the committed hooks in .githooks"
+run = "git config core.hooksPath .githooks"
+
+# The local development environment, in the foreground. ^C stops the
+# containers; ^C twice kills them.
+[tasks.dcup]
+description = "Run the site under docker compose, in the foreground"
+raw = true
+run = "docker compose up"
+
+# Previews the site with drafts on http://localhost:1313, in the foreground.
+#
+# `--renderToMemory`, because Hugo's server otherwise writes public/ on every
+# change, with drafts in it. The checks no longer read public/ (see `build`),
+# but nothing else should find a draft site on disk either.
+[tasks.serve]
+description = "Preview the site with drafts on http://localhost:1313"
+raw = true
+run = "hugo server -D --navigateToChanged --renderToMemory"
+
+# Every check that only reads. Nothing under here writes to the working tree,
+# and nothing here builds: htmltest needs build/, so it stays in `test`.
+# `fix` is the only task that writes. They run in parallel; none reads what
+# another writes.
+[tasks.lint]
+description = "Every check that only reads"
+depends = [
+  "lint-prose",
+  "test-vale",
+  "lint-md",
+  "lint-format",
+  "front-matter",
+  "dates",
+  "words",
+  "agent-text",
+  "fixme",
+  "sections",
+  "client-numbers",
+  "client-opener",
+  "client-tooling",
+  "code-blocks",
+]
+
+# Formatting for everything that is not prose, read-only, one task per tool
+# because neither needs the other. Hugo's layouts are excluded: prettier's
+# HTML parser cannot read a Go template expression inside an attribute and
+# errors on the file.
+[tasks.lint-format]
+description = "prettier over the css and yaml, taplo over the toml, read-only"
+depends = ["lint-prettier", "lint-taplo"]
+
+# Everything Vale has to say, as advice. It never fails.
+[tasks.lint-advice]
+description = "Everything Vale has to say about content/ and README.md, as advice"
+run = "vale content README.md"
+
+# The same build that CI deploys, into build/ rather than Hugo's default
+# public/. Any `hugo server` started without `--renderToMemory` writes public/
+# with drafts in it, newer than every source, so a build there was skipped as
+# current and htmltest failed on a draft's links. Nothing but this task writes
+# build/.
+#
+# `--cleanDestinationDir` because Hugo otherwise leaves the output of a
+# deleted post in build/, where the deploy step publishes it and htmltest
+# checks links on a page that no longer exists.
+# CI never saw it, because a runner starts from an empty checkout.
+#
+# This one declares a real output rather than an auto stamp, because it
+# produces a real file. That matters for the two checks that read build/
+# rather than the source. With a stamp, `rm -rf build` left the stamp
+# behind, the build was believed current, and htmltest and the anchor check
+# ran against a directory that was not there.
+[tasks.build]
+description = "The production build, into build/"
+sources = [
+  "content/**",
+  "go.mod",
+  "go.sum",
+  "layouts/**",
+  "assets/**",
+  "config/**",
+  "i18n/**",
+  "static/**",
+]
+outputs = ["build/index.html"]
+run = "hugo --minify -e production --cleanDestinationDir --destination build"
+
+# The old Docker path. It needs the running account in the docker group.
+[tasks.test-docker]
+description = "htmltest over build/, through Docker"
+run = 'docker run --network host -v "$PWD:/test" --rm wjdp/htmltest ./build -s -c .htmltest.yml'
+
+# Everything the build server runs, plus the link check. Every one of these is
+# a rule that used to live in a skill's checklist and is now a command.
+#
+# The order is the dependency graph and nothing else: the linters run beside
+# the build, and `anchors` and `test` wait for it because they read build/.
+[tasks.check]
+description = "Everything CI runs before it deploys: lint, build, anchors, test"
+depends = ["lint", "build", "anchors", "test"]

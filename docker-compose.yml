@@ -1,7 +1,7 @@
 # Containers we are going to run
 services:
   server:
-    image: hugomods/hugo:reg-exts-0.145.0
+    image: hugomods/hugo:reg-exts-0.165.0
     command: server -D
     volumes:
       - ".:/src"

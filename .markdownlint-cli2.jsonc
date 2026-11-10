@@ -1,0 +1,32 @@
+{
+  // Markdown structure for the posts and the README. Wording is Vale's job:
+  // nothing in here has an opinion about a sentence.
+  "globs": ["content/**/*.md", "README.md"],
+
+  // Hugo templates, not markdown. The front matter holds `{{ .Date }}`.
+  "ignores": [
+    "archetypes/**",
+    "public/**",
+    "build/**",
+    "themes/**",
+    "node_modules/**",
+  ],
+
+  "config": {
+    // A Makefile recipe is a tab by definition, so a fenced make block keeps
+    // its tabs. Prose still may not carry one.
+    "MD010": { "code_blocks": false },
+    "default": true,
+
+    // Line length is the writer's. The newer posts hard-wrap at about 76 and
+    // the older ones do not, and pasted terminal output wraps where it wraps.
+    "MD013": false,
+
+    // Hugo shortcodes and the theme's raw HTML are deliberate.
+    "MD033": false,
+
+    // A callout (`> [!TLDR]`, `> [!CAUTION]`) may sit right after another;
+    // Hugo renders each as its own block, so the blank line between is fine.
+    "MD028": false,
+  },
+}

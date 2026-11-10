@@ -1,0 +1,15 @@
+# Overrides for single theme strings. Hugo merges this file over the theme's
+# own i18n/en.yaml, so only the keys below change.
+
+list:
+  # The theme default is "There are no articles to list here yet."
+  no_articles: "Nothing here yet."
+
+admonition:
+  # `> [!TLDR]` is its own admonition type here. See
+  # layouts/partials/impls/hooks/admonition-maps.html.
+  tldr: "TL;DR"
+
+author:
+  # The card sits under the article, so it reads as a sign-off.
+  byline_title: "Written by"

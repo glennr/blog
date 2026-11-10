@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+# Count the prose words in content files, and how many sit in agent text.
+#
+#   bin/body-words <file>...
+#
+# Prints one tab-separated line per file:
+#
+#   file  format  draft  words  agent_words  markers  unclosed
+#
+# `words` is the body's prose: front matter, fenced code blocks, HTML
+# comments, shortcodes and link targets are not words, and a token counts
+# only when it has a letter or a digit in it. A heading is prose. That is
+# the count a reader feels and the one the TIL rule means by "under 150
+# words of prose, code blocks and output do not count".
+#
+# `agent_words` is the part of `words` between `<!-- agent -->` and
+# `<!-- /agent -->`. Post source must carry no such markers; `agent-text`
+# fails on any. `markers` counts both kinds, and `unclosed` is 1 when an
+# opening marker has no close.
+#
+# `words` and `agent-text` both read this, so the two gates count the same
+# words. One definition, one place.
+set -euo pipefail
+
+[ "$#" -gt 0 ] || { echo "usage: bin/body-words <file>..." >&2; exit 1; }
+
+awk '
+  function count(text,   n, i, toks, c) {
+    # Link and image targets are not words; their text is.
+    gsub(/!\[[^]]*\]\([^)]*\)/, " ", text)
+    gsub(/\]\([^)]*\)/, "]", text)
+    gsub(/\{\{[<%][^}]*[>%]\}\}/, " ", text)
+    gsub(/<[^>]*>/, " ", text)
+    n = split(text, toks, /[ \t]+/)
+    c = 0
+    for (i = 1; i <= n; i++) if (toks[i] ~ /[[:alnum:]]/) c++
+    return c
+  }
+
+  # One segment of prose, counted against whichever side of a marker it is on.
+  function add(seg,   c) {
+    c = count(seg)
+    words += c
+    if (inagent) agent += c
+  }
+
+  function report() {
+    if (!started) return
+    printf "%s\t%s\t%s\t%d\t%d\t%d\t%d\n", fname, (format == "" ? "-" : format),
+      (draft == "" ? "-" : draft), words, agent, markers, (inagent ? 1 : 0)
+  }
+
+  FNR == 1 {
+    report()
+    started = 1; fname = FILENAME; format = ""; draft = ""
+    words = 0; agent = 0; markers = 0; inagent = 0; fence = 0; comment = 0
+    fm = ($0 == "---")
+    if (fm) next
+  }
+
+  fm {
+    if ($0 == "---") { fm = 0; next }
+    if (match($0, /^format: */)) { format = substr($0, RLENGTH + 1); gsub(/["'"'"' \t]/, "", format) }
+    if (match($0, /^draft: */))  { draft = substr($0, RLENGTH + 1);  gsub(/["'"'"' \t]/, "", draft) }
+    next
+  }
+
+  /^[ \t]*(```|~~~)/ { fence = !fence; next }
+  fence { next }
+
+  # A note to the writer is not prose: a `FIXME` line, and an alert label
+  # such as `> [!CAUTION]` on a line of its own. `fixme` keeps notes out of
+  # a published post.
+  /FIXME/ { next }
+  /^[ \t]*>[ \t]*\[![A-Z]+\][ \t]*$/ { next }
+
+  {
+    line = $0
+    while (line != "") {
+      if (comment) {
+        # Inside a multi-line comment: skip to its end.
+        if (!match(line, /-->/)) { line = ""; break }
+        line = substr(line, RSTART + RLENGTH); comment = 0
+        continue
+      }
+      if (!match(line, /<!--/)) { add(line); break }
+      add(substr(line, 1, RSTART - 1))
+      line = substr(line, RSTART)
+      if (match(line, /^<!--[ \t]*agent[ \t]*-->/))  { markers++; inagent = 1; line = substr(line, RLENGTH + 1); continue }
+      if (match(line, /^<!--[ \t]*\/agent[ \t]*-->/)) { markers++; inagent = 0; line = substr(line, RLENGTH + 1); continue }
+      # Any other comment is a note to the writer, not prose.
+      if (match(line, /-->/)) { line = substr(line, RSTART + RLENGTH); continue }
+      comment = 1; line = ""
+    }
+  }
+
+  END { report() }
+' "$@"

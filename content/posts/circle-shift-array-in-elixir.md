@@ -2,6 +2,7 @@
 title: "Circle Shift an Array in Elixir"
 description: "Circle Shift an Array in Elixir"
 date: 2020-09-27
+format: til
 categories:
   - Algorithms
 tags:

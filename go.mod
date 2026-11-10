@@ -2,4 +2,5 @@ module github.com/glennr/blog
 
 go 1.24
 
-require github.com/jpanther/congo/v2 v2.11.0
+
+require github.com/nunocoracao/blowfish/v3 v3.6.0 // indirect

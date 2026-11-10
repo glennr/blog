@@ -1,0 +1,46 @@
+/* Riso scheme: the colours of the post illustrations, which are printed in
+   teal, pink and yellow on cream paper.
+
+   - neutral: warm paper greys, so the page is the illustrations' cream and a
+     hero no longer sits on white as a pasted-in rectangle
+   - primary: the teal ink, for links, the TL;DR and diagrams
+   - secondary: the riso pink, for inline code
+
+   Contrast against the page: primary-600 on neutral is about 5.6:1,
+   primary-400 on neutral-800 (dark) about 5.3:1. */
+:root {
+  --color-neutral: 252, 249, 243;
+  /* Paper */
+  --color-neutral-50: 247, 243, 235;
+  --color-neutral-100: 239, 234, 224;
+  --color-neutral-200: 224, 217, 204;
+  --color-neutral-300: 204, 195, 180;
+  --color-neutral-400: 163, 153, 138;
+  --color-neutral-500: 120, 111, 98;
+  --color-neutral-600: 89, 81, 71;
+  --color-neutral-700: 66, 60, 52;
+  --color-neutral-800: 38, 35, 31;
+  --color-neutral-900: 26, 23, 21;
+  /* Teal ink */
+  --color-primary-50: 236, 248, 247;
+  --color-primary-100: 205, 238, 236;
+  --color-primary-200: 157, 221, 218;
+  --color-primary-300: 98, 196, 194;
+  --color-primary-400: 45, 166, 168;
+  --color-primary-500: 16, 135, 140;
+  --color-primary-600: 10, 111, 117;
+  --color-primary-700: 12, 89, 95;
+  --color-primary-800: 14, 71, 76;
+  --color-primary-900: 15, 58, 62;
+  /* Riso pink */
+  --color-secondary-50: 253, 240, 245;
+  --color-secondary-100: 251, 224, 235;
+  --color-secondary-200: 248, 192, 214;
+  --color-secondary-300: 243, 146, 184;
+  --color-secondary-400: 236, 98, 150;
+  --color-secondary-500: 222, 58, 118;
+  --color-secondary-600: 196, 36, 94;
+  --color-secondary-700: 164, 27, 77;
+  --color-secondary-800: 136, 26, 66;
+  --color-secondary-900: 114, 26, 58;
+}

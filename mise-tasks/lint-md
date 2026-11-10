@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#MISE description="markdownlint over the posts and README.md"
+#MISE sources=["README.md", ".markdownlint-cli2.jsonc", "content/**", "mise-tasks/lint-md"]
+#MISE outputs={ auto = true }
+#
+# Markdown structure: fence languages, list prefixes, trailing newlines. Prose
+# is Vale's job, so the line-length rule is off and the wording rules are not
+# here.
+set -euo pipefail
+
+markdownlint-cli2

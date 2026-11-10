@@ -1,0 +1,47 @@
+#!/usr/bin/env bash
+#MISE description="Time the checks, cold and warm, against the one-second budget"
+#
+# Times the checks, so "is this cheap enough to run on every commit" is a
+# number anyone can re-check rather than a claim in a comment. The cold run
+# is a forced one, which ignores every stamp and leaves the tree warm.
+#
+# The number that decides it is not the cold run, it is the warm one: most
+# runs change nothing the checks read. The budget is one second, for both.
+set -euo pipefail
+
+ms() {
+  local label=$1; shift
+  local start end
+  start=$(date +%s%N)
+  "$@" >/dev/null 2>&1 || true
+  end=$(date +%s%N)
+  printf '| `%s` | %d ms |\n' "$label" $(( (end - start) / 1000000 ))
+}
+
+echo "Each checker on its own, without mise (from the checkout root):"
+echo
+echo "| | |"
+echo "| :-- | :-- |"
+ms 'vale' vale --filter='.Name matches "^(Slop|Security|House)"' --output=line content
+ms 'markdownlint-cli2' markdownlint-cli2
+ms 'prettier --check .' prettier --check .
+ms 'taplo fmt --check' taplo fmt --check
+ms 'mise-tasks/front-matter' ./mise-tasks/front-matter
+ms 'mise-tasks/dates' ./mise-tasks/dates
+ms 'mise-tasks/words' ./mise-tasks/words
+ms 'mise-tasks/agent-text' ./mise-tasks/agent-text
+ms 'hugo --minify' hugo --minify -e production
+ms 'htmltest' htmltest ./build -s -c .htmltest.yml
+
+echo
+echo "Through mise, which is how a commit and CI run it:"
+echo
+echo "| | |"
+echo "| :-- | :-- |"
+ms 'mise run check, cold' mise run --force check
+ms 'mise run check, warm' mise run check
+ms 'mise run lint, warm' mise run lint
+
+echo
+echo "Content: $(find content -name '*.md' | wc -l) files. Range: \
+$(git rev-list --count "$(git merge-base master HEAD 2>/dev/null || git rev-list --max-parents=0 HEAD)"..HEAD) commits."

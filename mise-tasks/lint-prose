@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+#MISE description="Vale over content/ and README.md: the Slop, Security and House styles"
+#MISE depends=["security-vocab"]
+#MISE sources=["content/**", ".vale.ini", "styles/**", "README.md", "mise-tasks/lint-prose"]
+#MISE outputs={ auto = true }
+#
+# Vale exits 0 on a warning, so this fails on output as well as exit code.
+#
+# README.md is in scope as well as content/. The house rules are about what
+# this repository publishes, and the em dash ban does not stop at content/.
+# The archetypes are not: their front matter holds `{{ .Date }}`, and Vale's
+# YAML parser reports an E201 on it.
+set -euo pipefail
+
+status=0
+alerts=$(vale --filter='.Name matches "^(Slop|Security|House)[.]|^proselint[.]Cursing$"' \
+  --output=line content README.md) || status=$?
+[ -z "$alerts" ] || printf '%s\n' "$alerts"
+[ "$status" -eq 0 ] || { echo "vale exited $status"; exit "$status"; }
+[ -z "$alerts" ] || exit 1
+echo "Prose is clean."

@@ -1,0 +1,14 @@
+# The shapes a post may declare, each with the most prose words it may carry.
+# `mise run front-matter` reads the keys, `mise run words` reads the numbers.
+# A ceiling, not a target: a 65-word TIL is fine.
+#
+# Prose is what `bin/body-words` counts: front matter, fenced code, HTML
+# comments, shortcodes and link targets are not words. The same numbers are
+# in the `blog-style` skill, under "Word budgets", so a writer sees the
+# ceiling before the gate does. Change both together.
+guide = 1100
+fix = 900
+explainer = 900
+build-log = 900
+comparison = 1200
+til = 150

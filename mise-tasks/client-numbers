@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+#MISE description="House.ClientNumbers and House.ClientPractice over each post whose front matter says client: true"
+#MISE sources=["content/**", ".vale.ini", "styles/**", "mise-tasks/client-numbers"]
+#MISE outputs={ auto = true }
+#
+# Vale cannot read front matter, so .vale.ini keeps House.ClientNumbers and
+# House.ClientPractice off, and this runs Vale on a copy of it with one
+# section per flagged post that turns both on. Published posts carry no flag, so they never fire.
+set -euo pipefail
+
+mapfile -t files < <(grep -rlx --include='*.md' 'client: true' content || true)
+[ "${#files[@]}" -gt 0 ] || { echo "No post is marked client: true."; exit 0; }
+
+dir=$(mktemp -d)
+trap 'rm -rf "$dir"' EXIT
+sed "s|^StylesPath = .*|StylesPath = $PWD/styles|" .vale.ini >"$dir/vale.ini"
+printf '\n[%s]\nHouse.ClientNumbers = YES\nHouse.ClientPractice = YES\n' "${files[@]}" >>"$dir/vale.ini"
+
+status=0
+alerts=$(vale --config="$dir/vale.ini" --filter='.Name matches "^House[.]Client(Numbers|Practice)$"' \
+  --output=line "${files[@]}") || status=$?
+[ -z "$alerts" ] || { printf '%s\n' "$alerts"; exit 1; }
+[ "$status" -eq 0 ] || { echo "vale exited $status"; exit "$status"; }
+echo "Client numbers are rounded, and no client practice shows, in ${#files[@]} post(s)."

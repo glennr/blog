@@ -1,0 +1,21 @@
+# The story of how the author got to the design, told instead of the design.
+# Glenn: make the point without the story of how I got there, unless the story
+# carries the narrative. State the obvious design and why it breaks. From
+# broadcast-audit-events-after-commit: "A review caught that in the first
+# version...", "At first, commit/1 broadcast once...", "Now only...". A post
+# whose story is the history (a debugging post) says so with a per-file
+# exemption in .vale.ini.
+extends: existence
+message: "Process archaeology: '%s'. State the design and why the obvious one breaks."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  - '\ba\s+review\s+caught\b'
+  - '\bat\s+first[,.]'
+  - '\bour\s+first\s+version\b'
+  - '\bin\s+the\s+first\s+version\b'
+  - '\boriginally\b'
+  - '\bwe\s+later\b'
+  - '\bnow\s+only\b'
+  - '\bturned\s+out\b'

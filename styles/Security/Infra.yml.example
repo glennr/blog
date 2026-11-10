@@ -1,0 +1,25 @@
+# Structural patterns only. Start Infra.yml from this in the main checkout and
+# add the real names there: it is gitignored, and this repository is public.
+#
+# tokens: stays last. `mise run security-vocab` reads from it to the end of file.
+extends: existence
+message: "infrastructure detail: '%s'"
+level: error
+ignorecase: true
+
+# Matched against the token, not the source line: the hostname
+# grafana.default.svc.cluster.local is reported as cluster.local.
+exceptions:
+  - 1.2.3.4
+  - cluster.local
+
+# Vale wraps every token in its own word boundaries, so a pattern that ends
+# in punctuation never fires: 'Main \(\d+\)' matches nothing, 'Main \(\d+\b'
+# matches "Main (20". End each token on a word character.
+tokens:
+  # IPv4, in any context. Published posts use 1.2.3.4 as the example address.
+  - '\b(?:[0-9]{1,3}\.){3}[0-9]{1,3}\b'
+  # Hostnames on a home network.
+  - '\b[a-z0-9-]+\.(?:local|lan|home\.arpa)\b'
+  # MAC addresses.
+  - '\b(?:[0-9a-f]{2}:){5}[0-9a-f]{2}\b'

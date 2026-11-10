@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#MISE description="No commit on this branch whose only content change is a date"
+#USAGE flag "--staged" help="Ask the same question of the staged diff, before the commit exists"
+#
+# No commit whose only change is a post's date.
+#
+# The history is public. A commit that moves a date and nothing else, or that
+# says "fix the date" in its subject, tells every reader the post was
+# backdated. The date is part of the draft: set it when you write the file and
+# change it in the same commit as the words around it.
+#
+# The range is this branch against master, so a commit is still fixable by
+# amend or rebase when this names it. Once merged, master's own range is
+# empty and it goes quiet.
+#
+# `--staged` asks the same question of a commit that does not exist yet, which
+# is what the pre-commit hook wants: refusing the commit beats naming it
+# afterwards, when the fix is a rebase.
+set -euo pipefail
+
+if [ "${usage_staged:-}" = true ]; then
+  diff=$(git diff --cached -U0 -- 'content/*.md' | grep -E '^[+-][^+-]' || true)
+  if [ -n "$diff" ] && ! grep -qvE '^[+-]date: ' <<<"$diff"; then
+    echo "The only staged content change is a date." >&2
+    echo "The history is public, so a date-only commit announces the backdate." >&2
+    echo "Stage the words that go with it, or leave the date alone." >&2
+    exit 1
+  fi
+  echo "Staged content is not a bare date change."
+  exit 0
+fi
+
+# No fallback. A checkout without master cannot answer the question this
+# asks, and a check that answers "fine" because it could not look is worse
+# than one that stops. On master the merge-base is HEAD, so the range is empty.
+base=$(git merge-base master HEAD)
+
+# One traversal, not a loop. Walking `git rev-list` and calling `git show`
+# twice per commit spent 195ms on 37 commits, effectively all of it process
+# startup, and this target has no stamp so it pays that on every run.
+#
+# The pathspec limits the patch to content, so a commit that changed no post
+# arrives as a header with no diff and falls through. `-U0` means there are no
+# context lines, so every `+`/`-` line is a real change, and `---`/`+++` fail
+# the `[^+-]` test the way they did before.
+git log --format='>>>COMMIT<<<%x09%h%x09%s' -p -U0 "$base..HEAD" -- 'content/*.md' \
+  | awk -F'\t' '
+    function emit() {
+      if (hash == "") return
+      if (dates && !other)
+        report("the only content change is a date")
+      else if (dates && tolower(subject) ~ /(^|[^a-z])(back)?dat(e|es|ed|ing)([^a-z]|$)/)
+        report("the subject names a date change")
+    }
+    function report(why) {
+      printf "%s %s: %s\n", hash, subject, why > "/dev/stderr"
+      fail = 1
+    }
+    $1 == ">>>COMMIT<<<" {
+      emit(); hash = $2; subject = $3; dates = 0; other = 0; next
+    }
+    /^[+-][^+-]/ {
+      if ($0 ~ /^[+-]date: /) dates = 1; else other = 1
+    }
+    END {
+      emit()
+      if (fail) {
+        print "Rewrite those commits: squash each into the commit that wrote the words." > "/dev/stderr"
+        exit 1
+      }
+      print "No date-only commits."
+    }
+  '

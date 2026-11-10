@@ -1,0 +1,6 @@
+{{- /* A ```mermaid fenced block renders as a diagram, like the theme's
+  mermaid shortcode. The theme loads its mermaid bundle only for a page that
+  uses the shortcode, so layouts/partials/extend-head-uncached.html loads it
+  for a page with a fenced block too. The theme's appearance.js redraws the
+  diagram when the reader switches between light and dark. */ -}}
+<pre class="not-prose mermaid">{{ .Inner | htmlEscape | safeHTML }}</pre>

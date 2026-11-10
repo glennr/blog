@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+#MISE description="What a commit has to pass: the staged date rule, fix over the staged paths, then check"
+#
+# `.githooks/pre-commit` is one line that runs this. CI runs `check` too, but
+# only after the commit exists. This is the earlier of the two, and it is
+# under 100ms warm, so it costs nothing on a commit that changed nothing the
+# checks read.
+#
+# It checks the working tree, not the index. A partial `git add` therefore
+# validates something other than what is being committed. That is the usual
+# bargain for a pre-commit hook and the alternative, stashing the unstaged
+# half, loses work when it goes wrong.
+#
+# `git commit --no-verify` skips it. CI does not.
+set -euo pipefail
+
+# The date rule is the one check that differs before and after the commit
+# exists. `dates` reads the range against master; here the commit is still a
+# staged diff, and refusing it now saves a rebase later.
+mise run dates --staged >/dev/null
+
+# Format what is being committed, then stage the result. Without this the commit
+# carries unformatted content and leaves the repaired version behind as a dirty
+# tree, which is the next commit's confusing diff.
+#
+# Scoped to paths that are already staged, so it can reformat a file the author
+# chose and can never add one they did not. `fix` with no paths would be the
+# whole tree, which is the thing that quietly stages someone else's work.
+#
+# The list is read NUL-separated and handed over as arguments, so a filename
+# with a space in it arrives intact.
+mapfile -t -d '' staged < <(./bin/git-changed-files --staged)
+
+if [ "${#staged[@]}" -gt 0 ]; then
+  mise run fix -- "${staged[@]}"
+  git add -- "${staged[@]}"
+fi
+
+# A draft may carry FIXMEs while it is worked on; `check` and CI fail on any.
+FIXME_DRAFTS_OK=1 exec mise run check

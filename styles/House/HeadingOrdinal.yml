@@ -1,0 +1,14 @@
+# A heading does not number itself.
+#
+# Numbering a heading gives the reader an order that putting one section after
+# another has already given them. It also breaks when a section moves, and the
+# numbers then say the opposite of the structure.
+#
+# One pattern, not three: Vale concatenates the entries under `raw` into a
+# single expression, so a list of alternatives has to carry its own `|`.
+extends: existence
+message: "Do not number a heading: '%s'. The order is the order they appear in."
+level: error
+scope: heading
+raw:
+  - '^(?:\d+[.)]\s|(?:First|Second|Third|Fourth|Fifth|Next|Finally|Lastly)\s*[:,-]|(?:Step|Part|Stage)\s+\d+\b)'

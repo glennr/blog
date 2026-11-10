@@ -1,0 +1,47 @@
+# Keep the size of a client's or employer's system vague.
+#
+# A count of their tables, migrations, customers or rows is their information,
+# not ours, and on a backfill it shows the author still reading their code.
+# Say what the thing does, not how big it is.
+#
+# The reader's own tools and public benchmarks are a different matter, and the
+# posts are full of their numbers: lines of a personal harness, runs of a
+# benchmark, VUs in a load test, replicas in a Kubernetes example. So a count
+# fires only on the nouns that size a business (tables, tenants, engineers,
+# deploys), and a small spelled-out number ("two tables" in a SQL example)
+# fires only after "our" or "their". Rates and money fire only after "our" or
+# "their" too, so "we processed 83 requests per second" in a tutorial passes.
+#
+# test/vale/should-fire.md and test/vale/must-not-fire.md hold every case this
+# was built from. `mise run test-vale` fails if either one drifts.
+extends: existence
+message: "'%s' sizes someone's system. Describe it without the count."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  # "39 history tables", "129 of our 492 migrations", "100 149 rows"
+  - '(?<!\b(?:simulat\w*|virtual|concurrent|fake|test|sample|example|demo|create|add|join|seed|make|drop|generate)\s+)\b\d[\d,.]*(?:\s\d{3})*(?:[km]|\s+(?:thousand|million|billion))?\+?\s+(?:of\s+(?:our|their|the)\s+\d[\d,.]*\s+)?(?:(?:history|database|DB|Postgres|key|production|prod|active|paying|enterprise|internal|live|unique|distinct|daily|monthly|weekly|human|bot|open|merged|separate|customer|client|tenant|single-tenant|backend|staging|legacy|core|full-time|senior)\s+)?(?:tables|migrations|customers|tenants|clients|users|accounts|rows|records|employees|engineers|developers|devs|staff|people|committers|contributors|teammates|repos|repositories|services|microservices|apps|applications|regions|databases|commits|PRs|pull\s+requests|deploys|deployments)\b'
+  - '\b\d[\d,.]*\s+of\s+(?:our|their)\s+\d[\d,.]*\b'
+  # "a 39-table schema", "a 12-person team"
+  - '\b\d[\d,.]*[km]?[-\s]?(?:table|tenant|customer|region|service|microservice|engineer|developer|person|people|repo)\s+(?:schema|database|team|company|startup|org|organisation|organization|monorepo|deployment|architecture|platform|system|setup)\b'
+  # "our 8 regions", "their forty microservices", "our few dozen tables"
+  - '\b(?:our|their|\w+''s)\s+(?:\w+\s+)?(?:\d[\d,.]*[km]?|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\w+teen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|a\s+hundred|a\s+thousand|(?:a\s+few\s+|several\s+)?dozens?(?:\s+of)?|hundreds\s+of|thousands\s+of|millions\s+of)\s+(?:\w+\s+)?(?:tables|migrations|customers|tenants|clients|users|accounts|rows|records|employees|engineers|developers|devs|staff|people|committers|contributors|teammates|repos|repositories|services|microservices|apps|applications|regions|databases|commits|PRs|pull\s+requests|deploys|deployments)\b'
+  # "a few dozen history tables", "thousands of tenants", "forty engineers"
+  - '\b(?:a\s+few\s+|few\s+|several\s+|many\s+|a\s+|one\s+|two\s+|three\s+|half\s+a\s+)dozens?\s+(?:of\s+)?(?:\w+\s+)?(?:tables|migrations|customers|tenants|clients|users|accounts|rows|records|employees|engineers|developers|staff|people|committers|repos|repositories|services|microservices|apps|applications|regions|databases|commits|PRs|deploys)\b'
+  - '\b(?:hundreds|thousands|millions|tens\s+of\s+thousands)\s+of\s+(?:\w+\s+)?(?:tables|migrations|customers|tenants|rows|records|microservices|engineers|employees)\b'
+  - '\b(?:twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|a\s+hundred|a\s+thousand)(?:[-\s](?:one|two|three|four|five|six|seven|eight|nine))?\s+(?:\w+\s+)?(?:tables|migrations|customers|tenants|clients|rows|records|employees|engineers|developers|microservices|services|apps|regions|repos|commits|PRs|deploys)\b'
+  # "about a quarter of our migrations", "30% of our customers"
+  - '\b(?:a\s+(?:quarter|third|half|fifth|tenth)|half|(?:one|two|three)[-\s](?:quarters?|thirds?|fifths?)|\d+(?:\.\d+)?\s*%|\d+\s+percent|(?:one|two|three|four|five|six|seven|eight|nine)\s+in\s+(?:ten|five|four|three))\s+of\s+(?:our|their|\w+''s)\s+(?:\w+\s+)?(?:tables|migrations|customers|tenants|clients|users|accounts|rows|records|employees|engineers|developers|staff|people|committers|repos|repositories|services|microservices|apps|applications|regions|databases|commits|PRs|pull\s+requests|deploys|deployments|traffic|requests|revenue)\b'
+  # "a team of eight", "a five-person team", "our team had nine"
+  - '\b(?:our|their)\s+(?:engineering\s+|dev\s+|platform\s+)?team\s+(?:has|had|is|was|grew\s+to)\s+(?:about\s+|around\s+|roughly\s+|over\s+|under\s+)?(?:\d+|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\w+teen|twenty|thirty|forty|fifty)\b'
+  - '\bteam\s+of\s+(?:about\s+|around\s+|roughly\s+|over\s+|under\s+)?(?:\d+|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\w+teen|twenty|thirty|forty|fifty)\b'
+  - '\b(?:\d+|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|\w+teen|twenty|thirty|forty|fifty)[-\s](?:person|people|engineer|developer|strong)\s+(?:team|squad|company|startup|org|engineering)'
+  # "our API handles 2,000 requests a second", "their traffic peaked at 5k"
+  - '\b(?:our|their)\s+(?:\w+\s+){0,3}?(?:serves?|served|handles?|handled|process(?:es|ed)?|peaks?\s+at|peaked\s+at|sees|saw|runs?\s+at|ran\s+at)\s+(?:about\s+|around\s+|over\s+|roughly\s+|nearly\s+|~)?\d[\d,.]*\s*[km]?\s+(?:\w+\s+)?(?:requests|req|rps|qps|tps|transactions|queries|events|messages|jobs|orders|signups|logins|users|sessions|calls|connections)\b'
+  - '\b(?:our|their)\s+(?:\w+\s+){0,3}?(?:peak|traffic|load|throughput)\s+(?:of|is|was|at|hit|reached)\s+(?:about\s+|around\s+|over\s+|~)?\d'
+  # "our AWS bill was $40k", "$2M ARR", "$30k a month on AWS"
+  - '\b(?:our|their|\w+''s)\s+(?:\w+\s+){0,3}?(?:bill|spend|revenue|ARR|MRR|budget|costs?)\s+(?:of|was|is|were|are|hit|reached|came\s+to|ran\s+to|at)\s+(?:about\s+|around\s+|over\s+|roughly\s+|nearly\s+|~)?[$€£]?\s?\d'
+  - '[$€£]\s?\d[\d,.]*\s?(?:[kmb]|million|billion)?\s+(?:ARR|MRR|in\s+(?:revenue|ARR|MRR|sales)|of\s+(?:revenue|ARR|MRR)|(?:a|per)\s+(?:month|year)\s+(?:on|in|for)\s+(?:AWS|GCP|Azure|cloud|infrastructure|infra|hosting|compute))\b'
+  # "we deploy twenty times a day"
+  - '\b(?:deploy|deploys|deployed|ship|ships|shipped|release|releases|released|merge|merges|merged)\s+(?:to\s+production\s+)?(?:about\s+|around\s+|over\s+)?(?:\d+|two|three|four|five|six|seven|eight|nine|ten|\w+teen|twenty|thirty|forty|fifty|dozens\s+of|hundreds\s+of)\s+times\s+(?:a|per|each)\s+(?:day|week|month)\b'

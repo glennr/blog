@@ -1,0 +1,22 @@
+# Round every number measured on a client's system.
+#
+# House.ClientScale fires only on the nouns that size a business. A post drawn
+# from client work also measures their code: references, violations, modules,
+# call sites, tests, build times. Those are theirs too, so in such a post any
+# exact number of three or more digits, and any timing, fires unless it is
+# rounded: "about 650", "4 to 5 seconds". Round hundreds, years and HTTP
+# codes pass.
+#
+# Off for every file in .vale.ini. `mise run client-numbers` turns it on for
+# each post whose front matter says `client: true`, and the section for
+# test/vale/client/ turns it on for its fixtures.
+extends: existence
+message: "'%s' is an exact number from a client's system. Round it: 'about 650', '4 to 5 seconds'."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  # "4224 ms", "1.5s", "12 seconds", but not "4 to 5 seconds" or "about 2 minutes"
+  - '(?<!\b(?:about|around|roughly|nearly|almost|approximately|under|over|some|than|to|and|or)\s+|[~–-]\s?)(?<![\w.,])(?!(?:1[89]|20)\d0s\b)\d+(?:\.\d+)?\s?(?:ms|µs|us|ns|s|secs?|seconds?|mins?|minutes?|hours?|hrs?|h)\b'
+  # "652 forbidden references", "brought it to 134", "1,317", but not "about 650", "1,200" or "2026"
+  - '(?<!\b(?:about|around|roughly|nearly|almost|approximately|under|over|some|than|HTTP|status|port|RFC|ISO|PR|issue)\s+|[~#]\s?)(?<![\w.,])(?!(?:19|20)\d\d(?!\d|,\d))(?![\d,]*00(?!\d|,\d))(?:\d{1,3}(?:,\d{3})+|\d{3,})(?!\d|\.\d)'

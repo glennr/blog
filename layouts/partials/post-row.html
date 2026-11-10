@@ -1,0 +1,96 @@
+{{/* One row in a list of articles.
+
+     Used by the home page (layouts/partials/home/custom.html) and by the
+     section and taxonomy lists, through the article-link/simple.html override.
+
+     Takes a dict:
+       page         the page to render
+       showSummary  true to print the description under the title
+
+     A row holds a title, a date, and an optional description. The link
+     stretches over the whole row, so a click anywhere on the row opens the
+     page. If the page has a feature image, the row puts a thumbnail in front
+     of the text.
+
+     The styles live in assets/css/custom.css under the .post-row prefix. */}}
+
+{{ $page := .page }}
+{{ $showSummary := .showSummary | default false }}
+{{ $dateFormat := site.Params.dateFormat | default "2 January 2006" }}
+
+{{/* Reading time. A page parameter of false must win over the site default,
+     so test for the parameter instead of piping it through default. */}}
+{{ $showReadingTime := site.Params.article.showReadingTime | default false }}
+{{ if isset $page.Params "showreadingtime" }}
+  {{ $showReadingTime = $page.Params.showReadingTime }}
+{{ end }}
+
+{{ $summary := $page.Description }}
+{{ if not $summary }}
+  {{ $summary = $page.Summary | plainify }}
+{{ end }}
+
+{{/* Thumbnail, from the featureImage front matter field or from an image in
+     the page bundle named feature, cover, or thumbnail. */}}
+{{ $thumbnail := "" }}
+{{ if not $page.Params.hideFeatureImage }}
+  {{ with partial "functions/feature-image.html" $page }}
+    {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+      {{ $thumbnail = resources.GetRemote . }}
+    {{ else }}
+      {{ $thumbnail = $page.Resources.Get . }}
+      {{ if not $thumbnail }}{{ $thumbnail = resources.Get . }}{{ end }}
+    {{ end }}
+  {{ end }}
+  {{ if not $thumbnail }}
+    {{ $images := $page.Resources.ByType "image" }}
+    {{ range slice "*feature*" "*cover*" "*thumbnail*" }}
+      {{ if not $thumbnail }}{{ $thumbnail = $images.GetMatch . }}{{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ $thumbnailURL := "" }}
+{{ with $thumbnail }}
+  {{ $thumbnailURL = .RelPermalink }}
+  {{ if not (or (site.Store.Get "disableImageOptimization") (eq .MediaType.SubType "svg")) }}
+    {{ with try (.Fill "384x216 Center") }}
+      {{ with .Value }}{{ $thumbnailURL = .RelPermalink }}{{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<article class="post-row">
+  {{ with $thumbnailURL }}
+    <div class="post-row__thumbnail">
+      <img src="{{ . }}" alt="{{ $page.Params.alt }}" loading="lazy" decoding="async" fetchpriority="low" class="nozoom not-prose" />
+    </div>
+  {{ end }}
+  <div class="post-row__body">
+    <h3 class="post-row__title">
+      <a
+        {{ with $page.Params.externalUrl }}
+          href="{{ . }}" target="_blank" rel="external"
+        {{ else }}
+          href="{{ $page.RelPermalink }}"
+        {{ end }}>{{ $page.Title | emojify }}</a>
+      {{- /* No space before the arrow, so it never wraps onto a line alone. */ -}}
+      <span aria-hidden="true" class="post-row__arrow">
+        {{- if $page.Params.externalUrl }}&#8599;&#xFE0E;{{ else }}&rarr;{{ end -}}
+      </span>
+      {{ if and $page.Draft site.Params.article.showDraftLabel }}
+        <span class="post-row__draft">{{ i18n "article.draft" | emojify }}</span>
+      {{ end }}
+    </h3>
+    <p class="post-row__date">
+      <time datetime="{{ $page.Date.Format `2006-01-02` }}">{{ $page.Date.Format $dateFormat }}</time>
+      {{ if and $showReadingTime (ne $page.ReadingTime 0) }}
+        <span class="post-row__separator">&middot;</span>
+        {{ i18n "article.reading_time" $page.ReadingTime | emojify }}
+      {{ end }}
+    </p>
+    {{ if and $showSummary $summary }}
+      <p class="post-row__summary">{{ $summary }}</p>
+    {{ end }}
+  </div>
+</article>

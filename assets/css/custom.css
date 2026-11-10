@@ -1,18 +1,728 @@
+/* Project styles, loaded after the theme stylesheet.
+
+   Blowfish ships a pre-built Tailwind stylesheet, so a Tailwind class that the
+   theme does not already use produces no rules. Anything this project adds is
+   written here as plain CSS instead.
+
+   Colors come from the theme scheme in assets/css/schemes. Each variable holds
+   an "r, g, b" triplet, so a rule reads it as rgb(var(--color-neutral-700)).
+   The theme puts the class "dark" on <html> for dark mode. */
+
 html {
   font-size: 14pt;
 }
 
-/* Override backticks on all code elements with higher specificity */
-html body .prose :where(code):not(:where([class~="not-prose"] *))::before,
-html body .prose :where(code):not(:where([class~="not-prose"] *))::after {
-  content: none !important;
+:root {
+  --site-hairline: rgb(var(--color-neutral-200));
+  --site-ink-soft: rgb(var(--color-neutral-600));
+  --site-brand: rgb(var(--color-primary-600));
+  --site-row-hover: rgb(var(--color-neutral-50));
 }
 
-/* If you still want backticks for inline code but not in code blocks */
-html body .prose :where(p code):not(:where([class~="not-prose"] *))::before {
-  content: "`";
+html.dark {
+  --site-hairline: rgb(var(--color-neutral-700));
+  --site-ink-soft: rgb(var(--color-neutral-400));
+  --site-brand: rgb(var(--color-primary-400));
+  --site-row-hover: rgba(var(--color-neutral-700), 0.4);
 }
 
+/* The theme hides the backticks that the Tailwind typography plugin adds
+   around every code element. Put them back for inline code in a paragraph,
+   and leave code blocks alone. The theme also pads inline code on both sides,
+   which would push the backticks away from the word, so drop that padding. */
+html body .prose :where(p code):not(:where([class~="not-prose"] *)) {
+  padding-inline: 0;
+}
+
+html body .prose :where(p code):not(:where([class~="not-prose"] *))::before,
 html body .prose :where(p code):not(:where([class~="not-prose"] *))::after {
+  display: inline;
   content: "`";
+}
+
+/* -- Article rows ----------------------------------------------------------
+   Markup: layouts/partials/post-row.html. The home page, the section lists,
+   and the taxonomy lists all draw the same row. The <body> element already
+   sets the page width and the side padding, so nothing below adds a gutter. */
+
+.post-list {
+  margin-top: 2rem;
+}
+
+.post-row {
+  position: relative;
+  border-bottom: 1px solid var(--site-hairline);
+  transition: background-color 0.15s ease;
+}
+
+.post-row:first-child {
+  border-top: 1px solid var(--site-hairline);
+}
+
+.post-row:hover {
+  background-color: var(--site-row-hover);
+}
+
+/* The theme wraps list rows in a container that spaces its children apart.
+   The rows carry their own borders, so close that gap. */
+section.space-y-10 > .post-row {
+  margin-block-start: 0 !important;
+  margin-block-end: 0 !important;
+}
+
+.post-row__body {
+  display: grid;
+  gap: 0.25rem;
+  padding: 1.5rem 1rem;
+}
+
+.post-list--compact .post-row__body {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.post-row__thumbnail {
+  padding: 1.5rem 1rem 0;
+}
+
+.post-row__thumbnail img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--site-hairline);
+  object-fit: cover;
+}
+
+.post-row__title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.post-row__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretch the link over the whole row. */
+.post-row__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.post-row:hover .post-row__title a {
+  color: var(--site-brand);
+}
+
+/* Inline, not inline-block: an inline-block is a break opportunity, so a
+   long title left its arrow alone on the next line. The nudge on hover moves
+   the margin instead of a transform, which an inline box cannot take. */
+.post-row__arrow {
+  margin-inline-start: 0.5rem;
+  color: var(--site-brand);
+  transition: margin-inline-start 0.15s ease;
+}
+
+.post-row:hover .post-row__arrow,
+.home-project:hover .post-row__arrow {
+  margin-inline-start: 0.75rem;
+}
+
+.post-row__draft {
+  margin-inline-start: 0.5rem;
+  border-radius: 0.25rem;
+  background-color: rgb(var(--color-primary-600));
+  padding: 0.1rem 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: rgb(var(--color-neutral));
+  vertical-align: middle;
+}
+
+.post-row__date {
+  margin: 0;
+  font-size: 0.875rem;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  color: var(--site-ink-soft);
+}
+
+.post-row__separator {
+  color: rgb(var(--color-primary-500));
+  padding-inline: 0.25rem;
+}
+
+.post-row__summary {
+  margin: 0.5rem 0 0;
+  max-width: 65ch;
+  color: var(--site-ink-soft);
+}
+
+@media (min-width: 853px) {
+  .post-row {
+    display: flex;
+    flex-direction: row;
+    align-items: start;
+  }
+
+  .post-row__thumbnail {
+    flex: none;
+    width: 14rem;
+    padding-inline-end: 0;
+  }
+
+  .post-row__body {
+    flex: 1 1 auto;
+    min-width: 0;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: 2rem;
+  }
+
+  .post-row__title,
+  .post-row__summary {
+    grid-column: span 8 / span 8;
+  }
+
+  .post-row__date {
+    grid-column: span 4 / span 4;
+    text-align: end;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-row,
+  .post-row__arrow {
+    transition: none;
+  }
+
+  .post-row:hover .post-row__arrow,
+  .home-project:hover .post-row__arrow {
+    margin-inline-start: 0.5rem;
+  }
+}
+
+/* -- Home page -------------------------------------------------------------
+   Markup: layouts/partials/home/custom.html */
+
+.home-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+  padding-top: 2.5rem;
+  padding-bottom: 3rem;
+}
+
+.home-hero__portrait {
+  order: -1;
+  width: 40%;
+  max-width: 14rem;
+  margin: 0;
+}
+
+.home-hero__portrait img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 9999px;
+  border: 2px solid var(--site-hairline);
+  object-fit: cover;
+}
+
+.home-hero__title {
+  margin: 0;
+  font-size: 2.75rem;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+.home-hero__lead {
+  margin-top: 1.5rem;
+  max-width: 65ch;
+  color: var(--site-ink-soft);
+}
+
+.home-hero__lead > :first-child {
+  margin-top: 0;
+}
+
+.home-hero__links {
+  margin-top: 1.5rem;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+@media (min-width: 853px) {
+  .home-hero {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    align-items: start;
+    column-gap: 3rem;
+    row-gap: 2.5rem;
+    padding-top: 4rem;
+  }
+
+  .home-hero__text {
+    grid-column: span 8 / span 8;
+  }
+
+  .home-hero__portrait {
+    order: 0;
+    grid-column: span 4 / span 4;
+    width: 100%;
+    max-width: none;
+  }
+
+  .home-hero__title,
+  .home-hero__links {
+    text-align: start;
+  }
+}
+
+.home-section {
+  padding-top: 2.5rem;
+  padding-bottom: 2.5rem;
+}
+
+.home-section__title {
+  margin: 0;
+  font-size: 1.875rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.home-projects {
+  border-top: 1px solid var(--site-hairline);
+}
+
+.home-projects__grid {
+  display: grid;
+  gap: 2.5rem;
+  margin-top: 2rem;
+}
+
+.home-project {
+  position: relative;
+}
+
+.home-project__title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.home-project__title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Stretch the link over the whole card. */
+.home-project__title a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.home-project:hover .home-project__title a {
+  color: var(--site-brand);
+}
+
+.home-project__description {
+  margin: 0.5rem 0 0;
+  max-width: 55ch;
+  color: var(--site-ink-soft);
+}
+
+/* This paragraph sits outside the prose container, so inline code needs its
+   own colour. */
+.home-project__description code {
+  font-size: 0.9em;
+  color: rgb(var(--color-secondary-700));
+}
+
+html.dark .home-project__description code {
+  color: rgb(var(--color-secondary-400));
+}
+
+@media (min-width: 853px) {
+  .home-projects__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 3rem;
+  }
+}
+
+.home-button {
+  display: inline-block;
+  margin-top: 2rem;
+  border: 1px solid var(--site-hairline);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.home-button:hover {
+  border-color: var(--site-brand);
+  color: var(--site-brand);
+}
+
+/* The theme parks its "Skip to main content" link in an absolutely positioned
+   #the-top box at the top centre of the page. The link itself is translated
+   out of sight until it takes focus, but the box stays put, and it sits over
+   the menu and swallows the clicks. Let clicks through, and take them back
+   while the link has focus. */
+
+#the-top {
+  pointer-events: none;
+}
+
+#the-top a:focus {
+  pointer-events: auto;
+}
+
+/* -- Callouts --------------------------------------------------------------
+   The theme renders `> [!NOTE]` and the other GitHub alerts as .admonition
+   boxes, coloured by data-type from its admonition.css. `> [!TLDR]` is a type
+   of this site's (layouts/partials/impls/hooks/admonition-maps.html), so it
+   takes its colours here, from the scheme's violet. It sits at the top of a
+   post, so it is a little roomier than the others. */
+
+:root {
+  --adm-tldr-border: rgb(var(--color-primary-500));
+  --adm-tldr-bg: rgb(var(--color-primary-50));
+  --adm-tldr-text: rgb(var(--color-neutral-800));
+  --adm-tldr-title: rgb(var(--color-primary-700));
+}
+
+html.dark {
+  --adm-tldr-border: rgb(var(--color-primary-400));
+  --adm-tldr-bg: rgba(var(--color-primary-900), 0.35);
+  --adm-tldr-text: rgb(var(--color-neutral-200));
+  --adm-tldr-title: rgb(var(--color-primary-300));
+}
+
+.admonition[data-type="tldr"] {
+  border-color: var(--adm-tldr-border);
+  background-color: var(--adm-tldr-bg);
+  color: var(--adm-tldr-text);
+  padding: 1rem 1.25rem;
+}
+
+.admonition[data-type="tldr"] > div:first-child {
+  color: var(--adm-tldr-title);
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* -- Code blocks -----------------------------------------------------------
+   Markup: layouts/_default/_markup/render-codeblock.html. A block with
+   {filename="..."} gets a tab with the file name above the code. The theme's
+   copy button sits in the top right of the wrapper, over the tab's row. */
+
+.codeblock-filename {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.4rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  color: var(--site-ink-soft);
+}
+
+.codeblock-filename__icon {
+  display: inline-flex;
+  width: 0.8rem;
+  color: var(--site-brand);
+}
+
+/* -- Diagrams --------------------------------------------------------------
+   A ```mermaid block. Centre it, and keep a wide diagram from pushing the
+   page sideways on a phone. */
+
+.prose pre.mermaid {
+  display: flex;
+  /* safe: a diagram wider than the column scrolls from its left edge. */
+  justify-content: safe center;
+  margin-block: 2rem;
+  overflow-x: auto;
+  background: transparent;
+}
+
+/* A diagram too wide to read at the column width scrolls; the faded right
+   edge says there is more of it. */
+.prose pre.mermaid[data-scrolls]:not([data-at-end]) {
+  mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent);
+}
+
+/* -- Header image ----------------------------------------------------------
+   The theme's "big" hero: the bundle's feature.webp, full width above the
+   title. A hairline keeps a pale illustration from bleeding into the page. */
+
+.single_hero_round {
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border: 1px solid var(--site-hairline);
+}
+
+/* A paper-white illustration glares on the dark page. Take the edge off. */
+html.dark .single_hero_round {
+  filter: brightness(0.88);
+}
+
+/* The theme draws every callout with a 4px stripe down its left side and a
+   drop shadow. A stripe reads as a quote bar; a hairline box on its tint is
+   enough to say "set apart". */
+html body .admonition {
+  border-width: 1px;
+  box-shadow: none;
+}
+
+/* In dark mode the theme fills each callout with a deep saturated colour, so
+   four in a row read as a traffic light. Lay the page colour over the fill at
+   60% so the hue stays and the weight drops. */
+html.dark body .admonition {
+  background-image: linear-gradient(
+    rgba(var(--color-neutral-800), 0.6),
+    rgba(var(--color-neutral-800), 0.6)
+  );
+}
+
+/* -- Code blocks, again ----------------------------------------------------
+   On the white page the theme's code block is white too, framed by a shadow
+   too faint to see. A tint and a hairline make it read as a block. */
+
+html:not(.dark) .prose .highlight-wrapper {
+  border: 1px solid var(--site-hairline);
+  border-radius: 0.375rem;
+  box-shadow: none;
+  background-color: rgb(var(--color-neutral-50));
+}
+
+html:not(.dark) .prose .highlight-wrapper pre,
+html:not(.dark) .prose .highlight-wrapper .chroma {
+  background-color: transparent;
+}
+
+/* -- Author card -----------------------------------------------------------
+   Under the article it is a sign-off, so its label reads as words, not as a
+   tiny uppercase tag. */
+
+.author .place-self-center > :first-child {
+  font-size: 0.8rem;
+  line-height: 1.2;
+  text-transform: none;
+}
+
+/* -- Contents --------------------------------------------------------------
+   The theme puts the contents above the article on a narrow screen, where
+   they push the TL;DR off the first screen. They are for the wide column. */
+
+@media (max-width: 1023px) {
+  .prose .toc {
+    display: none;
+  }
+}
+
+/* -- Shortcodes ------------------------------------------------------------
+   layouts/shortcodes/. Each one is a plain block in the column; none of them
+   needs JavaScript. */
+
+/* fig: a caption under anything. The theme's image hook uses the same
+   <figure>/<figcaption>, so both read alike. */
+.prose figure.fig {
+  margin-block: 2rem;
+}
+
+.prose figure.fig > pre.mermaid,
+.prose figure.fig > .highlight-wrapper {
+  margin-block: 0;
+}
+
+.prose figcaption {
+  margin-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  text-align: center;
+  color: var(--site-ink-soft);
+}
+
+/* aside: smaller, softer, and indented under a short rule, so the eye can
+   step over it. */
+.prose aside.aside {
+  margin-block: 1.5rem;
+  margin-inline-start: 1.5rem;
+  border-top: 1px solid var(--site-hairline);
+  padding-top: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--site-ink-soft);
+}
+
+.prose aside.aside > :first-child {
+  margin-top: 0;
+}
+
+.prose aside.aside > :last-child {
+  margin-bottom: 0;
+}
+
+/* compare: two columns once there is room for two lines of code each. */
+.prose .compare {
+  display: grid;
+  gap: 1rem;
+  margin-block: 2rem;
+}
+
+@media (min-width: 640px) {
+  .prose .compare {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.prose .compare__side {
+  min-width: 0;
+  border: 1px solid var(--site-hairline);
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem 1rem;
+}
+
+.prose .compare__side > :last-child {
+  margin-bottom: 0;
+}
+
+.prose .compare__side .highlight-wrapper {
+  margin-block: 0.5rem 0;
+}
+
+.prose .compare__title {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: rgb(var(--color-neutral-800));
+}
+
+html.dark .prose .compare__title {
+  color: rgb(var(--color-neutral-200));
+}
+
+.prose .compare__mark {
+  display: inline-flex;
+  width: 0.9rem;
+}
+
+.prose .compare__side--good .compare__mark {
+  color: rgb(21, 128, 61);
+}
+
+.prose .compare__side--bad .compare__mark {
+  color: rgb(185, 28, 28);
+}
+
+html.dark .prose .compare__side--good .compare__mark {
+  color: rgb(74, 222, 128);
+}
+
+html.dark .prose .compare__side--bad .compare__mark {
+  color: rgb(248, 113, 113);
+}
+
+/* == Editorial direction ===================================================
+   One centred column at reading measure, a serif for the prose, and the
+   margins kept for asides. The interface (menu, dates, captions, callouts,
+   code) stays in the theme's sans and mono, so the argument and the
+   apparatus around it read apart. */
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/fonts/source-serif-4-latin-wght-normal.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Source Serif 4";
+  src: url("/fonts/source-serif-4-latin-wght-italic.woff2") format("woff2");
+  font-weight: 200 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+:root {
+  --site-serif: "Source Serif 4", Charter, "Bitstream Charter", Georgia, serif;
+  --site-sans: ui-sans-serif, system-ui, sans-serif;
+}
+
+.article-content,
+#single_header h1,
+.post-row__title,
+.home-hero__title,
+.home-section__title {
+  font-family: var(--site-serif);
+}
+
+.article-content {
+  font-size: 1.06rem;
+  line-height: 1.65;
+}
+
+.article-content :where(h2, h3, h4) {
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+#single_header h1 {
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+}
+
+.article-content :where(.admonition, figcaption, aside.aside, .compare__title) {
+  font-family: var(--site-sans);
+}
+
+/* One centred column: the header, the prose and the footer share one left
+   edge, and the hero is no wider than the column plus a little, so the
+   title reaches the first screen. */
+article > header#single_header,
+article > footer,
+article > section > div {
+  margin-inline: auto;
+}
+
+/* A rem width, not ch: the header is sans and the prose serif, so 65ch is
+   two different widths and the two left edges did not line up. 38rem is
+   about 70 characters of the serif. */
+article > header#single_header,
+article > footer,
+article > section > div {
+  width: 100%;
+  max-width: 38rem;
+}
+
+article > section .article-content {
+  max-width: none;
+}
+
+article > figure:first-child {
+  max-width: 48rem;
+  margin-inline: auto;
+}
+
+/* Asides move into the right margin once there is room beside the column,
+   and stay inline below that. */
+@media (min-width: 1400px) {
+  .prose aside.aside {
+    float: right;
+    clear: right;
+    width: 14rem;
+    margin: 0.25rem -16rem 1rem 0;
+  }
 }

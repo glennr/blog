@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+#MISE description="No term in the vocabulary that the security rule bans"
+#MISE sources=["styles/Security/Infra.yml", "styles/Security/Infra.yml.example", "styles/config/vocabularies/Blog/accept.txt", "mise-tasks/security-vocab"]
+#MISE outputs={ auto = true }
+#
+# One line in accept.txt silences a hostname and the rule that caught it: a
+# term in the vocabulary mutes every rule on the span that contains it. Vale
+# cannot lint its own vocabulary, so this reads the rule's token list and
+# greps the vocabulary for it.
+set -euo pipefail
+
+# The example alone passes every check below and bans no real name.
+if cmp -s styles/Security/Infra.yml styles/Security/Infra.yml.example; then
+  echo "styles/Security/Infra.yml is only the example, with none of the real names. Run mise run setup." >&2
+  exit 1
+fi
+
+patterns=$(sed -n "/^tokens:/,$ s/^  - ['\"]\?\(.*[^'\"]\)['\"]\?$/\1/p" \
+  styles/Security/Infra.yml)
+pattern=$(printf '%s\n' "$patterns" | paste -sd'|' -)
+
+status=0
+hits=$(grep -nP "$pattern" styles/config/vocabularies/Blog/accept.txt) || status=$?
+[ "$status" -le 1 ] || exit "$status"
+if [ -n "$hits" ]; then
+  printf '%s\n' "$hits"
+  echo "accept.txt holds a term the security rule bans"
+  exit 1
+fi

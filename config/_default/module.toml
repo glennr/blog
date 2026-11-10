@@ -1,3 +1,3 @@
 [[imports]]
-path = "github.com/jpanther/congo/v2"
-
+  disable = false
+  path = "github.com/nunocoracao/blowfish/v3"

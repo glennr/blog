@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="htmltest over build/"
+#MISE depends=["build"]
+#MISE sources=["build/index.html", ".htmltest.yml", "mise-tasks/test"]
+#MISE outputs={ auto = true }
+#
+# Checks every link in public/. htmltest is pinned in .tool-versions.
+set -euo pipefail
+
+htmltest ./build -s -c .htmltest.yml

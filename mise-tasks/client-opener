@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+#MISE description="A client post's opener says what the team faced, not whose app it is"
+#MISE sources=["content/**", "test/client-opener/**", "mise-tasks/client-opener"]
+#MISE outputs={ auto = true }
+#
+# In a post marked `client: true`, the team builds the app, so it is "our
+# app" and "we"; Glenn's own part is "I". The opener (the description, the
+# TL;DR callout and the first prose paragraph) never says whose app it is:
+# no "a client's app", "my client", "I'm building", "an app I work on" or "my app". Glenn fixed
+# "I'm building a client's Phoenix LiveView app" to "We're building a
+# Phoenix LiveView app ... My part is ...". Later paragraphs are the
+# reviewers' business; a regex cannot tell the team's "I" from Glenn's.
+#
+# test/client-opener/fire/ and pass/ pin the cases, one opener a file; this
+# fails if either drifts, then checks every client post.
+set -euo pipefail
+
+scan() {
+  awk '
+    BEGIN { re = "(^|[^[:alnum:]_])((a|my|our|the|for a) client(.s)?( [[:alnum:]-]+)? (app|application|codebase|project|system|product|team)|my client|a client.s|for a client|i.m building|i am building|(app|codebase) i (work on|build|maintain)|my (app|codebase|product)([^[:alnum:]_]|$))" }
+    FNR == 1 { fm = ($0 == "---"); state = 0; para = 0; fence = 0; next }
+    fm && $0 == "---" { fm = 0; next }
+    fm { if ($0 ~ /^description:/ && tolower($0) ~ re) printf "%s:%d: description: %s\n", FILENAME, FNR, $0; next }
+    state == 2 { next }
+    /^```/ { fence = !fence; next }
+    fence { next }
+    /^> / { line = $0; gsub(/`[^`]*`/, "", line); if (line ~ /TLDR/) { state = 1; next } }
+    state == 1 && /^>/ { if (tolower(line) ~ re) printf "%s:%d: TL;DR: %s\n", FILENAME, FNR, $0; next }
+    /^[A-Za-z"`(\[]/ {
+      line = $0; gsub(/`[^`]*`/, "", line)
+      if (tolower(line) ~ re) printf "%s:%d: first paragraph: %s\n", FILENAME, FNR, $0
+      para = 1; next
+    }
+    para && /^[[:space:]]*$/ { state = 2 }
+  ' "$@"
+}
+
+status=0
+for f in test/client-opener/fire/*.md; do
+  [ -n "$(scan "$f")" ] || { echo "$f: did not fire"; status=1; }
+done
+for f in test/client-opener/pass/*.md; do
+  hit=$(scan "$f")
+  [ -z "$hit" ] || { echo "$hit (must not fire)"; status=1; }
+done
+[ "$status" -eq 0 ] || exit 1
+
+mapfile -t files < <(grep -rlx --include='*.md' 'client: true' content || true)
+[ "${#files[@]}" -gt 0 ] || { echo "No post is marked client: true."; exit 0; }
+hits=$(scan "${files[@]}")
+[ -z "$hits" ] || { printf '%s\n' "$hits"; echo "Say what the team faced; the app is 'our app', and 'I' is your own part."; exit 1; }
+echo "Client openers name no owner in ${#files[@]} post(s)."

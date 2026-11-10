@@ -1,4 +1,4 @@
 ---
-  CheckScripts: false
-  CheckMailto: false
-  IgnoreDirectoryMissingTrailingSlash: true
+CheckScripts: false
+CheckMailto: false
+IgnoreDirectoryMissingTrailingSlash: true

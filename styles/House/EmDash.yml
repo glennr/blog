@@ -1,0 +1,11 @@
+# No em dashes or en dashes.
+#
+# The house rule is a spaced hyphen, a comma, or two sentences. The vendored
+# Slop.EmDash rule allows two per paragraph, which is the general advice; this
+# is the blog's own rule and it allows none.
+extends: existence
+message: "No em dashes: '%s'. Use a spaced hyphen, a comma, or two sentences."
+level: error
+scope: raw
+raw:
+  - '[—–]'

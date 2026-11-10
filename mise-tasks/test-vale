@@ -1,0 +1,50 @@
+#!/usr/bin/env bash
+#MISE description="The regex House and Slop rules against their fixtures"
+#MISE sources=["test/vale/**", "styles/House/TimeAnchor.yml", "styles/House/ClientScale.yml", "styles/House/ClientNumbers.yml", "styles/House/ClientPractice.yml", "styles/House/AgentSpend.yml", "styles/House/ProcessDetail.yml", "styles/Slop/Cost.yml", "styles/Slop/StagedLabel.yml", "styles/Slop/SloganHeading.yml", "styles/Slop/Archaeology.yml", ".vale.ini", "mise-tasks/test-vale"]
+#MISE outputs={ auto = true }
+#
+# These rules are regexes over prose, written from a handful of examples, so
+# each case they were built from is pinned here.
+#
+# In test/vale/should-fire.md every paragraph under a `## <Rule>` heading must
+# raise House.<Rule> on its first line (`## Slop.<Rule>` names a Slop rule). A
+# case may wrap onto a second line, to pin the hard-wrapped posts. In
+# test/vale/must-not-fire.md nothing may raise any of them. A new case goes in one file or the other before the rule
+# changes. test/vale/client/ holds the same pair for House.ClientNumbers and
+# House.ClientPractice, which .vale.ini turns on only there.
+set -euo pipefail
+
+filter='.Name matches "^(House[.](TimeAnchor|ClientScale|ClientNumbers|ClientPractice|AgentSpend|ProcessDetail)|Slop[.](Cost|StagedLabel|SloganHeading|Archaeology))$"'
+status=0
+
+for dir in test/vale test/vale/client; do
+  # Vale exits 1 when it reports an error, and these files exist to make it.
+  fired=$(vale --filter="$filter" --output=line "$dir/should-fire.md" || true)
+  missed=$(awk -v fired="$fired" '
+    BEGIN {
+      n = split(fired, lines, "\n")
+      for (i = 1; i <= n; i++) {
+        split(lines[i], f, ":")
+        sub(/^House[.]/, "", f[4])
+        hit[f[2] ":" f[4]] = 1
+      }
+    }
+    /^## / { rule = $2; prev = ""; next }
+    rule != "" && NF && prev == "" && !((NR ":" rule) in hit) {
+      printf "%s:%d: %s did not fire: %s\n", FILENAME, NR, (rule ~ /[.]/ ? rule : "House." rule), $0
+    }
+    { prev = $0 }' "$dir/should-fire.md")
+  if [ -n "$missed" ]; then
+    printf '%s\n' "$missed"
+    status=1
+  fi
+
+  passed=$(vale --filter="$filter" --output=line "$dir/must-not-fire.md" || true)
+  if [ -n "$passed" ]; then
+    printf '%s\n' "$passed" | sed 's/$/ (must not fire)/'
+    status=1
+  fi
+done
+
+[ "$status" -eq 0 ] && echo "The regex rules match their fixtures."
+exit "$status"

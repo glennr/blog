@@ -2,16 +2,17 @@
 title: "A Space Broke the Drata Agent"
 description: "A simple but frustrating issue with directory names containing spaces causing the Drata Agent to fail"
 date: 2025-03-14T10:47:00+10:00
+format: fix
 categories:
   - troubleshooting
 tags:
   - drata
-  - linux
+  - Linux
 ---
 
 I recently ran into a simple but frustrating issue with [Drata's](https://drata.com/) Agent for [Linux](https://help.drata.com/en/articles/4752916-installing-the-drata-agent-via-ubuntu-linux). The agent wouldn't start, and the logs showed this error:
 
-```
+```text
 LaunchProcess: failed to execvp:
 /opt/Drata
 [FATAL:zygote_host_impl_linux.cc(201)] Check failed: . : Invalid argument (22)

@@ -2,6 +2,10 @@
 title: "How to test your Elixir Phoenix LiveView apps with k6."
 description: "How to test your Elixir Phoenix LiveView apps with k6."
 date: 2022-10-25T23:09:24+10:00
+format: guide
+slug: how-to-test-your-elixir-phoenix-liveview-apps-with-k6
+aliases:
+  - /posts/2022/10/25/how-to-test-your-elixir-phoenix-liveview-apps-with-k6./
 showTableOfContents: true
 categories:
   - load-testing
@@ -14,7 +18,7 @@ tags:
 
 Elixir and Phoenix tout high performance with [low hardware
 requirements](https://freecontent.manning.com/ride-the-phoenix/), and
-[microsecond (μs) response times](https://medium.com/pinterest-engineering/introducing-new-open-source-tools-for-the-elixir-community-2f7bb0bb7d8c). Of course Elixir and Phoenix are only one part of your (production) stack, and thus tell only part of the whole story.
+[microsecond (μs) response times](https://medium.com/pinterest-engineering/introducing-new-open-source-tools-for-the-elixir-community-2f7bb0bb7d8c). Of course Elixir and Phoenix are only one part of your (production) stack, so those numbers only tell you about the application layer.
 
 How well does your Phoenix LiveView app, and infrastructure, perform under stress?
 
@@ -22,7 +26,7 @@ How do you baseline performance, and how do you measure the impact of changes on
 
 Given LiveView relies on websocket communication, how do you test that? How memory hungry are your views?
 
-I recently had to answer these questions for [Bramble](www.brmbl.io) which is an
+I recently had to answer these questions for [Bramble](https://www.brmbl.io) which is an
 app built with Phoenix LiveView. I needed something to simulate HTTP and websocket traffic with spikey and sustained workloads.
 
 ## Enter k6
@@ -63,7 +67,7 @@ For a production setup, you'll likely run the tests against a staging or pre-pro
 
 ### Install k6
 
-First, install k6 per [their instructions](https://k6.io/docs/getting-started/installation/. ASDF users can try https://github.com/grimoh/asdf-k6
+First, install k6 per [their instructions](https://k6.io/docs/getting-started/installation/). ASDF users can try [asdf-k6](https://github.com/grimoh/asdf-k6).
 
 ### Set up a LiveView project
 
@@ -114,18 +118,18 @@ export default function () {
 [Source code on GitHub](https://github.com/glennr/live_beats/commit/d17cdff42b0bbe856dc818a04db191dc2bdc0cc9)
 
 For simplicity, this script skips GitHub OAuth sign in.
-Instead it expects a valid cookie exposed as an environment variable.
+Instead it reads a valid cookie from an environment variable.
 
 To do this grab the `_live_beats_key_v1` cookie from your browser, and export it
 in the same session you'll run k6.
 
-```
+```console
 % export LIVEBEATS_COOKIE=YOUR_COOKIE
 ```
 
 To run this script, use the k6 binary you installed:
 
-```
+```console
 
 % k6 run test/k6/load-test.js
 
@@ -168,7 +172,7 @@ default ✓ [======================================] 1 VUs  00m01.1s/10m0s  1/1 
      vus_max……………………: 1       min=1      max=1
 ```
 
-Boom, you can see both checks worked, and various performance statistics for the
+Boom, you can see both checks worked, and the performance statistics for the
 run. Our p90 HTTP request duration is 63.55ms.
 
 ## Baby's first melted CPU
@@ -461,4 +465,4 @@ You can also see a set of new websocket-related metrics in the k6 output. As you
 
 It's possible with `k6/ws` to simulate navigation within the LiveView (by keeping the websocket open and sending `redirect` or `patch` messages). With this approach you should see more exact resource memory consumption (in particular any memory overhead) on your servers.
 
-If your app uses LiveView, your load scripts may use [k6/ws](https://k6.io/docs/javascript-api/k6-ws/) more than [k6/http](https://k6.io/docs/javascript-api/#k6-http). However if `k6/http` provides you with a 'good enough' load test, start there, as the API is simpler, and your load scripts will be easier to grok. Also check out some [various test types](https://k6.io/docs/test-types/introduction/) that k6 has to offer, for example ramping stress tests.
+If your app uses LiveView, your load scripts may use [k6/ws](https://k6.io/docs/javascript-api/k6-ws/) more than [k6/http](https://k6.io/docs/javascript-api/#k6-http). However if `k6/http` provides you with a 'good enough' load test, start there, as the API is simpler, and your load scripts will be easier to grok. Also check out some [test types](https://k6.io/docs/test-types/introduction/) that k6 has to offer, for example ramping stress tests.

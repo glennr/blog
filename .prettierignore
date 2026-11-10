@@ -1,0 +1,21 @@
+# Prose. Vale reads the words and markdownlint reads the structure; a
+# reflow here would fight both, and markdown is the one format the two
+# tools would disagree about.
+*.md
+
+# Hugo templates. Prettier's HTML parser reads `{{ "posts/" | relLangURL }}`
+# inside an attribute as an unterminated tag and errors on the file.
+layouts/
+
+# Vendored: the Vale styles are synced from upstream packages.
+styles/
+
+# Build output and checkouts.
+public/
+build/
+resources/
+themes/
+node_modules/
+tmp/
+.worktrees/
+.claude/

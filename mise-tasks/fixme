@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+#MISE description="No post carries a FIXME"
+#MISE sources=["content/**", "mise-tasks/fixme"]
+#
+# A draft carries its open questions inline, in a red callout after the
+# paragraph it is about, so Glenn reads each one next to its line:
+#
+#   > [!CAUTION]
+#   > FIXME 1: <context>. <recommendation>. Suggested: "<text>". Yes or no?
+#
+# Glenn's own review notes are `FIXME` too. This fails on any of them, in any
+# post, draft or not, front matter included, so a post with one cannot be
+# merged or published (Glenn, 2026-11-10). A FIXME inside backticks is code the
+# post is about, not a note, so it does not count. `bin/body-words` does not
+# count a `FIXME` line, so the questions do not push a draft past its word
+# budget.
+#
+# The pre-commit hook sets FIXME_DRAFTS_OK=1, so work in progress on a draft
+# still commits; `check` and CI do not. No `outputs`, so mise never serves a
+# pre-commit pass from cache to `check`.
+set -euo pipefail
+
+mapfile -d '' -t files < <(find content -name '*.md' ! -name '_index.md' -print0 | sort -z)
+[ "${#files[@]}" -gt 0 ] || { echo "no content files under content/" >&2; exit 1; }
+
+awk -v drafts_ok="${FIXME_DRAFTS_OK:-0}" '
+  FNR == 1 { fm = ($0 == "---"); draft[FILENAME] = 0 }
+  FNR > 1 && fm && $0 == "---" { fm = 0 }
+  fm && /^draft: *true *$/ { draft[FILENAME] = 1 }
+  { line = $0; gsub(/`[^`]*`/, "", line) }
+  line ~ /FIXME/ { n[FILENAME]++; first[FILENAME] = first[FILENAME] ? first[FILENAME] : FNR }
+  END {
+    for (f in n) if (!(drafts_ok == 1 && draft[f])) {
+      printf "%s:%d: %d FIXME(s); resolve them before this post merges\n", f, first[f], n[f] > "/dev/stderr"
+      fail = 1
+    }
+    if (fail) { print "fixme check failed" > "/dev/stderr"; exit 1 }
+    print (drafts_ok == 1 ? "No FIXME outside a draft." : "No FIXME in any post.")
+  }' "${files[@]}"

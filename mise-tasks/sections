@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+#MISE description="Warn on a section of more than three prose paragraphs, in posts not yet on master"
+#MISE sources=["content/**", "mise-tasks/sections"]
+#MISE outputs={ auto = true }
+#
+# A warning, never a failure: blog-style's "Check before you show the draft"
+# says a three-paragraph gate fails thirteen posts, some cut by Glenn himself,
+# so this only points the next pass at a long section. Published posts are
+# left out, because they are never reworded, and so are TILs, which have no
+# sections. A paragraph is a blank-line
+# separated block of prose: code fences, lists, callouts, tables, shortcodes
+# and headings do not count.
+set -euo pipefail
+
+mapfile -t files < <(git diff --name-only --diff-filter=A master -- 'content/posts/*.md' || true)
+[ "${#files[@]}" -gt 0 ] || exit 0
+
+awk '
+  function flush() {
+    if (n > 3) printf "warning: %s:%d: section \"%s\" has %d paragraphs\n", file, start, head, n
+  }
+  FNR == 1 { if (NR > 1) flush(); file = FILENAME; fm = ($0 == "---"); fence = 0; n = 0; head = "(top)"; start = 1; prev = ""; next }
+  fm { if ($0 == "---") fm = 0; next }
+  /^```/ { fence = !fence; prev = "x"; next }
+  fence { next }
+  /^#+ / { flush(); n = 0; head = $0; sub(/^#+ /, "", head); start = FNR; prev = ""; next }
+  /^[[:space:]]*$/ { prev = ""; next }
+  prev == "" && /^[A-Za-z"`(\[]/ { n++ }
+  { prev = $0 }
+  END { flush() }' "${files[@]}"

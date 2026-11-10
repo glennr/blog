@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+#MISE description="A client draft names no mise task of our own"
+#MISE sources=["content/**", "test/client-tooling/**", "mise-tasks/client-tooling"]
+#MISE outputs={ auto = true }
+#
+# The reader of a client post can't run our tasks, so a task's name tells
+# them nothing; the post says what the step does. In a draft marked
+# `client: true`, this fails on "mise task", "mise file task", "mise run <x>"
+# or "mise-tasks/" in prose, and on a code block whose filename is under
+# mise-tasks/. A post tagged `mise` or `tooling` is about the tasks and is
+# skipped. Vale can't do this: it masks inline code, so it never sees the
+# "mise" in "a `mise` task".
+#
+# test/client-tooling/fire/ and pass/ pin the cases, one file each; this
+# fails if either drifts, then checks every client draft.
+set -euo pipefail
+
+scan() {
+  awk '
+    BEGIN { re = "(^|[^[:alnum:]_])(mise (file )?tasks?|mise run [[:alnum:]:_-]+|mise-tasks/)" }
+    FNR == 1 { fm = ($0 == "---"); draft = 0; client = 0; skip = 0; intags = 0; fence = 0; next }
+    fm && $0 == "---" { fm = 0; next }
+    fm {
+      if ($0 ~ /^draft: *true *$/) draft = 1
+      if ($0 ~ /^client: *true *$/) client = 1
+      if ($0 ~ /^tags:/) { intags = 1; next }
+      if (intags && $0 ~ /^  - /) { if (tolower($0) ~ /- *(mise|tooling) *$/) skip = 1; next }
+      intags = 0; next
+    }
+    !draft || !client || skip { next }
+    /^ *```/ {
+      if (!fence && tolower($0) ~ /filename="mise-tasks\//) printf "%s:%d: %s\n", FILENAME, FNR, $0
+      fence = !fence; next
+    }
+    fence { next }
+    { line = tolower($0); gsub(/`/, "", line); gsub(/\]\([^)]*\)/, "", line); gsub(/\[/, "", line)
+      if (line ~ re) printf "%s:%d: %s\n", FILENAME, FNR, $0 }
+  ' "$@"
+}
+
+status=0
+for f in test/client-tooling/fire/*.md; do
+  [ -n "$(scan "$f")" ] || { echo "$f: did not fire"; status=1; }
+done
+for f in test/client-tooling/pass/*.md; do
+  hit=$(scan "$f")
+  [ -z "$hit" ] || { echo "$hit (must not fire)"; status=1; }
+done
+[ "$status" -eq 0 ] || exit 1
+
+mapfile -t files < <(grep -rlx --include='*.md' 'client: true' content)
+hits=$(scan "${files[@]}")
+[ -z "$hits" ] || { printf '%s\n' "$hits"; echo "Say what the step does. The reader can't run our tasks."; exit 1; }
+echo "No client draft names a task of ours, in ${#files[@]} post(s)."

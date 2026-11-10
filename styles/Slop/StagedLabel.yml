@@ -1,0 +1,17 @@
+# A short sentence or label that announces the next point instead of making
+# it. Glenn's examples: "Timing matters too.", "The rule now:", "That buys
+# three things:", "Two raises keep...", "One rule makes it safe to send:".
+# Exact shapes only, anchored at a sentence start; the general move ("That
+# works until...") is the AI-tells reviewer's job.
+extends: existence
+message: "Staged opener: '%s'. Make the point; drop the announcement."
+level: error
+scope: paragraph
+ignorecase: false
+nonword: true
+tokens:
+  - '\b[A-Za-z]+\s+matters\s+too\.'
+  - '\bThe\s+(?:rule|fix|catch|upshot)\s+now:'
+  # A count that sets up a reveal: "Two gotchas:", "One test proves it:".
+  - '(?:^|(?<=[.!?]\s))(?:One|Two|Three|Four|Five)\s+[a-z]+(?:\s+[a-z]+){0,4}:'
+  - '(?:^|(?<=[.!?]\s))(?:One|Two|Three|Four|Five)\s+[a-z]+\s+(?:keeps?|makes?|buys?)\b'

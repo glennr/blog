@@ -1,0 +1,60 @@
+# Don't anchor a post in time.
+#
+# "Since I started it in 2020", "six years on", "last March", "in late 2025"
+# date the work from the outside. The post's own date already says when. On a
+# backfill they also show the author reading the history long after the fact.
+# Name a year only when it is the point: a release, a deprecation, a version.
+# A title that ends "in 2026" (a guide to the stack as it stands) is that
+# case, so a bare "in <year>" at the very end of a title, heading or paragraph
+# is allowed, and so is a year straight after "released", "deprecated" and the
+# like. The end means the end of the text, not of a line: the newer posts wrap
+# at about 76, and "in 2021" at the end of a wrapped line is mid-sentence.
+#
+# Durations count only in days and longer. "Ten minutes later" is how long CI
+# took, not when the work happened. "Next week" and "after a month" are the
+# reader's future, so they pass; "a month later" and "last week" do not.
+# "At the time of" is about a row or a request, not the work, so it passes.
+#
+# test/vale/should-fire.md and test/vale/must-not-fire.md hold every case this
+# was built from. `mise run test-vale` fails if either one drifts.
+extends: existence
+message: "'%s' anchors the post in time. Drop it; the post's date says when."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  # "since I started it in 2020"
+  - '\bsince\s+(?:I|we)\b[^.!?]{0,40}?\b(?:19|20)\d\d\b'
+  # "since 2020", "by late 2025", "back in 2019", but not "released in 2015"
+  - '(?<!\b(?:released|deprecated|removed|introduced|shipped|published|announced|launched|retired|archived|supported|available)\s+)\b(?:since|by|until|till|from|during|before|after|around|circa|back\s+in)\s+(?:early\s+|late\s+|mid-?\s*)?(?:19|20)\d\d\b'
+  - '\bin\s+(?:early\s+|late\s+|mid-?\s*)(?:19|20)\d\d\b'
+  - '(?<!\b(?:released|deprecated|removed|introduced|shipped|published|announced|launched|retired|archived)\s+)\bin\s+(?:19|20)\d\d\b(?!\s*\z)'
+  # "2026 Q3", "Q3 2025", "by Q3"
+  - '\b(?:19|20)\d\d\s*[-/]?\s*[QH][1-4]\b'
+  - '\b[QH][1-4]\s*[-/]?\s*(?:19|20)\d\d\b'
+  - '\b(?:in|by|during|until|since|from|before|after|through)\s+Q[1-4]\b'
+  # "six years on", "a month later", "two days before", "years later"
+  - '\b(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|a\s+few|a\s+couple\s+of|several|many|\d+)\s+(?:days?|weeks?|months?|years?|decades?)\s+(?:on|later|ago|earlier|after|before|into|since)\b'
+  - '\b(?:a|an|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|a\s+few|a\s+couple\s+of|several|\d+)\s+(?:weeks?|months?|years?|decades?)\s+in(?=\s*[,.;:!?)])'
+  - '\b(?:days|weeks|months|years|decades)\s+(?:later|on|ago|earlier)\b'
+  # "a year of letting it", "six years of temporal tables"
+  - '\b(?:a|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|a\s+few|a\s+couple\s+of|several|\d+)\s+(?:months?|years?|decades?)\s+of\b'
+  # "for months", "for the first six months", "for a year"
+  - '\bfor\s+(?:the\s+(?:first|last|past|next)\s+)?(?:(?:a|one)\s+(?:week|month|year|decade)|(?:(?:two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|a\s+few|a\s+couple\s+of|several|many|\d+)\s+)?(?:weeks|months|years|decades))\b'
+  # "last March", "this year", "that summer", "last week"
+  - '\b(?:last|this|next|that|the\s+following|the\s+previous)\s+(?:year|month|quarter|spring|summer|autumn|fall|winter|January|February|March|April|May|June|July|August|September|October|November|December)\b'
+  - '\b(?:last|that|the\s+following|the\s+previous)\s+week\b'
+  # "over the next few years", "the last six months", "the past months"
+  - '\b(?:last|past|next|following|first)\s+(?:few|couple\s+of|several|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|eighteen)\s+(?:days|weeks|months|years|decades)\b'
+  - '\bthe\s+(?:last|past|next|following)\s+(?:weeks|months|years|decades)\b'
+  # "in June", "June 2025", "mid-December"; "in May" is too often a verb
+  - '\b(?:in|since|by|until|till|from|during|before|after|early|late|mid-?|around|through|throughout)\s+(?:January|February|March|April|June|July|August|September|October|November|December)\b'
+  - '\b(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+(?:19|20)\d\d\b'
+  # "back then", "at the time", "these days", "a long time ago"
+  - '\bback\s+then\b'
+  - '\bat\s+the\s+time\b(?!\s+of\b)'
+  - '\bthese\s+days\b'
+  - '\bnowadays\b'
+  - '\bto\s+this\s+day\b'
+  - '\b(?:a\s+long\s+time|long|a\s+while|some\s+time|ages)\s+ago\b'
+  - '\b(?:since|by|until|from|at|before|after|in)\s+the\s+(?:start|end|beginning|middle|turn)\s+of\s+(?:the|this|that|last|next)\s+(?:year|month|quarter|decade)\b'

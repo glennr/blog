@@ -1,0 +1,10 @@
+{{/* Override of the theme partial. The section lists, the taxonomy lists, and
+     the home page all draw the same row, so they all go through
+     partials/post-row.html. */}}
+
+{{ $showSummary := site.Params.list.showSummary | default false }}
+{{ if isset .Params "showsummary" }}
+  {{ $showSummary = .Params.showSummary }}
+{{ end }}
+
+{{ partial "post-row.html" (dict "page" .Page "showSummary" $showSummary) }}

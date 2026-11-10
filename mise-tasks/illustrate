@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+#MISE description="Draw a post's header image into its page bundle as feature.webp"
+#USAGE arg "<bundle>" help="The post's page bundle, e.g. content/posts/<slug>"
+#USAGE flag "--style <name>" help="A house style from assets/illustration/styles/ (default: risograph)"
+#
+# Draws a header for one post and writes it to <bundle>/feature.webp, the one
+# name the hero, the list thumbnail and og:image all pick up.
+#
+#   mise run illustrate content/posts/<slug> [--style <name>]
+#
+# The prompt is three parts: the house style from
+# assets/illustration/styles/<name>.md, the post's title and description, and
+# the optional `illustration.subject` from the front matter, which says what
+# the picture should show when the title alone does not. The style comes from
+# --style, else from `illustration.style` in the front matter, else it is
+# risograph, the house default. A style with a reference image beside it,
+# <name>.png, sends that image along too.
+#
+# The image comes from Codex CLI, which draws it on the ChatGPT plan, so no API
+# key is involved. Codex works in a scratch directory and copies its PNG there.
+# That PNG is cropped to 16:9 from the centre, which is why the prompt asks for
+# the subject in the middle, and resized to 1600x900.
+#
+# The front matter then records what was sent, under `illustration`: the
+# style, the subject, and the full prompt. Running the same prompt again gets
+# a picture in the same spirit, not the same picture.
+set -euo pipefail
+
+usage="usage: mise run illustrate <bundle> [--style <name>]"
+# mise parses the arguments from the #USAGE lines above into these.
+bundle="${usage_bundle:-}"
+style="${usage_style:-}"
+[ -n "$bundle" ] || { echo "$usage" >&2; exit 1; }
+bundle="${bundle%/}"
+page="$bundle/index.md"
+[ -f "$page" ] || { echo "$page does not exist. A header needs a page bundle: move <slug>.md to <slug>/index.md." >&2; exit 1; }
+
+command -v codex >/dev/null || { echo "codex is not on PATH. Install it with mise use -g codex." >&2; exit 1; }
+command -v magick >/dev/null || { echo "magick is not on PATH. Install ImageMagick with WebP support." >&2; exit 1; }
+
+# One scalar from the front matter. Top-level keys only, or a key one level
+# under `illustration:`. The values in this repository are single-line, with
+# or without double quotes.
+field() {
+  awk -v want="$1" '
+    NR == 1 && /^---$/ { infm = 1; next }
+    infm && /^---$/ { exit }
+    !infm { exit }
+    /^[^ ]/ { parent = "" }
+    /^illustration:[ ]*$/ { parent = "illustration"; next }
+    {
+      line = $0
+      key = line; sub(/:.*/, "", key); gsub(/^ +/, "", key)
+      path = (line ~ /^ / ? parent "." key : key)
+      if (path != want) next
+      sub(/^[^:]*:[ ]*/, "", line)
+      if (line ~ /^".*"$/) { line = substr(line, 2, length(line) - 2); gsub(/\\"/, "\"", line) }
+      print line
+      exit
+    }' "$page"
+}
+
+title=$(field title)
+description=$(field description)
+subject=$(field illustration.subject)
+[ -n "$style" ] || style=$(field illustration.style)
+[ -n "$style" ] || style=risograph
+[ -n "$title" ] || { echo "$page has no title." >&2; exit 1; }
+
+style_file="assets/illustration/styles/$style.md"
+[ -f "$style_file" ] || { echo "$style_file does not exist. Styles: $(ls assets/illustration/styles/*.md | xargs -n1 basename | sed 's/\.md$//' | paste -sd' ')" >&2; exit 1; }
+
+prompt="Draw the header illustration for a blog post.
+
+House style:
+$(cat "$style_file")
+
+The post is titled \"$title\".
+${description:+It is about this: $description
+}${subject:+The picture shows: $subject
+}
+Frame it as a wide 16:9 landscape. Keep the subject in the centre, with
+nothing important near the left and right edges, because the image is
+cropped to 16:9 from the centre. The picture must contain no text at all.
+
+Save it in the current directory as feature.png."
+
+work=$(mktemp -d)
+trap 'rm -rf "$work"' EXIT
+
+images=()
+[ -f "assets/illustration/styles/$style.png" ] && images=(-i "$PWD/assets/illustration/styles/$style.png")
+
+# "Model at capacity" draws nothing and a wrapper can hide its exit 1, so success is a PNG on disk,
+# not the exit code. Three tries, 30 seconds apart.
+echo "illustrate: drawing $bundle in the $style style (about a minute)"
+png=
+for try in 1 2 3; do
+  (cd "$work" && codex exec --skip-git-repo-check -s workspace-write "${images[@]}" "$prompt" </dev/null >"$work/codex.log" 2>&1) || true
+  png=$(find "$work" -maxdepth 1 -name '*.png' -print -quit)
+  [ -z "$png" ] || break
+  if [ "$try" -lt 3 ]; then
+    echo "illustrate: codex wrote no PNG (try $try of 3), retrying in 30 seconds" >&2
+    sleep 30
+  fi
+done
+[ -n "$png" ] || { echo "codex exec wrote no PNG into $work after 3 tries. Its last log:" >&2; cat "$work/codex.log" >&2; exit 1; }
+
+magick "$png" -resize '1600x900^' -gravity center -extent 1600x900 -quality 82 "$bundle/feature.webp"
+
+# Rewrite the `illustration` block: drop the old one, then put the new one
+# last in the front matter. The prompt goes in as a literal block, so it needs
+# no escaping.
+fm="$work/index.md"
+style="$style" subject="$subject" prompt="$prompt" awk '
+  BEGIN { style = ENVIRON["style"]; subject = ENVIRON["subject"]; prompt = ENVIRON["prompt"] }
+  NR == 1 && /^---$/ { print; infm = 1; next }
+  infm && /^---$/ {
+    print "illustration:"
+    print "  style: " style
+    if (subject != "") { s = subject; gsub(/"/, "\\\"", s); print "  subject: \"" s "\"" }
+    print "  prompt: |"
+    n = split(prompt, lines, "\n")
+    for (i = 1; i <= n; i++) print (lines[i] == "" ? "" : "    " lines[i])
+    print; infm = 0; next
+  }
+  infm && /^illustration:/ { skip = 1; next }
+  infm && skip && /^ / { next }
+  infm && skip && /^$/ { next }
+  { skip = 0; print }
+' "$page" >"$fm"
+cat "$fm" >"$page"
+
+echo "illustrate: wrote $bundle/feature.webp and recorded the prompt in $page"

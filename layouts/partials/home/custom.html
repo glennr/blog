@@ -1,0 +1,91 @@
+{{/* Home page.
+
+     Two parts, top to bottom: a hero that puts the intro on the left and the
+     portrait on the right, and a list of recent posts. Each list row carries a
+     title, a date, and a description, and the whole row is one click target.
+
+     The words come from content/_index.md. Its body is the intro prose, and
+     these front matter fields control the rest:
+
+       heroTitle        the h1, defaults to the author name
+       recentPostCount  rows in the posts list, defaults to 5
+       projects         a list of {name, url, description}, one card each
+       projectsHeading  the label above the cards, defaults to "Open source"
+
+     The projects section only appears when the projects list has an entry.
+
+     The rows come from partials/post-row.html, which the section lists use
+     too. The styles live in assets/css/custom.css under the .home- and
+     .post-row prefixes. They are plain CSS on purpose: the theme ships a
+     pre-built Tailwind stylesheet, so a Tailwind class that the theme does not
+     already use produces no rules. */}}
+
+{{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
+{{ $postCount := .Params.recentPostCount | default 5 }}
+
+<article class="home">
+  <section class="home-hero">
+    <div class="home-hero__text">
+      <h1 class="home-hero__title">
+        {{ .Params.heroTitle | default .Site.Params.Author.name | default .Site.Title | emojify }}
+      </h1>
+      <div class="home-hero__lead prose dark:prose-invert">{{ .Content }}</div>
+      <div class="home-hero__links">{{ partialCached "author-links.html" . }}</div>
+    </div>
+
+    {{ with .Site.Params.Author.image }}
+      {{ $portrait := "" }}
+      {{ if or (strings.HasPrefix . "http:") (strings.HasPrefix . "https:") }}
+        {{ $portrait = resources.GetRemote . }}
+      {{ else }}
+        {{ $portrait = resources.Get . }}
+      {{ end }}
+      {{ with $portrait }}
+        {{ $rendered := . }}
+        {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
+          {{ $rendered = .Fill (print "448x448 Center q" ($.Site.Params.Author.imagequality | default "96")) }}
+        {{ end }}
+        <figure class="home-hero__portrait">
+          <img
+            src="{{ $rendered.RelPermalink }}"
+            alt="{{ $.Site.Params.Author.name | default `Author` }}"
+            width="448"
+            height="448"
+            loading="eager"
+            fetchpriority="high"
+            class="nozoom" />
+        </figure>
+      {{ end }}
+    {{ end }}
+  </section>
+
+  {{ $posts := where .Site.RegularPages "Type" "posts" }}
+  {{ with first $postCount $posts }}
+    <section class="home-section">
+      <h2 class="home-section__title">Recent writing</h2>
+      <div class="post-list">
+        {{ range . }}
+          {{ partial "post-row.html" (dict "page" . "showSummary" true) }}
+        {{ end }}
+      </div>
+      <a class="home-button" href="{{ "posts/" | relLangURL }}">All writing</a>
+    </section>
+  {{ end }}
+
+  {{ with .Params.projects }}
+    <section class="home-section home-projects">
+      <h2 class="home-section__title">{{ $.Params.projectsHeading | default "Open source" }}</h2>
+      <div class="home-projects__grid">
+        {{ range . }}
+          <div class="home-project">
+            <h3 class="home-project__title">
+              <a href="{{ .url }}">{{ .name }}</a>
+              <span aria-hidden="true" class="post-row__arrow">&#8599;&#xFE0E;</span>
+            </h3>
+            <p class="home-project__description">{{ .description | markdownify }}</p>
+          </div>
+        {{ end }}
+      </div>
+    </section>
+  {{ end }}
+</article>

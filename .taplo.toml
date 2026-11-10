@@ -1,0 +1,9 @@
+# Hugo's configuration is the only TOML here.
+include = ["config/**/*.toml"]
+
+[formatting]
+# The theme's configuration nests three tables deep. Indenting the entries
+# under their own header is what makes that readable.
+indent_entries = true
+# Order is meaning in a Hugo menu, and the params file groups by feature.
+reorder_keys = false

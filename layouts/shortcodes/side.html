@@ -1,0 +1,14 @@
+{{- /* One column of a compare shortcode. `title` names it: Before, After,
+  Option A. An optional `verdict` of "good" or "bad" marks the side to copy
+  and the side to avoid, with an icon as well as a colour. */ -}}
+{{- $verdict := .Get "verdict" -}}
+<section class="compare__side{{ with $verdict }} compare__side--{{ . }}{{ end }}">
+  {{- with .Get "title" }}
+    <p class="compare__title">
+      {{- if eq $verdict "good" }}<span class="compare__mark" aria-hidden="true">{{ partial "icon.html" "check" }}</span>{{ end -}}
+      {{- if eq $verdict "bad" }}<span class="compare__mark" aria-hidden="true">{{ partial "icon.html" "xmark" }}</span>{{ end -}}
+      {{ . }}
+    </p>
+  {{- end }}
+  {{ .Inner | .Page.RenderString (dict "display" "block") }}
+</section>

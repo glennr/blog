@@ -1,0 +1,102 @@
+#!/usr/bin/env bash
+#MISE description="The keys each section publishes with"
+#MISE sources=["content/**", "data/word-budgets.toml", "mise-tasks/front-matter"]
+#MISE outputs={ auto = true }
+#
+# Every content file carries the front matter its section needs.
+#
+# The archetypes already write these keys. What this catches is a file made by
+# hand, a key dropped in an edit, and a `format` that names no shape - all of
+# which build and publish without complaint, and all of which cost a reader
+# something: no `description` is no meta description, a `format` with no
+# budget is a post `mise run words` never measures.
+#
+# One awk over every file. The first version read each value with its own
+# `sed` and spent 514ms on 28 files, effectively all of it process startup.
+set -euo pipefail
+
+# The set of shapes is the set of keys in the word budgets, so a shape needs
+# a ceiling and nothing else. An archetype only saves typing the front matter.
+budgets=data/word-budgets.toml
+[ -f "$budgets" ] || { echo "$budgets does not exist" >&2; exit 1; }
+formats=$(sed -n 's/^\([a-z-]*\)[ \t]*=.*/\1/p' "$budgets" | paste -sd, -)
+
+# The list goes to one awk, not through xargs: xargs reports a child's
+# failure as 123, and this check's exit code is the whole of its output.
+mapfile -d '' -t files < <(find content -name '*.md' ! -name '_index.md' -print0 | sort -z)
+[ "${#files[@]}" -gt 0 ] || { echo "no content files under content/" >&2; exit 1; }
+
+awk -v formats="$formats" '
+    function note(msg) { printf "%s: %s\n", fname, msg > "/dev/stderr"; fail = 1 }
+
+    function check(   i, key, need, n) {
+      if (!closed) { note("no front matter"); return }
+
+      if (fname ~ /^content\/posts\//)    need = "title description date format categories tags"
+      else if (fname ~ /^content\/til\//) need = "title date format tags"
+      else                                   need = "title date"
+
+      n = split(need, want, " ")
+      for (i = 1; i <= n; i++)
+        if (!(want[i] in val)) note("front matter has no `" want[i] "`")
+
+      if (val["title"] == "") note("`title` is empty")
+      if (val["title"] == "Untitled") note("`title` is still Untitled")
+
+      if (val["date"] !~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/)
+        note("`date` is not a date: " (val["date"] == "" ? "empty" : val["date"]))
+
+      if ("format" in val && !(val["format"] in known))
+        note("`format: " val["format"] "` names no shape in data/word-budgets.toml")
+
+      if ("draft" in val && val["draft"] != "true" && val["draft"] != "false")
+        note("`draft` is neither true nor false: " val["draft"])
+
+      # A list key the archetype wrote and nobody filled leaves a bare `-`,
+      # which Hugo reads as one empty term and renders as a nameless taxonomy.
+      for (i = 1; i <= 2; i++) {
+        key = (i == 1 ? "categories" : "tags")
+        if ((key in val) && items[key] == 0) note("`" key "` is empty")
+      }
+
+      # content/til is the TIL section, and the til rules are the ones that
+      # apply to it. A note there declaring another format reads by the wrong
+      # rules.
+      if (fname ~ /^content\/til\// && val["format"] != "til")
+        note("a til note declares `format: " val["format"] "`")
+    }
+
+    BEGIN {
+      split(formats, f, ",")
+      for (i in f) known[f[i]] = 1
+    }
+
+    FNR == 1 {
+      if (started) check()
+      fname = FILENAME
+      started = 1; closed = 0; inside = ($0 == "---"); last = ""
+      delete val; delete items
+      next
+    }
+
+    inside && $0 == "---" { inside = 0; closed = 1; next }
+
+    inside {
+      if (match($0, /^[A-Za-z_]+:/)) {
+        last = substr($0, 1, RLENGTH - 1)
+        v = substr($0, RLENGTH + 1)
+        gsub(/^[ \t]+|[ \t]+$/, "", v)
+        gsub(/^["'"'"']|["'"'"']$/, "", v)
+        val[last] = v
+        items[last] = 0
+      } else if (last != "" && $0 ~ /^[ \t]+-[ \t]+[^ \t]/) {
+        items[last]++
+      }
+    }
+
+    END {
+      if (started) check()
+      if (fail) { print "front matter check failed" > "/dev/stderr"; exit 1 }
+      print "Front matter is complete."
+    }
+  ' "${files[@]}"

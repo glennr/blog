@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#MISE description="No post's prose runs past its format's word budget"
+#MISE sources=["content/**", "data/word-budgets.toml", "bin/body-words", "mise-tasks/words"]
+#MISE outputs={ auto = true }
+#
+# No post runs past the word budget for its `format:`.
+#
+# "Too long" was the commonest correction Glenn made to an agent draft, and
+# every agent pass added words. A skill rule did not hold, so the budget is a
+# gate. The numbers are in data/word-budgets.toml and nowhere else in this
+# repository; bin/body-words decides what counts as a word.
+set -euo pipefail
+
+budgets=data/word-budgets.toml
+[ -f "$budgets" ] || { echo "$budgets does not exist" >&2; exit 1; }
+
+mapfile -d '' -t files < <(find content -name '*.md' ! -name '_index.md' -print0 | sort -z)
+[ "${#files[@]}" -gt 0 ] || { echo "no content files under content/" >&2; exit 1; }
+
+bin/body-words "${files[@]}" | awk -F'\t' -v budgets="$budgets" '
+  BEGIN {
+    while ((getline line < budgets) > 0) {
+      if (line ~ /^[ \t]*(#|$)/) continue
+      split(line, kv, /[ \t]*=[ \t]*/)
+      max[kv[1]] = kv[2] + 0
+    }
+  }
+  ($2 in max) && $4 > max[$2] {
+    printf "%s: %d words, over the %s budget of %d by %d\n", $1, $4, $2, max[$2], $4 - max[$2] > "/dev/stderr"
+    fail = 1
+  }
+  END {
+    if (fail) { print "word budget check failed: cut words, not content (blog-style, \"Cut, do not grow\")" > "/dev/stderr"; exit 1 }
+    print "Every post is inside its word budget."
+  }'

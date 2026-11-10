@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+#MISE description="taplo over the toml, read-only"
+#MISE sources=[".taplo.toml", "{assets,config,i18n,.github}/**/*.toml", "mise-tasks/lint-taplo"]
+#MISE outputs={ auto = true }
+#
+# The sources are the set of files taplo owns here. `mise-tasks/fix` narrows
+# its arguments to the same set; keep the two together.
+set -euo pipefail
+
+taplo fmt --check

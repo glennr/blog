@@ -2,6 +2,7 @@
 title: "ESLint config for React + Redux projects"
 description: "ESLint config for React + Redux projects"
 date: 2015-11-19
+format: explainer
 categories:
   - web development
 tags:
@@ -23,7 +24,7 @@ In terms of JavaScript, there are some decent JS linter tools out there, for exa
 
 - [JSLint](http://www.jslint.com/)
 - [JSCS](http://jscs.info/)
-- [JSHint](jshint.com)
+- [JSHint](https://jshint.com)
 - [ESLint](http://eslint.org/)
 
 In the context of my problem, Sublime+ES6+Babel, it came down to JSHint vs ESLint. JSHint was okay, and had decent support via [SublimeLinter-jshint](https://github.com/SublimeLinter/SublimeLinter-jshint). However I was able to get up and running much faster with ESLint, [with some help from Mr Redux himself, Dan A](https://medium.com/@dan_abramov/lint-like-it-s-2015-6987d44c5b48#.fxqvf1ja6).

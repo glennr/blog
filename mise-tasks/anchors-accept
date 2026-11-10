@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#MISE description="Rewrite anchors.txt from the current build. Check the diff."
+#MISE depends=["build"]
+#
+# Rewrites the baseline from the current build. Every removal then shows up in
+# the diff, which is the point: dropping a published anchor is a decision
+# somebody makes on purpose, not a thing that happens. The regex is the one
+# `anchors` reads with; see the comment there.
+set -euo pipefail
+
+grep -rhoHE --include='index.html' '<div id="?[^"> ]+"?( class="?anchor"?)?>' \
+  build/posts build/til 2>/dev/null \
+  | sed -E 's|^build(.*)/index\.html:<div id="?([^"> ]+)"?.*|\1/#\2|' \
+  | sort -u > anchors.txt
+echo "anchors.txt rewritten: $(wc -l < anchors.txt) anchors. Check the diff."

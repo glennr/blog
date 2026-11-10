@@ -1,0 +1,30 @@
+# How the work was done, not what it found.
+#
+# Glenn cut every one of these from a post about designing screens with
+# Claude Code: "who's going to read that, and what are they going to get out
+# of that?" Judge scores, reruns, token counts per run and the pixel widths a
+# screen was tried at are the author's process. Keep the finding in a
+# sentence ("a run that used it throughout scored no better, on half again
+# the tokens"), and say "on a phone", not "at 320 pixels". Rounded spend
+# ("about 250M tokens") is House.AgentSpend's business and passes here.
+#
+# test/vale/should-fire.md and test/vale/must-not-fire.md hold every case this
+# was built from. `mise run test-vale` fails if either one drifts.
+extends: existence
+message: "'%s' is process detail the reader can't use. Keep the finding, not how you got it."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  # "a blind Opus judge scored each out of 40", "the reviewer rated it 7"
+  - '\b(?:judge|reviewer|grader)\s+(?:\w+\s+){0,2}?(?:scored|rated|graded)\b'
+  - '\bscored\s+(?:it\s+|them\s+|each\s+(?:one\s+|run\s+)?)?(?:a\s+)?\d+'
+  - '\bout\s+of\s+(?:10|20|40|50|100)\b'
+  # "I reran the skipped fix four ways"
+  - '\bre-?ran\s+(?:\w+\s+){0,4}?(?:\d+|two|three|four|five|six|seven|eight|nine|ten)\s+(?:ways|times)\b'
+  # "on 43k output tokens to 63k", "63k output tokens", but not "about 1.2M output tokens"
+  - '(?<!\b(?:about|around|roughly|nearly|over|under)\s)(?<![\w.,])\d[\d.,]*[kKM]?\s+(?:output|input|model)\s+tokens\b'
+  # "the row at 320 pixels", "at 390px"
+  - '(?<![\w.])\d{3,4}\s?(?:px|pixels)\b'
+  # "By kind: 12 ..." breakdowns with no story
+  - '\bby\s+(?:kind|type|category)\s*:'

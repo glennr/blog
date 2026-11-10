@@ -1,0 +1,25 @@
+{{- /* Override of the theme's code block hook, to add a file name tab.
+
+  ```elixir {filename="lib/foo.ex" hl_lines=[3]}
+
+  `filename` draws a tab above the block. The theme's own `title` attribute
+  still works and draws the same tab. Highlighting options such as hl_lines
+  and lineNos pass straight to Chroma. The wrapper keeps the theme's
+  highlight-wrapper class, which is what the copy button attaches to. The
+  tab's styles are in assets/css/custom.css under .codeblock-filename. */ -}}
+{{- $filename := .Attributes.filename -}}
+{{- $title := .Attributes.title -}}
+{{- $lang := or .Type "text" -}}
+<div class="highlight-wrapper{{ if $filename }} has-filename{{ end }}">
+  {{- with $filename -}}
+    <div class="codeblock-title codeblock-filename not-prose">
+      <span class="codeblock-filename__icon" aria-hidden="true">{{ partial "icon.html" "file-lines" }}</span>
+      <span class="codeblock-filename__name">{{ . }}</span>
+    </div>
+  {{- else -}}
+    {{- with $title -}}
+      <div class="codeblock-title">{{ . }}</div>
+    {{- end -}}
+  {{- end -}}
+  {{- transform.Highlight .Inner $lang .Options -}}
+</div>

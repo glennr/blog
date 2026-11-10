@@ -1,10 +1,11 @@
 ---
-title: "{{ replace .Name "-" " " | title }}"
-description: "{{ replace .Name "-" " " | title }}"
+title: "{{ replace .File.ContentBaseName "-" " " | humanize }}"
+description: ""
 date: {{ .Date }}
 draft: true
+client: false
 categories:
--
+  -
 tags:
--
+  -
 ---

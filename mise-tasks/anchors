@@ -1,0 +1,73 @@
+#!/usr/bin/env bash
+#MISE description="Every anchor the site has published still resolves"
+#MISE depends=["build"]
+#MISE sources=["build/index.html", "anchors.txt", "mise-tasks/anchors"]
+#MISE outputs={ auto = true }
+#
+# Every anchor the site has ever published still resolves.
+#
+# A heading's text generates its id, so renaming a heading in a published post
+# silently breaks every inbound link and bookmark to that section. It fails
+# more quietly than a dead page: the browser finds no element and scrolls to
+# the top, so nobody reports it.
+#
+# anchors.txt is the baseline, one `path#id` per line, committed. This fails
+# when a line in it is not in the current build. A new anchor is not an error.
+# `mise run anchors-accept` rewrites the file, which puts every removal in the
+# diff where a human has to approve it.
+#
+# It reads the production build, so drafts are out of scope by construction:
+# an unpublished anchor is not a promise to anybody.
+set -euo pipefail
+
+[ -d build ] || { echo "no build/ to read; run mise run build first" >&2; exit 1; }
+
+# Congo renders a heading's anchor as an empty div inside the heading, with
+# class="anchor". The aliases this repository adds by hand are the same div
+# without the class. Chrome like `the-top` carries a different class and is
+# not matched.
+current=$(mktemp)
+trap 'rm -f "$current"' EXIT
+
+# Two things this regex has to survive. The minifier drops the quotes around
+# an attribute value that has no spaces, so the build says `<div id=the-symptom
+# class=anchor>` and not `<div id="the-symptom" class="anchor">`; both forms
+# are matched, because turning off --minify must not empty the baseline. And
+# grep exits 1 on a file with no anchors, which any list page is, so it runs
+# once over the tree rather than per file, where xargs would report that as a
+# 123.
+grep -rhoHE --include='index.html' '<div id="?[^"> ]+"?( class="?anchor"?)?>' \
+  build/posts build/til 2>/dev/null \
+  | sed -E 's|^build(.*)/index\.html:<div id="?([^"> ]+)"?.*|\1/#\2|' \
+  | sort -u > "$current"
+
+[ -s "$current" ] || { echo "no anchors found in build/; is the build current?" >&2; exit 1; }
+
+if [ ! -f anchors.txt ]; then
+  echo "anchors.txt is missing. Run mise run anchors-accept to write the baseline." >&2
+  exit 1
+fi
+
+missing=$(comm -23 <(sort -u anchors.txt) "$current")
+
+if [ -n "$missing" ]; then
+  printf '%s\n' "$missing" | sed 's/^/  gone: /' >&2
+  cat >&2 <<'EOF'
+
+Those anchors were published and the build no longer emits them. A renamed
+heading is the usual cause.
+
+Either restore the heading text, or keep the new text and add the old id back
+as an alias immediately above the heading:
+
+    <div id="the-old-id"></div>
+
+    ## The new heading
+
+If the page itself was deliberately removed, run `mise run anchors-accept` to
+rewrite the baseline, and say so in the commit message.
+EOF
+  exit 1
+fi
+
+echo "Every published anchor still resolves."

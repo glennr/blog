@@ -1,0 +1,18 @@
+# No bold in the prose.
+#
+# A bold lead-in on a list item and a bold label in a paragraph are the AI
+# tell the Slop style is about. The house style allows italics for one loaded
+# word, once or twice in a whole post, and nothing heavier than that.
+#
+# The scope is `strong`, the rendered <strong> element, so Vale has already
+# parsed the markdown and a fenced code block is out of scope. An earlier
+# version matched `**` in the `raw` scope, which reads fenced blocks as well,
+# and fired on a verbatim CLAUDE.md excerpt. Both the `**` and `__` forms
+# render to <strong>, and k6's `__| \__` banner art sits in a code block, so
+# it is no longer matched.
+extends: existence
+message: "No bold: '%s'. Italics mark one loaded word, or cut the emphasis."
+level: error
+scope: strong
+tokens:
+  - '.+'

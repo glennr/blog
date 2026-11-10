@@ -1,0 +1,20 @@
+# Report agent spend in rounded tokens, not money.
+#
+# A price ages and depends on the plan; a token count is what the run used.
+# "420 runs for $29.91" and "$123 of agent time" fail. Round to the nearest K
+# or M: "about 250M tokens" passes, "251,402,118 tokens" and "4500 tokens"
+# fail. Tokens are not time, so "250M tokens of agent time" fails too.
+# A price in backticks (code) is not prose and passes.
+#
+# test/vale/should-fire.md and test/vale/must-not-fire.md hold every case this
+# was built from. `mise run test-vale` fails if either one drifts.
+extends: existence
+message: "Report agent spend in rounded tokens (about 250M tokens), not '%s'."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  - '[$]\d[\d,.]*\b'
+  - '\b\d{1,3}(?:,\d{3})+\s+(?:\w+\s+)?tokens\b'
+  - '\b\d{4,}\s+(?:\w+\s+)?tokens\b'
+  - '\bof\s+agent\s+time\b'

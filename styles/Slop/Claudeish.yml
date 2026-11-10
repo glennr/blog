@@ -1,0 +1,24 @@
+# Phrases Glenn has flagged in drafts as reading like Claude rather than him.
+# Each one is a stock move: a verdict announced ("what settles it"), a doubt
+# raised only to dismiss it ("was never in question"), a condition set up as a
+# logic puzzle ("two conditions have to hold ... if either fails"), or a
+# borrowed engineering metaphor ("load-bearing"). Every token is the exact
+# phrase, so a hit is the phrase and nothing near it. Error, because each one
+# was a correction already.
+extends: existence
+message: "Claudeish phrasing: '%s'. Say it the way you would to a colleague."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  - '\b(?:what\s+)?settles\s+it\b'
+  - '\bwas\s+never\s+in\s+question\b'
+  - '\band\s+that(?:\s+is|.s)\s+its\s+best\s+idea\b'
+  - '\btwo\s+conditions\s+(?:have\s+to|must|need\s+to)\s+hold\b'
+  - '\bif\s+either\s+(?:one\s+)?fails\b'
+  - '\bthe\s+answer\s+flips\b'
+  - '\bload[-\s]bearing\b'
+  - '\bcopy\s+the\s+pattern,\s+not\b'
+  # "That buys three things": Glenn says "that has a couple of benefits".
+  - '\b(?:that|this|it|which)\s+buys\b'
+  - '\bbuys\s+(?:you|us|me|them)\b'

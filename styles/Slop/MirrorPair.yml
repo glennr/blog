@@ -1,0 +1,13 @@
+# Two short sentences that mirror each other: the second has a pronoun
+# subject, a minimiser or negation, and repeats a word from the first.
+# "Traffic moved CPU. It barely moved memory." Glenn has rejected this as
+# Claude's cadence. Paragraph scope so a hard wrap does not hide it; \1 needs
+# Vale's regexp2 engine. Say both halves in one sentence.
+extends: existence
+message: "Mirrored pair ('%s'). Say it once, in one sentence."
+level: error
+scope: paragraph
+ignorecase: true
+nonword: true
+tokens:
+  - '(?:^|(?<=[.!?]\s))(?:[\p{L}\p{N}_’\x27-]+\s+){1,3}([\p{L}]+)\s+(?:[\p{L}\p{N}_’\x27-]+\s+){0,3}[\p{L}\p{N}_’\x27-]+[.!?]\s+(?:it|they|that|this)\s+(?:barely|hardly|scarcely|never|didn.t|did\s+not)\s+\1\b[^.!?]{0,40}[.!?]'

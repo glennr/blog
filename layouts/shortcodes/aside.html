@@ -1,0 +1,9 @@
+{{- /* A tangent the reader can skip: a footnote that sits by its line.
+
+    {{< aside >}}Oban calls this the Lifeline plugin.{{< /aside >}}
+
+  It reads as a quiet, smaller note in the column, set off by a rule. Styles:
+  .aside in custom.css. */ -}}
+<aside class="aside">
+  {{ .Inner | .Page.RenderString (dict "display" "block") }}
+</aside>

@@ -1,0 +1,13 @@
+{{/* Runs inside the theme's <head> for every page.
+
+     Mermaid for a ```mermaid fenced block. The theme's vendor.html loads the
+     bundle only when the page uses the mermaid shortcode, and the head renders
+     before the page body, so a flag set by the render hook would come too
+     late. Reading the source is order-free. The bundle is the theme's own
+     mermaid plus assets/js/mermaid.js. */}}
+{{ if and (not (.HasShortcode "mermaid")) (strings.Contains .RawContent "```mermaid") }}
+  {{ $lib := resources.Get "lib/mermaid/mermaid.min.js" }}
+  {{ $config := resources.Get "js/mermaid.js" | resources.Minify }}
+  {{ $js := slice $lib $config | resources.Concat "js/mermaid.bundle.js" | resources.Fingerprint (site.Params.fingerprintAlgorithm | default "sha512") }}
+  <script defer type="text/javascript" src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}"></script>
+{{ end }}

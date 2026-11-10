@@ -1,0 +1,17 @@
+{{- /* A figure with a caption around anything: a mermaid block, a code
+  block, a table.
+
+    {{< fig caption="What the trigger copies, and when." >}}
+    ```mermaid
+    ...
+    ```
+    {{< /fig >}}
+
+  A plain image with a title already becomes a figure through the theme's
+  image hook: ![alt](file.png "The caption"). Styles: .fig in custom.css. */ -}}
+<figure class="fig">
+  {{ .Inner | .Page.RenderString (dict "display" "block") }}
+  {{- with .Get "caption" }}
+    <figcaption>{{ . | $.Page.RenderString }}</figcaption>
+  {{- end }}
+</figure>

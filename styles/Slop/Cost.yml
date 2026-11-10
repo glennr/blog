@@ -1,0 +1,17 @@
+# A benefit or a downside dressed as a purchase: "the cost is", "what it
+# costs", "that earns". Glenn talks about a tradeoff, or says what the change
+# does. Literal money, time and tokens ("costs about 20 ms") are fine, so every
+# token needs a demonstrative or a set phrase. "That buys" lives in Claudeish.
+# Error, because each one was a correction already.
+extends: existence
+message: "Business metaphor: '%s'. Say the tradeoff or the benefit plainly."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  - '\bthe\s+cost\s+is\b'
+  - '\bat\s+the\s+cost\s+of\b'
+  - '\bat\s+a\s+cost\b(?!\s+of)'
+  # "What it costs" as a heading, from broadcast-audit-events-after-commit.
+  - '\bwhat\s+(?:it|this|that)\s+costs?\b'
+  - '\b(?:that|this|which)\s+(?:earns|pays\s+for)\b'

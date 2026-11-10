@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+#MISE description="No HTML comment in post source"
+#MISE sources=["content/**", "mise-tasks/agent-text"]
+#MISE outputs={ auto = true }
+#
+# The repository is public, and an HTML comment is invisible on the page but
+# ships in the page source and the repo. So post source carries none: no
+# `<!-- agent -->` markers (Glenn, 2026-10-26), no critique, no note, no
+# separator between two blockquotes (Glenn, 2026-11-10). A question for Glenn
+# is a bold `FIXME` the reader can see; everything else goes in the private
+# sidecar. The one exception is a Vale directive on a line of its own, which
+# is tooling, not commentary. A comment inside a code fence is the code the
+# post is about, so it does not count.
+set -euo pipefail
+
+mapfile -d '' -t files < <(find content -name '*.md' ! -name '_index.md' -print0 | sort -z)
+[ "${#files[@]}" -gt 0 ] || { echo "no content files under content/" >&2; exit 1; }
+
+awk '
+  FNR == 1 { fence = 0 }
+  /^[ \t]*(```|~~~)/ { fence = !fence; next }
+  fence { next }
+  /^<!-- vale [^>]*-->[ \t]*$/ { next }
+  /<!--/ { printf "%s:%d: an HTML comment; post source carries none\n", FILENAME, FNR > "/dev/stderr"; fail = 1 }
+  END {
+    if (fail) { print "agent text check failed" > "/dev/stderr"; exit 1 }
+    print "No HTML comment in content."
+  }' "${files[@]}"

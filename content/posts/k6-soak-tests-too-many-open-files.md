@@ -1,7 +1,8 @@
 ---
 title: "K6 Soak Tests: Too Many Open Files"
-description: "ESLint config for React + Redux projects"
+description: "A k6 soak test dies with socket: too many open files. Raise the open file limit with ulimit -n."
 date: 2022-10-26T23:21:33+10:00
+format: til
 categories:
   - DevOps
 tags:
@@ -10,9 +11,9 @@ tags:
   - k6
 ---
 
-Soak tests with [k6](https://www.k6.io) might generate this error:
+[Soak tests]({{< relref "testing-liveview-with-k6" >}}) with [k6](https://www.k6.io) might generate this error:
 
-```
+```text
 ERRO[0543] GoError: dial tcp 1.2.3.4:443: socket: too many open files
 running at go.k6.io/k6/js/modules/k6/ws.(*WS).Connect-fm (native)
 ```
@@ -21,20 +22,20 @@ Indicating a hard limit imposed by the Linux kernel, as the `k6` process was try
 
 This error can relate to personal file descriptor limits:
 
-```
+```console
 % ulimit -n
 1024
 ```
 
 The fix was simple:
 
-```
+```console
 % ulimit -n 10000
 ```
 
 And to verify:
 
-```
+```console
 % ulimit -n
 10000
 ```

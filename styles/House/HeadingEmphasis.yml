@@ -1,0 +1,12 @@
+# No underscore emphasis in a heading.
+#
+# `House.Bold` catches the `**` form anywhere in the file, headings included.
+# It cannot carry the `__` form, because its scope is raw and k6's banner art
+# draws a `__| \__` inside a code block. A heading is never inside one, so the
+# `__` form lives here and the two rules do not overlap.
+extends: existence
+message: "A heading carries no emphasis: '%s'."
+level: error
+scope: raw
+raw:
+  - '(?m)^#{1,6} .*__[^_\n]+__.*$'

@@ -1,0 +1,12 @@
+# The scoping disclaimer: a whole sentence that is a demonstrative verdict,
+# then the reading it rules out. "That's our app, not every BEAM app." The
+# reverse of NegativeParallelism's "isn't X. It's Y." Put the scope in the
+# sentence that makes the claim.
+extends: existence
+message: "Corrective 'X, not Y' ('%s'). Put the scope in the claim instead."
+level: error
+scope: paragraph
+ignorecase: false
+nonword: true
+tokens:
+  - '(?:^|(?<=[.!?]\s))(?:That|This|It)(?:[’\x27]s|\s+is|\s+was)\s+(?:[\p{L}\p{N}_-]+\s+){0,5}[\p{L}\p{N}_-]+,\s+not\s+(?:[\p{L}\p{N}_-]+\s+){0,5}[\p{L}\p{N}_-]+[.!?]'

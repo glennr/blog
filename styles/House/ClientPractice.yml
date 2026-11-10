@@ -1,0 +1,35 @@
+# Say nothing about how a client does its own work.
+#
+# A post drawn from client work opens on the feature the team built ("our
+# app") and leaves out the client's own practices: that it runs AI agents,
+# keeps its know-how in Claude skills, or has agents draft its content. Glenn:
+# "we don't want to reveal that the client might actually be using agents and
+# skills in the production of their work." His first catch was "A client runs
+# their own AI agents."
+#
+# The team building the app with Claude Code is Glenn's practice, not the
+# client's, so "we let Claude Code open PRs" passes. The regexes catch the
+# common forms; a paraphrase gets past them, and so does a phrase split
+# across two lines of a blockquote such as the TL;DR, which Vale reads line
+# by line. The reviewers look for both.
+#
+# Off for every file in .vale.ini. `mise run client-numbers` turns it on for
+# each post whose front matter says `client: true`, and the section for
+# test/vale/client/ turns it on for its fixtures.
+extends: existence
+message: "'%s' tells how the client does its own work. Say what the feature does in 'our app', not what the client runs."
+level: error
+ignorecase: true
+nonword: true
+tokens:
+  # "A client runs their own AI agents", "the editors use Claude"
+  - '\b(?:clients?|client.s|customers?|staff|admins?|editors?|writers?|their team)\s+(?:runs?|uses?|keeps?|has|have)\s+(?:(?:their|its)\s+own\s+)?(?:ai\s+)?(?:agents?|skills?|claude|llms?)\b'
+  # "The agents run in Claude"
+  - '\b(?:the|their|its|our)\s+(?:ai\s+)?agents\s+(?:run|live)\s+(?:in|on)\s+claude\b'
+  # "agents draft the content", "an agent writes their posts"
+  - '\bagents?\s+(?:drafts?|drafted|writes?|wrote|produces?|generates?)\s+(?:the\s+|their\s+|its\s+|our\s+)?(?:content|copy|posts|articles|notes|reports|drafts|newsletters?|emails?)\b'
+  # "keeps its know-how in Claude skills", "their process lives in skills"
+  - '\b(?:know-how|knowledge|playbooks?|process(?:es)?|procedures?)\s+(?:lives?|is kept|are kept|sits?)\s+in\s+(?:claude\s+)?skills\b'
+  - '\bkeeps?\s+(?:its|their)\s+(?:know-how|knowledge|playbooks?|process(?:es)?)\s+in\s+(?:claude\s+)?skills\b'
+  # "the app calls no LLM"
+  - '\b(?:app|server|product)\s+(?:calls|runs|uses)\s+no\s+(?:llms?|models?|ai)\b'
