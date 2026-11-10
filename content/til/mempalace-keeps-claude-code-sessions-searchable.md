@@ -1,7 +1,7 @@
 ---
 title: "mempalace keeps Claude Code sessions searchable"
 date: 2026-09-17T10:23:26+10:00
-draft: true
+draft: false
 format: til
 tags:
   - claude-code

@@ -3,7 +3,7 @@ title: "MCP before REST when the caller is an agent"
 description: "We wanted AI agents to work with our app. I built an MCP server with OAuth first, and REST only when a script that doesn't speak MCP needed the app too."
 client: true
 date: 2026-10-25T22:40:01+10:00
-draft: true
+draft: false
 alt: "A risograph print of a robot hand plugging a cable into one socket, with a second, tagged socket beside it left empty"
 format: explainer
 categories:

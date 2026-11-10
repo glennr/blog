@@ -2,7 +2,7 @@
 title: "Make the Phoenix scope the first argument"
 description: "Pass Phoenix 1.8's Scope first to almost every public context function, and the context becomes one authorization layer for your LiveViews, controllers, APIs and MCP server."
 date: 2026-11-03T21:23:08+10:00
-draft: true
+draft: false
 format: explainer
 categories:
   - development

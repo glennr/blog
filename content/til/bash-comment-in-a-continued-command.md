@@ -1,7 +1,7 @@
 ---
 title: "Bash ends a continued command at an inline comment"
 date: 2026-03-02T22:18:26+10:00
-draft: true
+draft: false
 format: til
 tags:
   - bash

@@ -2,7 +2,7 @@
 title: "Where to block PromEx's /metrics"
 description: "PromEx's plug serves /metrics on the Phoenix app's public port. Why blocking it at the load balancer beats an ingress-nginx snippet, and when a separate metrics port is simpler."
 date: 2025-11-24T20:02:47+10:00
-draft: true
+draft: false
 format: explainer
 slug: where-to-block-promex-metrics
 categories:

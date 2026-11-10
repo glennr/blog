@@ -1,7 +1,7 @@
 ---
 title: "A time on the Phoenix scope goes stale in a LiveView"
 date: 2026-11-07T23:54:13+10:00
-draft: true
+draft: false
 client: true
 format: til
 tags:

@@ -2,7 +2,7 @@
 title: "Let Claude Code design in the running app"
 description: "Why I stopped relaying work between Claude Design and Claude Code, and moved the design step into the app itself"
 date: 2026-11-01T19:33:43+10:00
-draft: true
+draft: false
 format: explainer
 client: true
 categories:

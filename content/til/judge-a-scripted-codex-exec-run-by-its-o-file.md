@@ -1,7 +1,7 @@
 ---
 title: "A scripted codex exec can hang or fail with no -o file"
 date: 2026-10-18T22:02:03+10:00
-draft: true
+draft: false
 format: til
 tags:
   - codex

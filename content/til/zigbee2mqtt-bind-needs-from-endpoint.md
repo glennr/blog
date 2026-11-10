@@ -1,7 +1,7 @@
 ---
 title: "Zigbee2mqtt bind needs from_endpoint"
 date: 2026-07-07T09:40:01+10:00
-draft: true
+draft: false
 format: til
 tags:
   - zigbee2mqtt

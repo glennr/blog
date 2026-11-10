@@ -1,7 +1,7 @@
 ---
 title: "uv tool install builds on the system Python"
 date: 2026-09-20T22:50:06+10:00
-draft: true
+draft: false
 format: til
 tags:
   - uv

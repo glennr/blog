@@ -2,7 +2,7 @@
 title: "Render PDFs in Elixir with the Typst NIF"
 description: "A Phoenix app renders its report PDFs inside the BEAM with the typst package's NIF. Why not headless Chrome or the Typst CLI, the checks a NIF has to pass, and a benchmark against the CLI."
 date: 2026-11-09T23:55:26+10:00
-draft: true
+draft: false
 client: true
 format: explainer
 categories:

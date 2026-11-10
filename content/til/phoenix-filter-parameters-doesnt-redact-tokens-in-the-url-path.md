@@ -1,7 +1,7 @@
 ---
 title: "Phoenix filter_parameters doesn't redact tokens in the URL path"
 date: 2026-11-05T21:34:51+10:00
-draft: true
+draft: false
 format: til
 tags:
   - phoenix

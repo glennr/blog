@@ -1,7 +1,7 @@
 ---
 title: "gcr-ssh-agent will not sign until the passphrase is in the keyring"
 date: 2026-09-14T22:48:43+10:00
-draft: true
+draft: false
 format: til
 tags:
   - ssh

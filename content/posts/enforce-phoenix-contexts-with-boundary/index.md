@@ -2,7 +2,7 @@
 title: "Enforce Phoenix contexts with boundary"
 description: "Phoenix contexts are a convention until something checks them. boundary makes a call from the web layer into a context's internals fail the build, even on an app that already breaks the rules."
 date: 2026-10-27T21:22:28+10:00
-draft: true
+draft: false
 format: explainer
 categories:
   - elixir

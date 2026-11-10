@@ -1,7 +1,7 @@
 ---
 title: "impeccable's detector scans Phoenix .ex files by regex only"
 date: 2026-10-30T21:08:40+10:00
-draft: true
+draft: false
 format: til
 client: true
 tags:

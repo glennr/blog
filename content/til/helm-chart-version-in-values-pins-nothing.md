@@ -1,7 +1,7 @@
 ---
 title: "A Helm chart version inside values pins nothing in Pulumi"
 date: 2026-10-14T22:22:11+10:00
-draft: true
+draft: false
 format: til
 tags:
   - pulumi

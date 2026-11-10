@@ -2,7 +2,7 @@
 title: "Which id belongs in the URI"
 description: "A record with its own primary key and an id from the upstream system that sent it. The upstream id usually belongs in the URI, when it passes three tests."
 date: 2026-02-26T22:07:34+10:00
-draft: true
+draft: false
 format: explainer
 categories:
   - web development
