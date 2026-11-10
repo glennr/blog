@@ -1,9 +1,10 @@
 # Containers we are going to run
 services:
   server:
-    image: hugomods/hugo:reg-exts-0.165.0
-    command: server -D
+    # The official extended image, at the version .tool-versions pins.
+    image: ghcr.io/gohugoio/hugo:v0.167.0
+    command: server -D --bind 0.0.0.0
     volumes:
-      - ".:/src"
+      - ".:/project"
     ports:
       - "1313:1313"

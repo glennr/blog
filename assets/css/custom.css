@@ -653,6 +653,14 @@ html.dark {
   background: transparent;
 }
 
+/* Mermaid 12 gives nodes and sequence actors a drop shadow, through a CSS
+   filter in some diagrams and an SVG filter attribute in others. The diagrams
+   are flat. Mermaid scopes its own rules by the diagram's id, which outranks
+   any class selector here. */
+.prose pre.mermaid svg * {
+  filter: none !important;
+}
+
 /* A diagram too wide to read at the column width scrolls; the faded right
    edge says there is more of it. */
 .prose pre.mermaid[data-scrolls]:not([data-at-end]) {

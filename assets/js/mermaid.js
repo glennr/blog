@@ -28,11 +28,16 @@ function initMermaid(dark) {
   const page = hex(dark ? "--color-neutral-800" : "--color-neutral");
   mermaid.initialize({
     theme: "base",
+    // Mermaid 12 lays flowcharts out with elk, giving right-angled edges, and
+    // strokes each node with a two-colour gradient. dagre and useGradient keep
+    // the flat look the diagrams were drawn for; custom.css drops its shadows.
+    layout: "dagre",
     sequence: { mirrorActors: false, wrap: true, width: 120, actorMargin: 30 },
     flowchart: { nodeSpacing: 30, rankSpacing: 40, wrappingWidth: 140 },
     themeVariables: {
       darkMode: dark,
       background: "transparent",
+      useGradient: false,
       fontFamily: mermaidFont,
       fontSize: "15px",
       primaryColor: box,
