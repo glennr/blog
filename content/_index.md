@@ -4,7 +4,7 @@ description: "Glenn Roberts is a hands-on engineer who helps companies build and
 heroTitle: "I help companies build with AI, and make the kind of product that's hard to copy."
 bio: "Code is cheap. Engineering isn't. I've been the one paged when it broke, so what I ship comes with the tests, permissions and deploy path it needs, and your team can change it after I leave. I take one main client at a time, and work in your repo on your tools."
 writingLead: "I write up what I learn, mostly building with AI, Elixir, Phoenix and AWS."
-heroLinks: [github, linkedin, bluesky]
+heroLinks: [github, gitlab, linkedin, bluesky]
 recentPostCount: 3
 ---
 
