@@ -2,8 +2,8 @@
 
      It leads with the consulting work. Top to bottom: a hero with the intro
      and the line to email on the left and the portrait on the right, how I
-     work, results, what I take on, then recent posts, recent TIL notes and
-     the projects. Each list row
+     work, results, what I take on, then recent posts (TIL notes among
+     them, marked TIL) and the projects. Each list row
      carries a title and a date, the posts a description too, and the whole
      row is one click target.
 
@@ -21,8 +21,8 @@
                         defaults to all of them
        resultsLead      the line above the results list
        writingLead      the line under the "Recent writing" heading
-       recentPostCount  rows in the posts list, defaults to 5
-       recentTilCount   rows in the TIL list, defaults to 5
+       recentPostCount  rows in the posts list, TIL notes included, defaults
+                        to 5
        projects         a list of {name, url, description}, one card each
        projectsHeading  the label above the cards, defaults to "Open source"
 
@@ -36,7 +36,6 @@
 
 {{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
 {{ $postCount := .Params.recentPostCount | default 5 }}
-{{ $tilCount := .Params.recentTilCount | default 5 }}
 {{ $work := hugo.Data.work }}
 
 <article class="home">
@@ -156,19 +155,6 @@
         {{ end }}
       </div>
       <a class="home-button" href="{{ "posts/" | relLangURL }}">All writing</a>
-    </section>
-  {{ end }}
-
-  {{ $notes := where .Site.RegularPages "Type" "til" }}
-  {{ with first $tilCount $notes }}
-    <section class="home-section">
-      <h2 class="home-section__title">Recent TIL</h2>
-      <div class="post-list post-list--compact">
-        {{ range . }}
-          {{ partial "post-row.html" (dict "page" .) }}
-        {{ end }}
-      </div>
-      <a class="home-button" href="{{ "til/" | relLangURL }}">All TIL</a>
     </section>
   {{ end }}
 

@@ -3,7 +3,12 @@ title: "mempalace keeps Claude Code sessions searchable"
 date: 2026-09-17T10:23:26+10:00
 draft: false
 format: til
+slug: mempalace-keeps-claude-code-sessions-searchable
+aliases:
+  - /til/mempalace-keeps-claude-code-sessions-searchable/
+showReadingTime: false
 tags:
+  - TIL
   - claude-code
   - mempalace
 ---

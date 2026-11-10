@@ -14,6 +14,9 @@ set -euo pipefail
 
 mapfile -t files < <(git diff --name-only --diff-filter=A master -- 'content/posts/*.md' || true)
 [ "${#files[@]}" -gt 0 ] || exit 0
+# A TIL is a post tagged TIL.
+mapfile -t files < <(grep -L '^[[:space:]]*-[[:space:]]*TIL[[:space:]]*$' "${files[@]}" || true)
+[ "${#files[@]}" -gt 0 ] || exit 0
 
 awk '
   function flush() {

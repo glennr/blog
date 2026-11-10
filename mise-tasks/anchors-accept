@@ -9,7 +9,7 @@
 set -euo pipefail
 
 grep -rhoHE --include='index.html' '<div id="?[^"> ]+"?( class="?anchor"?)?>' \
-  build/posts build/til 2>/dev/null \
+  build/posts 2>/dev/null \
   | sed -E 's|^build(.*)/index\.html:<div id="?([^"> ]+)"?.*|\1/#\2|' \
   | sort -u > anchors.txt
 echo "anchors.txt rewritten: $(wc -l < anchors.txt) anchors. Check the diff."

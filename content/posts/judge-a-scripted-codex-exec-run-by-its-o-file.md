@@ -3,7 +3,12 @@ title: "A scripted codex exec can hang or fail with no -o file"
 date: 2026-10-18T22:02:03+10:00
 draft: false
 format: til
+slug: judge-a-scripted-codex-exec-run-by-its-o-file
+aliases:
+  - /til/judge-a-scripted-codex-exec-run-by-its-o-file/
+showReadingTime: false
 tags:
+  - TIL
   - codex
 ---
 

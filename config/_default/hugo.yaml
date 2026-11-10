@@ -7,16 +7,18 @@ defaultContentLanguage: en
 
 enableRobotsTXT: true
 enableEmoji: true
+# Tag pages and the tag filter show a tag as written, "claude-code" and not
+# "Claude-Code".
+capitalizeListTitles: false
 summaryLength: 0
 
-# The TIL list and the post list both fit on one page at this size, so no
-# section ever paginates.
+# The post list, TIL notes included, fits on one page at this size, so it never
+# paginates.
 pagination:
   pagerSize: 100
 
 permalinks:
   posts: "/posts/:year/:month/:day/:slug/"
-  til: "/til/:slugorfilename/"
 
 taxonomies:
   tag: tags

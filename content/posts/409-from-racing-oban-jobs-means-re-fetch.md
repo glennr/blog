@@ -3,7 +3,12 @@ title: "Re-fetch on a 409 when two Oban jobs create the same record"
 date: 2026-02-05T22:20:50+10:00
 draft: false
 format: til
+slug: 409-from-racing-oban-jobs-means-re-fetch
+aliases:
+  - /til/409-from-racing-oban-jobs-means-re-fetch/
+showReadingTime: false
 tags:
+  - TIL
   - elixir
   - oban
   - appsignal

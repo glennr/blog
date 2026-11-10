@@ -3,7 +3,12 @@ title: "Zigbee2mqtt bind needs from_endpoint"
 date: 2026-07-07T09:40:01+10:00
 draft: false
 format: til
+slug: zigbee2mqtt-bind-needs-from-endpoint
+aliases:
+  - /til/zigbee2mqtt-bind-needs-from-endpoint/
+showReadingTime: false
 tags:
+  - TIL
   - zigbee2mqtt
   - zigbee
   - mqtt

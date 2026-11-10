@@ -37,7 +37,7 @@ trap 'rm -f "$current"' EXIT
 # once over the tree rather than per file, where xargs would report that as a
 # 123.
 grep -rhoHE --include='index.html' '<div id="?[^"> ]+"?( class="?anchor"?)?>' \
-  build/posts build/til 2>/dev/null \
+  build/posts 2>/dev/null \
   | sed -E 's|^build(.*)/index\.html:<div id="?([^"> ]+)"?.*|\1/#\2|' \
   | sort -u > "$current"
 

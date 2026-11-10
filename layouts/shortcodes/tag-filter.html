@@ -1,0 +1,93 @@
+{{/* The tag row and the text filter above the posts list. Usage, in
+     content/posts/_index.md: {{< tag-filter >}}.
+
+     One row of chips, the five most used tags, most used first. Each
+     chip links to its tag page, so without JavaScript a chip still works and
+     the list shows every post. With JavaScript a chip filters the list in
+     place by the rows' data-tags (layouts/partials/post-row.html) and puts
+     the tag in the URL, so /posts/?tag=til is a link to the TIL notes. The
+     text box filters the rows by their title, date, summary and body. The
+     body comes from the theme's search index (/index.json, built because
+     enableSearch is on), fetched the first time someone types; until it
+     arrives, or if it fails, the box matches the row text alone.
+
+     The styles live in assets/css/custom.css under the .tag-filter prefix. */}}
+
+{{ $list := .Page }}
+<div class="tag-filter not-prose">
+  <ul class="tag-filter__tags" aria-label="Filter by tag">
+    <li><a class="tag-filter__chip" href="{{ $list.RelPermalink }}" data-tag="" aria-current="true">All</a></li>
+    {{ range first 5 site.Taxonomies.tags.ByCount }}
+      {{ with . }}
+        <li>
+          <a class="tag-filter__chip" href="{{ .Page.RelPermalink }}" data-tag="{{ .Name }}">
+            {{- .Page.LinkTitle }} <span class="tag-filter__count">{{ .Count }}</span>
+          </a>
+        </li>
+      {{ end }}
+    {{ end }}
+  </ul>
+  <input class="tag-filter__search" type="search" placeholder="Filter posts" aria-label="Filter posts by text" hidden />
+  <p class="tag-filter__empty" role="status" hidden>No posts match.</p>
+</div>
+
+<script>
+  // The rows come after this script in the page, so wait for them.
+  document.addEventListener("DOMContentLoaded", () => {
+    const rows = [...document.querySelectorAll(".post-row[data-tags]")];
+    const chips = [...document.querySelectorAll(".tag-filter__chip")];
+    const search = document.querySelector(".tag-filter__search");
+    const empty = document.querySelector(".tag-filter__empty");
+    let tag = new URLSearchParams(location.search).get("tag") || "";
+    // Each row's searchable text, keyed by its link, with the body added once
+    // the index loads.
+    const text = new Map(rows.map((row) => [row.querySelector("a").getAttribute("href"), row.textContent.toLowerCase()]));
+    let index;
+    const loadIndex = () =>
+      (index ??= fetch({{ "index.json" | relLangURL }})
+        .then((response) => response.json())
+        .then((pages) => {
+          for (const page of pages) {
+            if (text.has(page.permalink)) text.set(page.permalink, text.get(page.permalink) + " " + page.content.toLowerCase());
+          }
+          apply();
+        })
+        .catch((error) => console.error("tag-filter: no search index", error)));
+
+    const apply = () => {
+      const q = search.value.trim().toLowerCase();
+      let shown = 0;
+      for (const row of rows) {
+        const match =
+          (!tag || row.dataset.tags.split(" ").includes(tag)) &&
+          (!q || text.get(row.querySelector("a").getAttribute("href")).includes(q));
+        row.hidden = !match;
+        if (match) shown++;
+      }
+      empty.hidden = shown > 0;
+      for (const chip of chips) {
+        if (chip.dataset.tag === tag) chip.setAttribute("aria-current", "true");
+        else chip.removeAttribute("aria-current");
+      }
+    };
+
+    for (const chip of chips) {
+      chip.addEventListener("click", (event) => {
+        event.preventDefault();
+        tag = chip.dataset.tag;
+        const url = new URL(location.href);
+        if (tag) url.searchParams.set("tag", tag);
+        else url.searchParams.delete("tag");
+        history.replaceState(null, "", url);
+        apply();
+      });
+    }
+
+    search.hidden = false;
+    search.addEventListener("input", () => {
+      loadIndex();
+      apply();
+    });
+    apply();
+  });
+</script>

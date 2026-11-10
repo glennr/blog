@@ -166,7 +166,7 @@ where it has to be approved.
 
 ```bash
 hugo new content posts/<slug>.md --kind guide
-hugo new content til/<slug>.md --kind til
+hugo new content posts/<slug>.md --kind til
 ```
 
 The kind is the shape, and it writes the front matter. The archetypes are in

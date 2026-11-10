@@ -188,6 +188,98 @@ section.space-y-10 > .post-row {
   text-wrap: pretty;
 }
 
+/* The TIL label, in a list row and in a post page's meta line
+   (layouts/partials/article-meta/basic.html). */
+.post-row__til,
+.article-meta__til {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--site-brand);
+}
+
+.article-meta__til {
+  text-decoration: none;
+}
+
+.article-meta__til:hover {
+  text-decoration: underline;
+}
+
+/* The tag filter hides rows with the hidden attribute, which the flex row
+   on wide screens would otherwise override. */
+.post-row[hidden] {
+  display: none;
+}
+
+/* -- Tag filter -----------------------------------------------------------
+   Markup: layouts/shortcodes/tag-filter.html, above the posts list. */
+
+.tag-filter {
+  display: grid;
+  gap: 1rem;
+}
+
+.tag-filter__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-filter__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  border: 1px solid var(--site-hairline);
+  border-radius: 999px;
+  padding: 0 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  color: inherit;
+}
+
+.tag-filter__chip:hover,
+.tag-filter__chip[aria-current="true"] {
+  border-color: var(--site-brand);
+  color: var(--site-brand);
+}
+
+.tag-filter__chip[aria-current="true"] {
+  background-color: var(--site-row-hover);
+}
+
+.tag-filter__count {
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+  color: var(--site-ink-soft);
+}
+
+.tag-filter__search {
+  box-sizing: border-box;
+  width: 100%;
+  min-height: 44px;
+  border: 1px solid var(--site-hairline);
+  border-radius: 0.375rem;
+  background: transparent;
+  padding: 0 0.9rem;
+  font: inherit;
+  color: inherit;
+}
+
+.tag-filter__search[hidden],
+.tag-filter__empty[hidden] {
+  display: none;
+}
+
+.tag-filter__empty {
+  margin: 0;
+  color: var(--site-ink-soft);
+}
+
 /* A section list shows its newest three rows in full, and the rest as an
    index: title, date and reading time, so an older post is a glance away
    rather than a long scroll. A row with a cover keeps it, and its summary,

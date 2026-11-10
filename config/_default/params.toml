@@ -30,7 +30,7 @@ mainSections = ["posts"]
 
 [homepage]
   # The home page is layouts/partials/home/custom.html. It draws its own
-  # recent-posts and recent-TIL lists, so showRecent stays off.
+  # recent-posts list, so showRecent stays off.
   layout = "custom"
   showRecent = false
 

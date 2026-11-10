@@ -3,7 +3,12 @@ title: "uv tool install builds on the system Python"
 date: 2026-09-20T22:50:06+10:00
 draft: false
 format: til
+slug: uv-tool-install-builds-on-the-system-python
+aliases:
+  - /til/uv-tool-install-builds-on-the-system-python/
+showReadingTime: false
 tags:
+  - TIL
   - uv
   - python
   - backblaze

@@ -2,9 +2,14 @@
 title: "A time on the Phoenix scope goes stale in a LiveView"
 date: 2026-11-07T23:54:13+10:00
 draft: false
-client: true
 format: til
+slug: pass-the-time-as-now-not-on-the-phoenix-scope
+aliases:
+  - /til/pass-the-time-as-now-not-on-the-phoenix-scope/
+showReadingTime: false
+client: true
 tags:
+  - TIL
   - elixir
   - phoenix
   - credo

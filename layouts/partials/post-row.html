@@ -9,7 +9,9 @@
        heading      the title's element, "h2" in a section list and "h3"
                     (the default) under a heading on the home page
 
-     A row holds a title, a date, and an optional description. The link
+     A row holds a title, a date, and an optional description. A post tagged
+     TIL says so after the date. The row's data-tags lists its tags, urlized,
+     for the tag filter on the posts list (layouts/posts/list.html). The link
      stretches over the whole row, so a click anywhere on the row opens the
      page. If the page has a feature image, the row puts a thumbnail in front
      of the text.
@@ -53,6 +55,9 @@
   {{ end }}
 {{ end }}
 
+{{ $tags := slice }}
+{{ range $page.Params.tags }}{{ $tags = $tags | append (urlize (lower .)) }}{{ end }}
+
 {{ $thumbnailURL := "" }}
 {{ with $thumbnail }}
   {{ $thumbnailURL = .RelPermalink }}
@@ -63,7 +68,7 @@
   {{ end }}
 {{ end }}
 
-<article class="post-row">
+<article class="post-row" data-tags="{{ delimit $tags " " }}">
   {{ with $thumbnailURL }}
     <div class="post-row__thumbnail">
       <img src="{{ . }}" alt="{{ $page.Params.alt }}" loading="lazy" decoding="async" fetchpriority="low" class="nozoom not-prose" />
@@ -90,6 +95,10 @@
       {{ if and $showReadingTime (ne $page.ReadingTime 0) }}
         <span class="post-row__separator">&middot;</span>
         {{ i18n "article.reading_time" $page.ReadingTime | emojify }}
+      {{ end }}
+      {{ if in $tags "til" }}
+        <span class="post-row__separator">&middot;</span>
+        <span class="post-row__til">TIL</span>
       {{ end }}
     </p>
     {{ if and $showSummary $summary }}

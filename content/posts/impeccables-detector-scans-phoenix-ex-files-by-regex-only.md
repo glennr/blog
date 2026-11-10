@@ -3,8 +3,13 @@ title: "impeccable's detector scans Phoenix .ex files by regex only"
 date: 2026-10-30T21:08:40+10:00
 draft: false
 format: til
+slug: impeccables-detector-scans-phoenix-ex-files-by-regex-only
+aliases:
+  - /til/impeccables-detector-scans-phoenix-ex-files-by-regex-only/
+showReadingTime: false
 client: true
 tags:
+  - TIL
   - impeccable
   - phoenix
   - claude-code

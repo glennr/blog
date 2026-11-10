@@ -32,8 +32,8 @@ awk -v formats="$formats" '
     function check(   i, key, need, n) {
       if (!closed) { note("no front matter"); return }
 
-      if (fname ~ /^content\/posts\//)    need = "title description date format categories tags"
-      else if (fname ~ /^content\/til\//) need = "title date format tags"
+      if (til)                            need = "title date format tags"
+      else if (fname ~ /^content\/posts\//) need = "title description date format categories tags"
       else                                   need = "title date"
 
       n = split(need, want, " ")
@@ -59,11 +59,11 @@ awk -v formats="$formats" '
         if ((key in val) && items[key] == 0) note("`" key "` is empty")
       }
 
-      # content/til is the TIL section, and the til rules are the ones that
-      # apply to it. A note there declaring another format reads by the wrong
-      # rules.
-      if (fname ~ /^content\/til\// && val["format"] != "til")
-        note("a til note declares `format: " val["format"] "`")
+      # The TIL tag is what makes a post a TIL note, and the til rules are the
+      # ones that apply to it. A note declaring another format reads by the
+      # wrong rules.
+      if (til && val["format"] != "til")
+        note("a TIL-tagged note declares `format: " val["format"] "`")
     }
 
     BEGIN {
@@ -75,7 +75,7 @@ awk -v formats="$formats" '
       if (started) check()
       fname = FILENAME
       started = 1; closed = 0; inside = ($0 == "---"); last = ""
-      delete val; delete items
+      delete val; delete items; til = 0
       next
     }
 
@@ -91,6 +91,7 @@ awk -v formats="$formats" '
         items[last] = 0
       } else if (last != "" && $0 ~ /^[ \t]+-[ \t]+[^ \t]/) {
         items[last]++
+        if (last == "tags" && $0 ~ /^[ \t]+-[ \t]+["'"'"']?TIL["'"'"']?[ \t]*$/) til = 1
       }
     }
 

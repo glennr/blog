@@ -16,11 +16,6 @@
   weight = 10
 
 [[main]]
-  name = "TIL"
-  pageRef = "til"
-  weight = 15
-
-[[main]]
   name = "LinkedIn"
   url = "https://linkedin.com/in/glennrob"
   weight = 20

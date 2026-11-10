@@ -3,7 +3,12 @@ title: "Bash ends a continued command at an inline comment"
 date: 2026-03-02T22:18:26+10:00
 draft: false
 format: til
+slug: bash-comment-in-a-continued-command
+aliases:
+  - /til/bash-comment-in-a-continued-command/
+showReadingTime: false
 tags:
+  - TIL
   - bash
   - qemu
 ---

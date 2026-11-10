@@ -3,7 +3,12 @@ title: "gcr-ssh-agent will not sign until the passphrase is in the keyring"
 date: 2026-09-14T22:48:43+10:00
 draft: false
 format: til
+slug: gcr-ssh-agent-passphrase-in-keyring
+aliases:
+  - /til/gcr-ssh-agent-passphrase-in-keyring/
+showReadingTime: false
 tags:
+  - TIL
   - ssh
   - omarchy
   - gnome-keyring

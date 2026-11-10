@@ -3,7 +3,12 @@ title: "A Helm chart version inside values pins nothing in Pulumi"
 date: 2026-10-14T22:22:11+10:00
 draft: false
 format: til
+slug: helm-chart-version-in-values-pins-nothing
+aliases:
+  - /til/helm-chart-version-in-values-pins-nothing/
+showReadingTime: false
 tags:
+  - TIL
   - pulumi
   - helm
 ---

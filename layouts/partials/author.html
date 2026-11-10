@@ -55,10 +55,10 @@
     <div class="text-2xl sm:text-lg">{{ partialCached "author-links.html" . }}</div>
   </div>
 </div>
-{{/* The theme's author card, plus a consulting box under it on posts and TIL
-     notes. The box's line depends on the page's tags; data/cta.toml holds the
+{{/* The theme's author card, plus a consulting box under it on posts, TIL
+     notes included. The box's line depends on the page's tags; data/cta.toml holds the
      lines and the tags that pick them. */}}
-{{ if in (slice "posts" "til") $.Type }}
+{{ if eq $.Type "posts" }}
   {{ $cta := hugo.Data.cta }}
   {{ $tags := slice }}
   {{ range $.Params.tags }}{{ $tags = $tags | append (lower .) }}{{ end }}

@@ -6,7 +6,6 @@ resultsLead: "Some of what I've delivered as an engineer, consultancy founder an
 writingLead: "I write up what I learn, mostly Elixir, PostgreSQL, Kubernetes and building with AI."
 heroLinks: [github, bluesky]
 recentPostCount: 3
-recentTilCount: 5
 projectsHeading: "A couple of things I maintain"
 projects:
   - name: "wt"
