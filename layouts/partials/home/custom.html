@@ -81,7 +81,7 @@
       {{ with $portrait }}
         {{ $rendered := . }}
         {{ if not (or $disableImageOptimization (eq .MediaType.SubType "svg")) }}
-          {{ $rendered = .Fill (print "448x448 Center q" ($.Site.Params.Author.imagequality | default "96")) }}
+          {{ $rendered = .Fill (print "448x448 Center webp q" ($.Site.Params.Author.imagequality | default "96")) }}
         {{ end }}
         <figure class="home-hero__portrait">
           <img
