@@ -2,7 +2,10 @@
 title: "Glenn Roberts"
 description: "Engineer and builder, shipping products with AI agents in the loop. Writing on Elixir, PostgreSQL, Kubernetes and building with AI."
 heroTitle: "Hi, I'm Glenn."
+heroTopics: "Writing on Elixir, PostgreSQL, Kubernetes and building with AI."
+heroLinks: [github, bluesky]
 recentPostCount: 3
+recentTilCount: 5
 projectsHeading: "A couple of things I maintain"
 projects:
   - name: "wt"

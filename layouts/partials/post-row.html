@@ -6,6 +6,8 @@
      Takes a dict:
        page         the page to render
        showSummary  true to print the description under the title
+       heading      the title's element, "h2" in a section list and "h3"
+                    (the default) under a heading on the home page
 
      A row holds a title, a date, and an optional description. The link
      stretches over the whole row, so a click anywhere on the row opens the
@@ -16,6 +18,7 @@
 
 {{ $page := .page }}
 {{ $showSummary := .showSummary | default false }}
+{{ $heading := cond (eq .heading "h2") "h2" "h3" }}
 {{ $dateFormat := site.Params.dateFormat | default "2 January 2006" }}
 
 {{/* Reading time. A page parameter of false must win over the site default,
@@ -67,7 +70,7 @@
     </div>
   {{ end }}
   <div class="post-row__body">
-    <h3 class="post-row__title">
+    {{ printf "<%s class=%q>" $heading "post-row__title" | safeHTML }}
       <a
         {{ with $page.Params.externalUrl }}
           href="{{ . }}" target="_blank" rel="external"
@@ -81,7 +84,7 @@
       {{ if and $page.Draft site.Params.article.showDraftLabel }}
         <span class="post-row__draft">{{ i18n "article.draft" | emojify }}</span>
       {{ end }}
-    </h3>
+    {{ printf "</%s>" $heading | safeHTML }}
     <p class="post-row__date">
       <time datetime="{{ $page.Date.Format `2006-01-02` }}">{{ $page.Date.Format $dateFormat }}</time>
       {{ if and $showReadingTime (ne $page.ReadingTime 0) }}

@@ -1,14 +1,19 @@
 {{/* Home page.
 
-     Two parts, top to bottom: a hero that puts the intro on the left and the
-     portrait on the right, and a list of recent posts. Each list row carries a
-     title, a date, and a description, and the whole row is one click target.
+     Top to bottom: a hero that puts the intro on the left and the portrait on
+     the right, a list of recent posts, a shorter list of recent TIL notes, and
+     the projects. Each list row carries a title and a date, the posts a
+     description too, and the whole row is one click target.
 
      The words come from content/_index.md. Its body is the intro prose, and
      these front matter fields control the rest:
 
        heroTitle        the h1, defaults to the author name
+       heroTopics       one line under the intro naming what the posts cover
+       heroLinks        the author links to show as icons, by name, in order;
+                        defaults to all of them
        recentPostCount  rows in the posts list, defaults to 5
+       recentTilCount   rows in the TIL list, defaults to 5
        projects         a list of {name, url, description}, one card each
        projectsHeading  the label above the cards, defaults to "Open source"
 
@@ -22,6 +27,7 @@
 
 {{ $disableImageOptimization := .Site.Params.disableImageOptimization | default false }}
 {{ $postCount := .Params.recentPostCount | default 5 }}
+{{ $tilCount := .Params.recentTilCount | default 5 }}
 
 <article class="home">
   <section class="home-hero">
@@ -30,7 +36,31 @@
         {{ .Params.heroTitle | default .Site.Params.Author.name | default .Site.Title | emojify }}
       </h1>
       <div class="home-hero__lead prose dark:prose-invert">{{ .Content }}</div>
-      <div class="home-hero__links">{{ partialCached "author-links.html" . }}</div>
+      {{ with .Params.heroTopics }}
+        <p class="home-hero__topics">{{ . | markdownify }}</p>
+      {{ end }}
+      {{ $show := .Params.heroLinks }}
+      {{ with .Site.Params.Author.links }}
+        <ul class="home-hero__links">
+          {{ $links := dict }}
+          {{ $order := slice }}
+          {{ range . }}
+            {{ range $name, $url := . }}
+              {{ $links = merge $links (dict $name $url) }}
+              {{ $order = $order | append $name }}
+            {{ end }}
+          {{ end }}
+          {{ range $name := $show | default $order }}
+            {{ with index $links $name }}
+              <li>
+                <a href="{{ . | safeURL }}" aria-label="{{ $name | title }}" title="{{ $name | title }}" rel="me noopener noreferrer" target="_blank">
+                  {{- partial "icon.html" $name -}}
+                </a>
+              </li>
+            {{ end }}
+          {{ end }}
+        </ul>
+      {{ end }}
     </div>
 
     {{ with .Site.Params.Author.image }}
@@ -69,6 +99,19 @@
         {{ end }}
       </div>
       <a class="home-button" href="{{ "posts/" | relLangURL }}">All writing</a>
+    </section>
+  {{ end }}
+
+  {{ $notes := where .Site.RegularPages "Type" "til" }}
+  {{ with first $tilCount $notes }}
+    <section class="home-section">
+      <h2 class="home-section__title">Recent TIL</h2>
+      <div class="post-list post-list--compact">
+        {{ range . }}
+          {{ partial "post-row.html" (dict "page" .) }}
+        {{ end }}
+      </div>
+      <a class="home-button" href="{{ "til/" | relLangURL }}">All TIL</a>
     </section>
   {{ end }}
 

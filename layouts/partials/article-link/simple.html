@@ -1,10 +1,11 @@
 {{/* Override of the theme partial. The section lists, the taxonomy lists, and
      the home page all draw the same row, so they all go through
-     partials/post-row.html. */}}
+     partials/post-row.html. A list's title is the page's h1, so each row's
+     title is an h2. */}}
 
 {{ $showSummary := site.Params.list.showSummary | default false }}
 {{ if isset .Params "showsummary" }}
   {{ $showSummary = .Params.showSummary }}
 {{ end }}
 
-{{ partial "post-row.html" (dict "page" .Page "showSummary" $showSummary) }}
+{{ partial "post-row.html" (dict "page" .Page "showSummary" $showSummary "heading" "h2") }}
