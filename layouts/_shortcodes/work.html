@@ -1,0 +1,53 @@
+{{/* A list from data/work.toml, so the pages and the home page say the same
+     thing. Usage: {{< work offers >}} or {{< work companies >}}.
+
+     Each item is one bullet; a plain string item is printed as it is. An
+     item with a title opens with it as a bold lead-in (.work-list__lead in
+     assets/css/custom.css), which Glenn asked for; the lead-in is markup, so no `**` reaches the prose lint.
+     An item's `link` phrase links to its `post`. `companies` is a wrapped
+     row, as on the home page. `projects` is Projects' cards.
+     `{{< work linkedin >}}` is the closing panel (partials/cta-panel.html)
+     with its default title, so each page ends on the same call to action.
+     `{{< work email >}}` is a text link that
+     mails `emailUser` at `emailDomain`, with a no-mail-app fallback. */}}
+{{ $name := .Get 0 }}
+{{ $data := hugo.Data.work }}
+{{ if eq $name "linkedin" }}
+  {{ partial "cta-panel.html" (dict) }}
+{{ else if eq $name "email" }}
+  <p><a href="#email" data-mail-user="{{ $data.emailUser }}" data-mail-domain="{{ $data.emailDomain }}">Email me</a> if you'd rather. No mail app? Write to {{ $data.emailUser }}@ this domain.</p>
+{{ else if eq $name "companies" }}
+  <ul class="home-companies not-prose">{{ range $data.companies }}<li>{{ . }}</li>{{ end }}</ul>
+{{ else if eq $name "projects" }}
+  <div class="projects not-prose">
+    {{ range $data.projects }}
+      <article class="project">
+        <h2 class="project__title">{{ .title }}</h2>
+        <p class="project__outcome"><strong>{{ .figure }}</strong> {{ .outcome }}</p>
+        <dl class="project__story">
+          <dt>Problem</dt><dd>{{ .problem }}</dd>
+          <dt>Built</dt><dd>{{ .built }}</dd>
+        </dl>
+        <p class="project__stack">{{ delimit .stack " · " }}</p>
+        {{ with .post }}
+          {{ $page := site.GetPage . }}
+          {{ if not $page }}{{ errorf "data/work.toml: no page at %q" . }}{{ end }}
+          <a class="project__link" href="{{ $page.RelPermalink }}">Read the write-up</a>
+        {{ end }}
+      </article>
+    {{ end }}
+  </div>
+{{ else }}
+{{ $items := index $data $name }}
+{{ if not $items }}{{ errorf "work shortcode: no list %q in data/work.toml (%s)" $name .Position }}{{ end }}
+<ul class="work-list">
+  {{ range $items }}
+    <li>
+      {{- if reflect.IsMap . -}}
+        {{- with .title }}<span class="work-list__lead">{{ . }}</span>: {{ end -}}
+        {{ partial "work-text.html" . }}
+      {{- else }}{{ . }}{{ end -}}
+    </li>
+  {{ end }}
+</ul>
+{{ end }}

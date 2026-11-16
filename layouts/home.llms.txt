@@ -1,0 +1,21 @@
+{{- /* /llms.txt (https://llmstxt.org). It replaces the theme's bare link
+     list with a summary first, from content/_index.md and data/work.toml,
+     then every page and post with its description. */ -}}
+{{- $work := hugo.Data.work -}}
+# {{ site.Title }}
+
+> {{ .Description }}
+
+{{ site.Params.Author.bio }} Companies I've worked with: {{ delimit $work.companies ", " ", and " }}. Contact: {{ $work.linkedin }}
+
+## Pages
+
+- [Home]({{ .Permalink }}): {{ .Description }}
+{{- range where site.RegularPages "Section" "" }}
+- [{{ .Title }}]({{ .Permalink }}): {{ .Description }}
+{{- end }}
+
+## Posts
+{{ range where site.RegularPages "Type" "posts" }}
+- [{{ .Title }}]({{ .Permalink }}){{ with .Description }}: {{ . }}{{ end }}
+{{- end }}

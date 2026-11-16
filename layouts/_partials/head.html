@@ -1,0 +1,51 @@
+{{/* Everything in <head>. The theme script runs first, before any paint, so
+     a reader who chose light never sees a flash of dark. */}}
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script>
+  (() => {
+    let theme;
+    try { theme = localStorage.getItem("theme"); } catch {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+    }
+    document.documentElement.dataset.theme = theme;
+  })();
+</script>
+
+{{ $title := cond .IsHome site.Title (printf "%s · %s" .Title site.Title) }}
+<title>{{ $title }}</title>
+{{ $description := or .Description (.Summary | plainify) site.Params.Author.bio }}
+<meta name="description" content="{{ $description | plainify | truncate 300 }}" />
+<meta name="author" content="{{ site.Params.Author.name }}" />
+<link rel="canonical" href="{{ .Permalink }}" />
+{{ if .Draft }}<meta name="robots" content="noindex" />{{ end }}
+
+{{ range .AlternativeOutputFormats -}}
+  <link rel="{{ .Rel }}" type="{{ .MediaType.Type }}" href="{{ .Permalink }}" title="{{ site.Title }}" />
+{{ end -}}
+
+{{ partial "opengraph.html" . }}
+{{ partial "twitter_cards.html" . }}
+{{ partial "schema.html" . }}
+
+{{/* Fonts: the faces above the fold load first. */}}
+<link rel="preload" href="{{ "fonts/space-grotesk-latin-wght-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="{{ "fonts/dm-sans-latin-wght-normal.woff2" | relURL }}" as="font" type="font/woff2" crossorigin />
+
+{{ $css := slice }}
+{{ range slice "tokens" "base" "home" }}
+  {{ $css = $css | append (resources.Get (printf "css/theme/%s.css" .)) }}
+{{ end }}
+{{ $css = $css | resources.Concat "css/site.css" }}
+{{ if hugo.IsProduction }}{{ $css = $css | minify | fingerprint }}{{ end }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}"{{ with $css.Data.Integrity }} integrity="{{ . }}"{{ end }} />
+
+{{ $js := resources.Get "js/site.js" | js.Build (dict "minify" hugo.IsProduction) }}
+{{ if hugo.IsProduction }}{{ $js = $js | fingerprint }}{{ end }}
+<script defer src="{{ $js.RelPermalink }}"{{ with $js.Data.Integrity }} integrity="{{ . }}"{{ end }}></script>
+
+<link rel="icon" href="{{ "favicon.ico" | relURL }}" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="{{ "favicon-32x32.png" | relURL }}" />
+<link rel="apple-touch-icon" href="{{ "apple-touch-icon.png" | relURL }}" />
+<link rel="manifest" href="{{ "site.webmanifest" | relURL }}" />

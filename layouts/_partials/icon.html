@@ -1,0 +1,6 @@
+{{/* An inline SVG icon from assets/icons/, by name: {{ partial "icon.html" "github" }}.
+     The icons are Font Awesome Free (CC BY 4.0). Fails the build on a name
+     with no file, so a typo cannot ship an empty span. */}}
+{{ $icon := resources.Get (printf "icons/%s.svg" .) }}
+{{ if not $icon }}{{ errorf "icon.html: no assets/icons/%s.svg" . }}{{ end }}
+<span class="icon" aria-hidden="true">{{ $icon.Content | safeHTML }}</span>

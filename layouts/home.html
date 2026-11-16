@@ -1,0 +1,148 @@
+{{/* Home page. Top to bottom: the hero (pulse badge, title, intro, typing
+     line, buttons, portrait), a band of stats and the company marquee, the
+     three ways I help as cards, how I work on a rail, recent writing, and
+     the closing panel.
+
+     The shared copy lives in data/work.toml; the rest comes from
+     content/_index.md. Its body is the intro, and its front matter sets:
+
+       eyebrow          the pulse badge above the h1
+       heroTitle        the h1
+       heroAccent       the end of heroTitle to colour orange
+       typing           the phrases the "$ currently:" line types out
+       portraitBadge    the chip on the portrait
+       heroLinks        the author links under the buttons, by name
+       bio              the line under "How I work"
+       writingLead      the line under "From the blog"
+       recentPostCount  posts shown, default 3
+
+     Styles: assets/css/theme/home.css. */}}
+{{ define "main" }}
+{{ $work := hugo.Data.work }}
+{{ $linkedin := $work.linkedin }}
+
+<section class="hero">
+  <div class="hero__grid" aria-hidden="true"></div>
+  <div class="container hero__inner">
+    <div class="hero__text">
+      {{ with .Params.eyebrow }}<p class="pulse-badge"><span class="pulse-badge__dot"></span>{{ . }}</p>{{ end }}
+      <h1 class="hero__title">
+        {{ $title := .Params.heroTitle | default site.Title }}
+        {{ with .Params.heroAccent }}
+          {{ if not (strings.HasSuffix $title .) }}{{ errorf "content/_index.md: heroAccent %q does not end heroTitle %q" . $title }}{{ end }}
+          {{ strings.TrimSuffix . $title }}<span class="accent">{{ . }}</span>
+        {{ else }}{{ $title }}{{ end }}
+      </h1>
+      <div class="hero__lead">{{ .Content }}</div>
+      {{ with .Params.typing }}
+        <p class="typing" data-words="{{ jsonify . }}">
+          <span class="typing__prompt">$ currently:</span>
+          <span class="typing__word">{{ index . 0 }}</span><span class="typing__caret" aria-hidden="true"></span>
+        </p>
+      {{ end }}
+      <div class="hero__actions">
+        <a class="button button--primary" href="{{ $linkedin }}" rel="me noopener noreferrer" target="_blank">Message me on LinkedIn <span aria-hidden="true">&rarr;</span></a>
+        <a class="button button--ghost" href="{{ "experience/" | relURL }}">See my experience</a>
+      </div>
+      {{ $links := dict }}
+      {{ range site.Params.Author.links }}{{ $links = merge $links . }}{{ end }}
+      <ul class="hero__links">
+        {{ range .Params.heroLinks }}
+          {{ $name := . }}
+          {{ with index $links $name }}<li><a href="{{ . }}" rel="me noopener noreferrer" target="_blank">{{ i18n (print "link." $name) | default ($name | title) }}</a></li>{{ end }}
+        {{ end }}
+      </ul>
+    </div>
+
+    {{ with resources.Get site.Params.Author.image }}
+      {{ $img := .Fill "896x896 Center webp q90" }}
+      <figure class="portrait">
+        <img src="{{ $img.RelPermalink }}" alt="{{ site.Params.Author.name }}" width="448" height="448" fetchpriority="high" />
+        {{ with $.Params.portraitBadge }}<figcaption class="portrait__badge"><span class="pulse-badge__dot"></span>{{ . }}</figcaption>{{ end }}
+      </figure>
+    {{ end }}
+  </div>
+</section>
+
+<section class="band" aria-label="Track record">
+  <div class="container">
+    <dl class="stats">
+      {{ range $work.stats }}
+        <div class="stats__item">
+          <dd class="stats__value">{{ .value }}</dd>
+          <dt class="stats__label">{{ .label }}</dt>
+        </div>
+      {{ end }}
+    </dl>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">Track record</p>
+    <h2 class="section__title">Companies I've worked with.</h2>
+    <p class="section__lead">From global telecoms to early-stage startups.</p>
+  </div>
+  <div class="marquee" aria-label="Companies">
+    {{/* The list twice, so the loop has no seam; the copy is hidden from
+         screen readers. */}}
+    <ul class="marquee__track">
+      {{ range $work.companies }}<li class="marquee__item">{{ . }}</li>{{ end }}
+      {{ range $work.companies }}<li class="marquee__item" aria-hidden="true">{{ . }}</li>{{ end }}
+    </ul>
+  </div>
+</section>
+
+<section class="section" id="where-i-help">
+  <div class="container">
+    <p class="eyebrow">Where I help</p>
+    <h2 class="section__title">Three ways I make teams faster.</h2>
+    <ol class="cards">
+      {{ range $i, $p := $work.problems }}
+        <li class="card">
+          <p class="card__number">{{ printf "%02d" (add $i 1) }}</p>
+          <h3 class="card__title">{{ $p.title | markdownify }}</h3>
+          <p class="card__text">{{ partial "work-text.html" $p }}</p>
+        </li>
+      {{ end }}
+    </ol>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <p class="eyebrow">How I work</p>
+    <h2 class="section__title">Code is cheap. Engineering isn't.</h2>
+    {{ with .Params.bio }}<p class="section__lead">{{ . | markdownify }}</p>{{ end }}
+    <ul class="rail">
+      {{ range $work.principles }}
+        <li class="rail__item">
+          <h3 class="rail__title">{{ .title }}</h3>
+          <p>{{ partial "work-text.html" . }}</p>
+        </li>
+      {{ end }}
+    </ul>
+  </div>
+</section>
+
+{{ $posts := where site.RegularPages "Type" "posts" }}
+{{ with first (.Params.recentPostCount | default 3) $posts }}
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow">From the blog</p>
+      <h2 class="section__title">What I'm learning, written down.</h2>
+      {{ with $.Params.writingLead }}<p class="section__lead">{{ . | markdownify }}</p>{{ end }}
+      <div class="post-cards">
+        {{ range . }}{{ partial "post-card.html" . }}{{ end }}
+      </div>
+      <a class="text-link" href="{{ "posts/" | relURL }}">Read all {{ len $posts }} posts <span aria-hidden="true">&rarr;</span></a>
+    </div>
+  </section>
+{{ end }}
+
+<section class="section">
+  <div class="container">
+    {{ partial "cta-panel.html" (dict) }}
+  </div>
+</section>
+{{ end }}

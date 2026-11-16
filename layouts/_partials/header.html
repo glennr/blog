@@ -1,0 +1,23 @@
+{{/* The top bar: the site name, the main menu, and the light/dark toggle.
+     A menu entry whose page is the current page, or its section, is marked
+     current. The last entry (Contact) is styled as a button. */}}
+<header class="site-header">
+  <div class="site-header__inner">
+    <a class="site-header__brand" href="{{ "/" | relURL }}">glenn<span>.</span>roberts</a>
+    <nav class="site-nav" aria-label="Main">
+      <ul>
+        {{ $current := . }}
+        {{ range site.Menus.main }}
+          {{ $active := or ($current.IsMenuCurrent "main" .) ($current.HasMenuCurrent "main" .) }}
+          <li>
+            <a href="{{ .URL }}"{{ if $active }} aria-current="page"{{ end }}>{{ .Name }}</a>
+          </li>
+        {{ end }}
+      </ul>
+    </nav>
+    <button class="theme-toggle" type="button" aria-label="Switch between light and dark" data-theme-toggle>
+      <span class="theme-toggle__sun">{{ partial "icon.html" "sun" }}</span>
+      <span class="theme-toggle__moon">{{ partial "icon.html" "moon" }}</span>
+    </button>
+  </div>
+</header>

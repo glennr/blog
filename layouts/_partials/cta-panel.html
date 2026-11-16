@@ -1,0 +1,18 @@
+{{/* The closing call to action every page ends on: a panel on the drifting
+     grid, a title whose second phrase is orange, a lead, the LinkedIn button
+     and the reply line from data/work.toml.
+
+     {{ partial "cta-panel.html" (dict "title" "…" "accent" "…" "lead" "…") }}
+
+     Each key is optional. Styles: .cta-panel in assets/css/theme/home.css. */}}
+{{ $work := hugo.Data.work }}
+{{ $title := .title | default "Building something?" }}
+{{ $accent := .accent | default "Let's talk." }}
+{{ $lead := .lead | default "Send me a paragraph on what you're building and what you need." }}
+<section class="cta-panel not-prose">
+  <div class="hero__grid" aria-hidden="true"></div>
+  <h2 class="cta-panel__title">{{ $title }} <span class="accent">{{ $accent }}</span></h2>
+  <p class="cta-panel__lead">{{ $lead | markdownify }}</p>
+  <a class="button button--primary" href="{{ $work.linkedin }}" rel="me noopener noreferrer" target="_blank">Message me on LinkedIn <span aria-hidden="true">&rarr;</span></a>
+  <p class="cta-panel__reply">{{ $work.reply | markdownify }}</p>
+</section>

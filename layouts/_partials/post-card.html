@@ -1,0 +1,13 @@
+{{/* One post as a card on the home page: title, description, and the date
+     with the reading time, or TIL for a note. The whole card is the link. */}}
+{{ $til := in (apply (.Params.tags | default slice) "lower" ".") "til" }}
+<article class="post-card">
+  <div class="post-card__body">
+    <h3 class="post-card__title"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h3>
+    {{ with .Description }}<p class="post-card__summary">{{ . }}</p>{{ end }}
+  </div>
+  <p class="post-card__meta">
+    <time datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "2006-01-02" }}</time>
+    · {{ if $til }}TIL{{ else }}{{ .ReadingTime }} min{{ end }}
+  </p>
+</article>

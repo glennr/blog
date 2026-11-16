@@ -29,6 +29,16 @@ outputs:
     - HTML
     - RSS
     - JSON
+    - llms
+
+# /llms.txt, from layouts/home.llms.txt: a plain summary of the site for
+# language models (https://llmstxt.org).
+outputFormats:
+  llms:
+    mediaType: text/plain
+    baseName: llms
+    isPlainText: true
+    notAlternative: true
 
 imaging:
   anchor: Center

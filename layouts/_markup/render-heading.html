@@ -1,0 +1,5 @@
+{{- /* A heading with its id on an empty div inside it, the markup Blowfish
+  used and `mise run anchors` reads, so every published anchor still resolves.
+  A "#" link to the heading shows on hover. Styles: .heading-anchor. */ -}}
+{{- $id := anchorize .Anchor -}}
+<h{{ .Level }}>{{ .Text }}<div id="{{ $id }}" class="anchor"></div> <a class="heading-anchor" href="#{{ $id }}" aria-label="Link to this section">#</a></h{{ .Level }}>

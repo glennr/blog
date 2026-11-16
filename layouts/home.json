@@ -1,0 +1,13 @@
+{{- /* /index.json: every dated page's title, summary and plain text, which
+  the posts filter (layouts/_shortcodes/tag-filter.html) searches. */ -}}
+{{- $index := slice -}}
+{{- range site.RegularPages -}}
+  {{- $index = $index | append (dict
+    "title" .Title
+    "date" (.Date.Format "2006-01-02")
+    "summary" (or .Description (.Summary | plainify))
+    "content" .Plain
+    "permalink" .RelPermalink
+  ) -}}
+{{- end -}}
+{{- $index | jsonify -}}

@@ -1,7 +1,13 @@
-# The consulting copy shared by the home page (layouts/partials/home/custom.html)
-# and About (the `work` shortcode). Text is Markdown. In a problem, `link` is
+# The copy shared by the home page (layouts/partials/home/custom.html) and the
+# Experience and Contact pages (the `work` shortcode). Text is Markdown. In a problem, `link` is
 # a phrase from its text that becomes a link to `post`, a content path
 # (layouts/partials/work-text.html).
+
+# The fastest way to reach me: every "Message me" button.
+linkedin = "https://linkedin.com/in/glennrob"
+
+# The home page's "Companies I've worked with" and Experience's list.
+companies = ["Ericsson", "Accenture", "Hetzner", "USAID", "Groove", "Bramble", "LawAdvisor", "OpenFn", "Siyelo"]
 
 # The address the Email me buttons mail, in two parts that the page joins
 # only on click (layouts/partials/extend-head-uncached.html). The home page says
@@ -9,8 +15,8 @@
 emailUser = "hello"
 emailDomain = "glenn-roberts.com"
 
-# Under each Email me button at the close of the home page and About.
-reply = "I reply within two working days. If I'm not the right fit, I'll say so and point you to someone who is."
+# Under each Message me on LinkedIn button.
+reply = "I reply within two working days. If I'm not the right fit, I'll point you to someone who is."
 
 [[offers]]
   title = "Web apps"
@@ -41,32 +47,87 @@ reply = "I reply within two working days. If I'm not the right fit, I'll say so 
   title = "Your team keeps it"
   text = "Plain code, written docs, and I explain the decisions as we go, so nothing depends on me."
 
-# The home page's "Where I can help" cards, in order: the symptom as the
-# title, the outcome as `fix`, then what I do about it.
+# The home page's three cards, numbered 01-03, in order: the title, then
+# what I do about it.
 [[problems]]
-  title = "You want agents in the product"
-  fix = "Agents that do the work."
-  text = "I build agents that plan, use your app's tools and check each other's work, with evals so you can see how often they get it right."
-
-[[problems]]
-  title = "You need someone senior who still writes code"
-  fix = "I do the building."
-  text = "I co-founded an enterprise SaaS and hand-wrote over half its code as CTO. I join your team and build the system, platform or API you need next."
+  title = "Agents in your product"
+  text = "Agents that plan, use your app's tools and check each other's work, with evals so you can see how often they get it right."
 
 [[problems]]
-  title = "You'd like a second opinion before you commit"
-  fix = "Talk it through first."
-  text = "I've been the CTO making these calls, and I've worked with Ericsson, Accenture, Hetzner, USAID and Groove. Send me what you're weighing up and I'll tell you what I'd do."
+  title = "Senior, and still writes code"
+  text = "I co-founded an enterprise SaaS and hand-wrote over half its code as CTO. I build the system, platform or API you need next."
 
-# The background, told as what a client got from it: About's "My background".
-[[background]]
-  title = "Built what enterprises need"
-  text = "I built the data integrations, API access and SSO that banks and insurers needed before they'd go live."
+[[problems]]
+  title = "A second opinion first"
+  text = "I've been the CTO making these calls. Send me what you're weighing up and I'll tell you what I'd do."
 
-[[background]]
-  title = "Wrote the code as CTO"
-  text = "I co-founded an enterprise SaaS and hand-wrote over half its code."
+# The figures under the home hero. No "years shipping" figure: it dates me
+# and says nothing a reader can use.
+[[stats]]
+  value = "500k"
+  label = "lines of code, over half hand-written"
 
-[[background]]
-  title = "Ran the platform too"
-  text = "I cut build and deploy from about 45 minutes to 10, trimmed cloud resources by 60% and took the company through SOC 2 Type 2."
+[[stats]]
+  value = "60%"
+  label = "cloud resources cut"
+
+[[stats]]
+  value = "99.9%"
+  label = "measured availability"
+
+# Projects' cards (`{{< work projects >}}`). The figure leads the outcome;
+# `post` adds a link to the write-up.
+[[projects]]
+  title = "Bramble platform"
+  problem = "Back-office teams at banks and insurers couldn't see where capacity was lost."
+  built = "A multi-tenant analytics SaaS with schema-per-tenant Postgres, a LiveView UI and a reporting warehouse."
+  figure = "99.9%"
+  outcome = "availability or better, live with enterprise customers in the US and Australia."
+  stack = ["Elixir", "Phoenix", "PostgreSQL", "AWS"]
+
+[[projects]]
+  title = "Regional EKS migration"
+  problem = "One AWS account per customer was costly and slow to change."
+  built = "Regional EKS clusters managed in Pulumi, with staged releases."
+  figure = "60%"
+  outcome = "fewer cloud resources, and deploys down from about 45 minutes to 10."
+  stack = ["Kubernetes", "Pulumi", "Docker"]
+
+[[projects]]
+  title = "Enterprise integrations"
+  problem = "Banks needed secure data exchange and SSO before they'd go live."
+  built = "Encrypted SFTP, S3 and SQS pipelines, SSO and API access."
+  figure = "SOC 2"
+  outcome = "Type 2 controls, with the enterprise go-lives unblocked."
+  stack = ["AWS S3", "SQS", "SSO"]
+
+[[projects]]
+  title = "Typst PDF rendering"
+  problem = "Report PDFs through headless Chrome were slow and fragile."
+  built = "In-BEAM rendering with the Typst NIF, benchmarked against the CLI."
+  figure = "5x"
+  outcome = "faster than the Typst CLI: a 10-page report in 10 ms."
+  stack = ["Elixir", "Typst", "NIF"]
+  post = "posts/render-pdfs-in-elixir-with-the-typst-nif"
+
+# The skills, one group each. The home page's JSON-LD Person lists every
+# item as knowsAbout; no page shows them.
+[[skills]]
+  title = "Languages and frameworks"
+  items = ["Elixir", "Phoenix and LiveView", "JavaScript and TypeScript", "Ruby"]
+
+[[skills]]
+  title = "Data"
+  items = ["PostgreSQL", "Schema-per-tenant design", "Reporting warehouses"]
+
+[[skills]]
+  title = "Cloud and DevOps"
+  items = ["AWS", "Kubernetes and EKS", "Pulumi and infrastructure as code", "Docker and CI/CD", "VictoriaMetrics and Grafana"]
+
+[[skills]]
+  title = "AI engineering"
+  items = ["LLM agents and tool use", "Evals and guardrails", "AI-assisted development workflows"]
+
+[[skills]]
+  title = "Security and integration"
+  items = ["SSO and API access", "SFTP, S3 and SQS pipelines", "SOC 2 change control"]

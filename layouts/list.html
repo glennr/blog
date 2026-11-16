@@ -1,0 +1,8 @@
+{{/* SPIKE: a bare list until the list layouts are built. */}}
+{{ define "main" }}
+<section class="container" style="padding-block: 3rem">
+  <h1>{{ .Title }}</h1>
+  {{ .Content }}
+  <div class="post-cards">{{ range .Pages }}{{ partial "post-card.html" . }}{{ end }}</div>
+</section>
+{{ end }}

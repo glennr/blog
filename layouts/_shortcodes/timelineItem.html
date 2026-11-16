@@ -1,0 +1,6 @@
+<li class="timeline__item">
+  <p class="timeline__badge">{{ .Get "badge" }}</p>
+  <h3 class="timeline__header">{{ .Get "header" }}</h3>
+  {{ with .Get "subheader" }}<p class="timeline__subheader">{{ . }}</p>{{ end }}
+  <div class="timeline__body">{{ .Inner }}</div>
+</li>

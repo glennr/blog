@@ -1,0 +1,17 @@
+{{/* The footer: copyright and location on the left, the author links and
+     the RSS feed on the right. */}}
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <p>{{ replace site.Params.copyright "{ year }" (string now.Year) }} · Australia (remote worldwide)</p>
+    <ul class="site-footer__links">
+      {{ range site.Params.Author.links }}
+        {{ range $name, $url := . }}
+          <li><a href="{{ $url }}" rel="me noopener noreferrer" target="_blank">{{ i18n (print "link." $name) | default ($name | title) }}</a></li>
+        {{ end }}
+      {{ end }}
+      {{ range site.Menus.footer }}
+        <li><a href="{{ .URL }}">{{ .Name }}</a></li>
+      {{ end }}
+    </ul>
+  </div>
+</footer>
