@@ -10,7 +10,7 @@ linkedin = "https://linkedin.com/in/glennrob"
 linkedinMessage = "https://www.linkedin.com/messaging/compose/?recipient=ACoAAAAkC7kBbdzfrZ6gVm2k9zqG-J2dpEVcceU"
 
 # The home page's "Companies I've worked with" and Experience's list.
-companies = ["Ericsson", "Accenture", "Hetzner", "USAID", "Groove", "Bramble", "Human Performance Group", "OpenFn", "Siyelo"]
+companies = ["Ericsson", "Accenture", "Hetzner", "USAID", "Groove", "Bramble", "OpenFn", "Siyelo", "Human Performance Group"]
 
 # Where the Email buttons and the Contact page's email card point.
 email = "hello@glenn-roberts.com"
