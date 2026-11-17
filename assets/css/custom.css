@@ -390,6 +390,7 @@ section.space-y-10
   position: relative;
   isolation: isolate;
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 3rem;
   padding-block: 2.5rem var(--site-space-section);
 }
@@ -457,6 +458,15 @@ section.space-y-10
   font-size: 0.875rem;
   white-space: nowrap;
   color: var(--site-ink-soft);
+}
+
+/* The longer phrases outgrow a phone's width, so they wrap there, with
+   two lines held so the page does not jump as they type. */
+@media (max-width: 639px) {
+  .home-hero__typing {
+    min-height: 2lh;
+    white-space: normal;
+  }
 }
 
 .home-hero__typed {
