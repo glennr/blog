@@ -1,0 +1,40 @@
+{{/* A card of Markdown under a mono label, for Contact. Usage:
+     {{< card label="Availability" id="email" >}} Markdown {{< /card >}}.
+     With a `title`, the label sits over it as an eyebrow; without one the
+     label is the heading. `lead=true` adds the email and LinkedIn buttons
+     from data/work.toml, as on the closing panel. Cards go in a
+     {{< contact >}} grid. */}}
+{{ $work := hugo.Data.work }}
+{{ $lead := .Get "lead" }}
+<section class="card contact-card{{ if $lead }} contact-card--lead{{ end }}"{{ with .Get "id" }} id="{{ . }}"{{ end }}>
+  {{ with .Get "title" }}
+    <p class="eyebrow">{{ $.Get "label" }}</p>
+    <h2 class="contact-card__title">{{ . }}</h2>
+  {{ else }}
+    <h2 class="eyebrow">{{ .Get "label" }}</h2>
+  {{ end }}
+  <div class="contact-card__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
+  {{ if $lead }}
+    <p class="contact-card__email">
+      <a href="mailto:{{ $work.email }}">{{ $work.email }}</a>
+      <button type="button" class="contact-card__copy" data-copy="{{ $work.email }}" aria-label="Copy email address" title="Copy email address">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+      </button>
+      <span class="contact-card__copied" role="status"></span>
+    </p>
+    {{/* Copies the address and says so for a moment, for readers whose mail
+         link opens nothing. */}}
+    <script>
+      document.querySelector(".contact-card__copy").addEventListener("click", async (e) => {
+        const status = document.querySelector(".contact-card__copied");
+        await navigator.clipboard.writeText(e.currentTarget.dataset.copy);
+        status.textContent = "Copied";
+        setTimeout(() => (status.textContent = ""), 2000);
+      });
+    </script>
+    <div class="contact-card__actions">
+      <a class="btn btn--primary" href="mailto:{{ $work.email }}">Email me</a>
+      <a class="btn btn--ghost" href="{{ $work.linkedinMessage }}" rel="noopener noreferrer" target="_blank">Message me on LinkedIn</a>
+    </div>
+  {{ end }}
+</section>

@@ -1,0 +1,23 @@
+{{/* Experience, Projects and Contact (`layout: work` in their front matter):
+     the theme's single page without the post furniture, at the home page's
+     width and body face, so the four pages read as one site. Posts keep the
+     theme's single layout and the serif reading column.
+
+     The header is the page's title as a label over its `headline` and
+     `lead` (front matter), so each page opens on what it says rather than
+     its menu name. Styles under .work-page in assets/css/custom.css. */}}
+{{ define "main" }}
+  <article class="work-page">
+    <header id="single_header" class="work-header">
+      <div class="bg-grid" aria-hidden="true"></div>
+      <p class="eyebrow">{{ .Title }}</p>
+      <h1 class="work-header__title">{{ .Params.headline | default .Title }}</h1>
+      {{ with .Params.lead }}<p class="work-header__lead">{{ . }}</p>{{ end }}
+    </header>
+    <section class="prose dark:prose-invert max-w-full">
+      <div class="article-content">
+        {{ .Content }}
+      </div>
+    </section>
+  </article>
+{{ end }}

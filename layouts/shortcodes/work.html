@@ -1,27 +1,49 @@
-{{/* A list from data/work.toml, so About and the home page say the same thing.
-     Usage: {{< work offers >}} or {{< work background >}}.
+{{/* A block from data/work.toml, so the pages and the home page say the
+     same thing. Usage: {{< work offers >}} or {{< work companies >}}.
 
-     Each item is one bullet. An item with a title opens with it as a bold
-     lead-in (.work-list__lead in assets/css/custom.css), which Glenn asked
-     for on About; the lead-in is markup, so no `**` reaches the prose lint.
-     An item's `link` phrase links to its `post`. `{{< work email >}}` is
-     the Email me button instead, which mails `emailUser` at
-     `emailDomain`, with a no-mail-app fallback and the `reply` line under it. */}}
+     A list of items with a title and text (offers) is a grid of cards; an
+     item's `link` phrase links to its `post`. `companies` is a grid of name
+     tiles, each with its mark (partials/company.html). `projects` is Projects' cards, numbered, with the figure first.
+     `{{< work linkedin >}}` is the closing panel (partials/cta-panel.html),
+     so each page ends on the same call to action. `{{< work email >}}` is
+     the address as a mail link. */}}
 {{ $name := .Get 0 }}
 {{ $data := hugo.Data.work }}
-{{ if eq $name "email" }}
-  <p class="not-prose"><a class="home-hero__cta-button" href="#working-together" data-mail-user="{{ $data.emailUser }}">Email me</a></p>
-  <p class="home-hero__fallback">No mail app? Write to {{ $data.emailUser }}@ this domain.</p>
-  <p>{{ $data.reply | markdownify }}</p>
+{{ if eq $name "linkedin" }}
+  {{ partial "cta-panel.html" (dict) }}
+{{ else if eq $name "email" }}
+  <p><a href="mailto:{{ $data.email }}">{{ $data.email }}</a></p>
+{{ else if eq $name "companies" }}
+  <ul class="company-tiles not-prose">{{ range $data.companies }}<li>{{ partial "company.html" . }}</li>{{ end }}</ul>
+{{ else if eq $name "projects" }}
+  <div class="projects not-prose">
+    {{ range $i, $p := $data.projects }}
+      <article class="card project" data-reveal>
+        <p class="project__index">{{ printf "%02d" (add $i 1) }}</p>
+        <h2 class="project__title">{{ .title }}</h2>
+        <p class="project__outcome"><strong>{{ .figure }}</strong> {{ .outcome }}</p>
+        <dl class="project__story">
+          <dt>Problem</dt><dd>{{ .problem }}</dd>
+          <dt>Built</dt><dd>{{ .built }}</dd>
+        </dl>
+        <ul class="project__stack">{{ range .stack }}<li>{{ . }}</li>{{ end }}</ul>
+        {{ with .post }}
+          {{ $page := site.GetPage . }}
+          {{ if not $page }}{{ errorf "data/work.toml: no page at %q" . }}{{ end }}
+          <a class="project__link" href="{{ $page.RelPermalink }}">Read the write-up</a>
+        {{ end }}
+      </article>
+    {{ end }}
+  </div>
 {{ else }}
 {{ $items := index $data $name }}
 {{ if not $items }}{{ errorf "work shortcode: no list %q in data/work.toml (%s)" $name .Position }}{{ end }}
-<ul class="work-list">
+<div class="work-cards not-prose">
   {{ range $items }}
-    <li>
-      {{- with .title }}<span class="work-list__lead">{{ . }}</span>: {{ end -}}
-      {{ partial "work-text.html" . }}
-    </li>
+    <section class="card work-card" data-reveal>
+      <h3 class="work-card__title">{{ .title }}</h3>
+      <p>{{ partial "work-text.html" . }}</p>
+    </section>
   {{ end }}
-</ul>
+</div>
 {{ end }}

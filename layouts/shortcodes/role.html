@@ -1,0 +1,10 @@
+{{/* One role on Experience's timeline: the dates, "title @ org", then the
+     inner Markdown. Usage: {{< role title="…" org="…" dates="…" place="…" >}}
+     Markdown {{< /role >}}. Each role draws its own stretch of the rail, so
+     consecutive roles join into one line with no wrapper. Styles under
+     .role in assets/css/custom.css. */}}
+<article class="role not-prose" data-reveal>
+  <p class="role__meta">{{ .Get "dates" }}{{ with .Get "place" }} · {{ . }}{{ end }}</p>
+  <h2 class="role__title">{{ .Get "title" }} <span class="role__org">@ {{ .Get "org" }}</span></h2>
+  <div class="role__body">{{ .Inner | .Page.RenderString (dict "display" "block") }}</div>
+</article>

@@ -13,7 +13,7 @@ title = "Glenn Roberts"
   rtl = false
   dateFormat = "2 January 2006"
   # The theme replaces "{ year }" with the year of the build.
-  copyright = "© { year } Glenn Roberts - All rights reserved."
+  copyright = "© { year } Glenn Roberts"
 
 [params.author]
   name = "Glenn Roberts"

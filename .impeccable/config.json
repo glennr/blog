@@ -1,0 +1,23 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "space grotesk",
+        "createdAt": "2026-11-16T12:34:41.124Z",
+        "reason": "brief: user asked to port the Lovable draft's look, whose heading face is Space Grotesk"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "assets/css/custom.css"
+        ],
+        "createdAt": "2026-11-16T12:47:52.540Z",
+        "reason": "brief: user asked to port the Lovable draft's drifting grid texture"
+      }
+    ]
+  }
+}

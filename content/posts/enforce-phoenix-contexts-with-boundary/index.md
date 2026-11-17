@@ -10,27 +10,32 @@ tags:
   - phoenix
   - elixir
   - architecture
-alt: "A cutaway of walled rooms, each with one doorway, and a rubber stamp coming down on a cable that tries to go through a wall instead."
+alt: "A cutaway of walled rooms, each with one doorway, and a stamp marking a cable that tunnels through a wall instead."
 illustration:
-  style: risograph
+  style: ember
   subject: "An application split into walled rooms (contexts), each with a single labelled doorway as its public API; a web layer outside may only enter through the doorways, and a compiler stamps a red mark on a wire that tunnels through a wall"
   prompt: |
     Draw the header illustration for a blog post.
 
     House style:
-    Medium: a risograph print in two or three spot inks, with visible grain,
-    slight misregistration between layers, and flat overlapping shapes.
-    Palette: fluorescent pink #FF48B0, teal #00838A and yellow #FFE800 on uncoated
-    cream paper #F6F0E1. Where two inks overlap, let them mix.
+    Medium: a flat vector editorial illustration, like a screen print in one spot
+    ink on dark stock. Crisp shapes, clean edges, a little fine grain, no
+    gradients or glow.
+    Palette: graphite background #161616 with a faint square line grid in #222222,
+    shapes in slightly lighter graphite #262626 and #3d3d3d, outlines and details
+    in warm off-white #f2ede8, and one accent orange #ea6134 used only on the
+    single focal object. No other colours.
     Composition: an editorial illustration that turns the post's idea into a
     metaphor with everyday objects (a jammed drawer, a tangled hose, two keys on
-    one ring). Big, simple shapes, one clear focal object, a playful tilt.
-    Mood: wry and a bit cheeky, like the cover of a small zine.
+    one ring). Big, simple shapes, one clear focal object in the centre, lots of
+    quiet dark space around it.
+    Mood: calm, precise and a bit wry, like a technical drawing with a joke in it.
     Avoid: any text, letters, numbers or labels; logos; faces or people; photo
-    realism; gradients; glowing brains, robots, circuit patterns or sci-fi light.
+    realism; gradients; neon or glow; glowing brains, robots, circuit patterns or
+    sci-fi light.
 
     The post is titled "Enforce Phoenix contexts with boundary".
-    It is about this: Phoenix contexts are a convention until something checks them. boundary makes them a compile error, even on an app that already breaks them.
+    It is about this: Phoenix contexts are a convention until something checks them. boundary makes a call from the web layer into a context's internals fail the build, even on an app that already breaks the rules.
     The picture shows: An application split into walled rooms (contexts), each with a single labelled doorway as its public API; a web layer outside may only enter through the doorways, and a compiler stamps a red mark on a wire that tunnels through a wall
 
     Frame it as a wide 16:9 landscape. Keep the subject in the centre, with

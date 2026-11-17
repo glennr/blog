@@ -1,72 +1,119 @@
-# The consulting copy shared by the home page (layouts/partials/home/custom.html)
-# and About (the `work` shortcode). Text is Markdown. In a problem, `link` is
+# The copy shared by the home page (layouts/partials/home/custom.html) and the
+# Experience and Contact pages (the `work` shortcode). Text is Markdown. In a problem, `link` is
 # a phrase from its text that becomes a link to `post`, a content path
 # (layouts/partials/work-text.html).
 
-# The address the Email me buttons mail, in two parts that the page joins
-# only on click (layouts/partials/extend-head-uncached.html). The home page says
-# "hello@ this domain", so keep emailDomain the site's own domain.
-emailUser = "hello"
-emailDomain = "glenn-roberts.com"
+# My LinkedIn profile, for the rel="me" links, JSON-LD and llms.txt.
+linkedin = "https://linkedin.com/in/glennrob"
 
-# Under each Email me button at the close of the home page and About.
-reply = "I reply within two working days. If I'm not the right fit, I'll say so and point you to someone who is."
+# Where every "Message me on LinkedIn" button goes: a new message to me.
+linkedinMessage = "https://www.linkedin.com/messaging/compose/?recipient=ACoAAAAkC7kBbdzfrZ6gVm2k9zqG-J2dpEVcceU"
+
+# The home page's "Companies I've worked with" and Experience's list.
+companies = ["Ericsson", "Accenture", "Hetzner", "USAID", "Groove", "Bramble", "Human Performance Group", "OpenFn", "Siyelo"]
+
+# Where the Email buttons and the Contact page's email card point.
+email = "hello@glenn-roberts.com"
+
+# What I offer: the home page's numbered cards and Experience's
+# `{{< work offers >}}`, one list so both say the same thing.
+[[offers]]
+  title = "Agentic products"
+  text = "Agents in your product that plan, use your app's tools and act for a user, with evals so you can see how often they get it right."
 
 [[offers]]
-  title = "Web apps"
-  text = "New products, or the app you already run, in whatever stack your team uses."
-
-[[offers]]
-  title = "Agentic systems"
-  text = "Agents in your product that plan, call your app's tools and act for a user (with evals and guardrails)."
+  title = "A platform that has to hold up"
+  text = "Multi-tenant SaaS, cloud and CI/CD that stay cheap to run and easy to change. I built one as co-founder and CTO, and I'll build the one you need next."
 
 [[offers]]
   title = "APIs and integrations"
   text = "APIs, data integrations and single sign-on between your product and your customers' systems."
 
 [[offers]]
-  title = "Cloud platforms"
-  text = "AWS, Kubernetes, infrastructure as code and CI/CD that are cheap to run and easy to change."
+  title = "A second opinion first"
+  text = "I've been the CTO making these calls. Send me what you're weighing up and I'll tell you what I'd do."
 
-# The home page's "How I work": the standard I hold, as a client lives it.
+# The home page's "How I work": how I approach a system, as an engineer.
 [[principles]]
-  title = "Shipped means in production"
-  text = "What we build goes live for your customers, not into a demo or a branch that sits."
-
-[[principles]]
-  title = "Tests and security in the same PR"
-  text = "Every change ships with its tests and a security review, not as a follow-up ticket."
+  title = "Start from the problem"
+  text = "I find out what's actually broken, and why, before anything gets built. Then we fix the cause, not the symptom."
 
 [[principles]]
-  title = "Your team keeps it"
-  text = "Plain code, written docs, and I explain the decisions as we go, so nothing depends on me."
+  title = "Built to run, not to demo"
+  text = "Multi-tenant, observable and cheap to run, with the tests and security in from the start. Systems I've built hold up with enterprise customers on them."
 
-# The home page's "Where I can help" cards, in order: the symptom as the
-# title, the outcome as `fix`, then what I do about it.
-[[problems]]
-  title = "You want agents in the product"
-  fix = "Agents that do the work."
-  text = "I build agents that plan, use your app's tools and check each other's work, with evals so you can see how often they get it right."
+[[principles]]
+  title = "Easy to change later"
+  text = "Clear boundaries, plain code and written decisions, so the system stays easy to change long after the first release."
 
-[[problems]]
-  title = "You need someone senior who still writes code"
-  fix = "I do the building."
-  text = "I co-founded an enterprise SaaS and hand-wrote over half its code as CTO. I join your team and build the system, platform or API you need next."
 
-[[problems]]
-  title = "You'd like a second opinion before you commit"
-  fix = "Talk it through first."
-  text = "I've been the CTO making these calls, and I've worked with Ericsson, Accenture, Hetzner, USAID and Groove. Send me what you're weighing up and I'll tell you what I'd do."
+# Projects' cards (`{{< work projects >}}`). The figure leads the outcome;
+# `post` adds a link to the write-up.
+[[projects]]
+  title = "Bramble platform"
+  problem = "Back-office teams at banks and insurers couldn't see where capacity was lost."
+  built = "A multi-tenant analytics SaaS with schema-per-tenant Postgres, a LiveView UI and a reporting warehouse."
+  figure = "0 to 1"
+  outcome = "from an empty repo to a platform live with enterprise customers in the US and Australia, at 99.9% availability or better."
+  stack = ["Elixir", "Phoenix", "PostgreSQL", "AWS"]
 
-# The background, told as what a client got from it: About's "My background".
-[[background]]
-  title = "Built what enterprises need"
-  text = "I built the data integrations, API access and SSO that banks and insurers needed before they'd go live."
+[[projects]]
+  title = "Regional EKS migration"
+  problem = "One AWS account per customer was costly and slow to change."
+  built = "Regional EKS clusters managed in Pulumi, with staged releases."
+  figure = "60%"
+  outcome = "fewer cloud resources, and deploys down from about 45 minutes to 10."
+  stack = ["Kubernetes", "Pulumi", "Docker"]
 
-[[background]]
-  title = "Wrote the code as CTO"
-  text = "I co-founded an enterprise SaaS and hand-wrote over half its code."
+[[projects]]
+  title = "Enterprise integrations"
+  problem = "Banks needed secure data exchange and SSO before they'd go live."
+  built = "Encrypted SFTP, S3 and SQS pipelines, SSO and API access."
+  figure = "SOC 2"
+  outcome = "Type 2 controls, with the enterprise go-lives unblocked."
+  stack = ["AWS S3", "SQS", "SSO"]
 
-[[background]]
-  title = "Ran the platform too"
-  text = "I cut build and deploy from about 45 minutes to 10, trimmed cloud resources by 60% and took the company through SOC 2 Type 2."
+[[projects]]
+  title = "Typst PDF rendering"
+  problem = "Report PDFs through headless Chrome were slow and fragile."
+  built = "In-BEAM rendering with the Typst NIF, benchmarked against the CLI."
+  figure = "5x"
+  outcome = "faster than the Typst CLI: a 10-page report in 10 ms."
+  stack = ["Elixir", "Typst", "NIF"]
+  post = "posts/render-pdfs-in-elixir-with-the-typst-nif"
+
+# The skills, one group each. The home page's JSON-LD Person lists every
+# item as knowsAbout; no page shows them.
+[[skills]]
+  title = "Languages and frameworks"
+  items = ["Elixir", "Phoenix and LiveView", "JavaScript and TypeScript", "Ruby"]
+
+[[skills]]
+  title = "Data"
+  items = ["PostgreSQL", "Schema-per-tenant design", "Reporting warehouses"]
+
+[[skills]]
+  title = "Cloud and DevOps"
+  items = ["AWS", "Kubernetes and EKS", "Pulumi and infrastructure as code", "Docker and CI/CD", "VictoriaMetrics and Grafana"]
+
+[[skills]]
+  title = "AI engineering"
+  items = ["LLM agents and tool use", "Evals and guardrails", "AI-assisted development workflows"]
+
+[[skills]]
+  title = "Security and integration"
+  items = ["SSO and API access", "SFTP, S3 and SQS pipelines", "SOC 2 change control"]
+
+# A company's mark beside its name (layouts/partials/company.html): an SVG in
+# assets/ drawn in the text colour, so it needs fill="currentColor". Keyed by
+# the name in lower case.
+[logos]
+  ericsson = "logos/ericsson.svg"
+  accenture = "logos/accenture.svg"
+  hetzner = "logos/hetzner.svg"
+  groove = "logos/groove.svg"
+  bramble = "logos/bramble.svg"
+  "human performance group" = "logos/human-performance-group.svg"
+  openfn = "logos/openfn.svg"
+  siyelo = "logos/siyelo.svg"
+  usaid = "logos/usaid.svg"

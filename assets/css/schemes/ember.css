@@ -1,0 +1,54 @@
+/* Ember scheme: graphite greys and one ember orange. The site is dark by
+   design; the light side is the same palette read the other way round.
+
+   - neutral: graphite with no hue, warming only at the light end so white
+     text and the light page are not blue-white. neutral-800 is the dark
+     page, neutral-700 its hairlines, neutral-400 its muted text.
+   - primary: the ember orange. primary-500 fills buttons (with
+     neutral-900 text, about 5.8:1); primary-400 is the dark page's links;
+     primary-600 is darker for links on the light page.
+   - secondary: a warm amber beside the orange, for the theme's few uses.
+
+   The values are sRGB conversions of OKLCH shades, so each step is an even
+   step in lightness. Contrast against the page: primary-600 on neutral is
+   about 5.2:1, primary-400 on neutral-800 (dark) about 6.8:1, neutral-600
+   (light muted) 6.5:1, neutral-400 (dark muted) 6.8:1. */
+:root {
+  --color-neutral: 247, 244, 242;
+  /* Graphite */
+  --color-neutral-50: 234, 231, 229;
+  --color-neutral-100: 221, 218, 216;
+  --color-neutral-200: 201, 199, 197;
+  --color-neutral-300: 192, 189, 187;
+  --color-neutral-400: 163, 157, 152;
+  --color-neutral-500: 119, 116, 114;
+  --color-neutral-600: 88, 88, 88;
+  --color-neutral-700: 61, 61, 61;
+  --color-neutral-800: 22, 22, 22;
+  --color-neutral-900: 13, 13, 13;
+  --color-neutral-950: 6, 6, 6;
+  /* Ember orange */
+  --color-primary-50: 255, 242, 233;
+  --color-primary-100: 255, 224, 206;
+  --color-primary-200: 255, 196, 169;
+  --color-primary-300: 255, 163, 127;
+  --color-primary-400: 251, 121, 74;
+  --color-primary-500: 234, 97, 52;
+  --color-primary-600: 184, 59, 7;
+  --color-primary-700: 163, 56, 16;
+  --color-primary-800: 129, 47, 19;
+  --color-primary-900: 93, 35, 17;
+  --color-primary-950: 63, 21, 7;
+  /* Amber */
+  --color-secondary-50: 254, 243, 231;
+  --color-secondary-100: 254, 231, 207;
+  --color-secondary-200: 252, 210, 171;
+  --color-secondary-300: 247, 185, 131;
+  --color-secondary-400: 239, 164, 100;
+  --color-secondary-500: 225, 142, 75;
+  --color-secondary-600: 189, 113, 56;
+  --color-secondary-700: 153, 90, 49;
+  --color-secondary-800: 117, 68, 39;
+  --color-secondary-900: 86, 51, 31;
+  --color-secondary-950: 54, 32, 20;
+}

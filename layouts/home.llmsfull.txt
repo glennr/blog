@@ -1,0 +1,26 @@
+{{- /* /llms-full.txt: the full text of every page and post, so a model can
+     read the site in one fetch. /llms.txt is the short index. */ -}}
+# {{ site.Title }}
+
+> {{ .Description }}
+{{- range where site.RegularPages "Section" "" }}
+
+---
+
+# {{ .Title }}
+
+URL: {{ .Permalink }}
+
+{{ .Plain | htmlUnescape }}
+{{- end }}
+{{- range where site.RegularPages "Type" "posts" }}
+
+---
+
+# {{ .Title }}
+
+URL: {{ .Permalink }}
+Published: {{ .PublishDate.Format "2006-01-02" }}
+
+{{ .Plain | htmlUnescape }}
+{{- end }}

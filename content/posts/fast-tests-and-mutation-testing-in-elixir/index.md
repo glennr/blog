@@ -1,5 +1,5 @@
 ---
-title: "Mutation Testing Finds What Coverage Misses"
+title: "Mutation testing finds what coverage misses"
 description: "Line coverage said our Phoenix app was 96% tested. Mutation testing with Muex, run only on a branch's changed lines and fast tests, found 17 changes no test caught."
 date: 2026-10-22T23:06:44+10:00
 draft: false
@@ -11,27 +11,32 @@ tags:
   - elixir
   - testing
   - muex
-alt: "A pink drawer full of green ticked cards, with small blocks spilling out unnoticed underneath, while a dart races past a snail."
+alt: "A cabinet of ticked test cards sorting work into a fast lane and a slow lane, with one unticked card slipping out the end."
 illustration:
-  style: risograph
+  style: ember
   subject: "A test suite where most tests are marked green as covered, while small mutated copies of the code (one operator flipped) slip past them unnoticed; a quick lane of fast tests runs beside a slow lane"
   prompt: |
     Draw the header illustration for a blog post.
 
     House style:
-    Medium: a risograph print in two or three spot inks, with visible grain,
-    slight misregistration between layers, and flat overlapping shapes.
-    Palette: fluorescent pink #FF48B0, teal #00838A and yellow #FFE800 on uncoated
-    cream paper #F6F0E1. Where two inks overlap, let them mix.
+    Medium: a flat vector editorial illustration, like a screen print in one spot
+    ink on dark stock. Crisp shapes, clean edges, a little fine grain, no
+    gradients or glow.
+    Palette: graphite background #161616 with a faint square line grid in #222222,
+    shapes in slightly lighter graphite #262626 and #3d3d3d, outlines and details
+    in warm off-white #f2ede8, and one accent orange #ea6134 used only on the
+    single focal object. No other colours.
     Composition: an editorial illustration that turns the post's idea into a
     metaphor with everyday objects (a jammed drawer, a tangled hose, two keys on
-    one ring). Big, simple shapes, one clear focal object, a playful tilt.
-    Mood: wry and a bit cheeky, like the cover of a small zine.
+    one ring). Big, simple shapes, one clear focal object in the centre, lots of
+    quiet dark space around it.
+    Mood: calm, precise and a bit wry, like a technical drawing with a joke in it.
     Avoid: any text, letters, numbers or labels; logos; faces or people; photo
-    realism; gradients; glowing brains, robots, circuit patterns or sci-fi light.
+    realism; gradients; neon or glow; glowing brains, robots, circuit patterns or
+    sci-fi light.
 
     The post is titled "Mutation Testing Finds What Coverage Misses".
-    It is about this: A Phoenix app had 97.8% line coverage, and Muex still found tests that would not notice a change. A fast test set made it affordable to look.
+    It is about this: Line coverage said our Phoenix app was 96% tested. Mutation testing with Muex, run only on a branch's changed lines and fast tests, found 17 changes no test caught.
     The picture shows: A test suite where most tests are marked green as covered, while small mutated copies of the code (one operator flipped) slip past them unnoticed; a quick lane of fast tests runs beside a slow lane
 
     Frame it as a wide 16:9 landscape. Keep the subject in the centre, with

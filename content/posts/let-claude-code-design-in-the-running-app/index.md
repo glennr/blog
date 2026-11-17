@@ -11,24 +11,29 @@ tags:
   - claude-code
   - ux
   - phoenix
-alt: "A risograph print of a phone sketch on an easel, beside a real phone screen being marked up with a pencil"
+alt: "A phone sketch on an easel, beside a real phone screen being marked up with a pencil"
 illustration:
-  style: risograph
+  style: ember
   subject: "an empty easel holding a paper sketch of a phone screen, ignored, while beside it a real working phone screen is being marked up directly with a pencil"
   prompt: |
     Draw the header illustration for a blog post.
 
     House style:
-    Medium: a risograph print in two or three spot inks, with visible grain,
-    slight misregistration between layers, and flat overlapping shapes.
-    Palette: fluorescent pink #FF48B0, teal #00838A and yellow #FFE800 on uncoated
-    cream paper #F6F0E1. Where two inks overlap, let them mix.
+    Medium: a flat vector editorial illustration, like a screen print in one spot
+    ink on dark stock. Crisp shapes, clean edges, a little fine grain, no
+    gradients or glow.
+    Palette: graphite background #161616 with a faint square line grid in #222222,
+    shapes in slightly lighter graphite #262626 and #3d3d3d, outlines and details
+    in warm off-white #f2ede8, and one accent orange #ea6134 used only on the
+    single focal object. No other colours.
     Composition: an editorial illustration that turns the post's idea into a
     metaphor with everyday objects (a jammed drawer, a tangled hose, two keys on
-    one ring). Big, simple shapes, one clear focal object, a playful tilt.
-    Mood: wry and a bit cheeky, like the cover of a small zine.
+    one ring). Big, simple shapes, one clear focal object in the centre, lots of
+    quiet dark space around it.
+    Mood: calm, precise and a bit wry, like a technical drawing with a joke in it.
     Avoid: any text, letters, numbers or labels; logos; faces or people; photo
-    realism; gradients; glowing brains, robots, circuit patterns or sci-fi light.
+    realism; gradients; neon or glow; glowing brains, robots, circuit patterns or
+    sci-fi light.
 
     The post is titled "Let Claude Code design in the running app".
     It is about this: Why I stopped relaying work between Claude Design and Claude Code, and moved the design step into the app itself

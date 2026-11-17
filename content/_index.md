@@ -1,13 +1,21 @@
 ---
 title: "Glenn Roberts"
-description: "Glenn Roberts is a hands-on engineer who helps companies build and ship with AI. Fractional and project work. Writing on building with AI, Elixir, Phoenix and AWS."
-heroTitle: "I help companies build with AI, and make the kind of product that's hard to copy."
-bio: "Code is cheap. Engineering isn't. I've been the one paged when it broke, so what I ship comes with the tests, permissions and deploy path it needs, and your team can change it after I leave. I take one main client at a time, and work in your repo on your tools."
-writingLead: "I write up what I learn, mostly building with AI, Elixir, Phoenix and AWS."
+description: "Glenn Roberts is an engineer and former co-founder and CTO in Australia, consulting on agentic products, multi-tenant SaaS platforms and the cloud they run on."
+eyebrow: "Taking on consulting work"
+heroTitle: "I build the systems"
+heroAccent: "your business runs on."
+heroTyping:
+  - "building agentic products"
+  - "designing multi-tenant platforms"
+  - "connecting enterprise systems"
+  - "running AWS and EKS"
+portraitTag: "ex-CTO · Bramble"
+bio: "I've been the one paged when it broke, so what I ship comes with the tests, permissions and deploy path it needs."
+writingLead: "Technical articles and quick TIL notes from real production work."
 heroLinks: [github, gitlab, linkedin, bluesky]
 recentPostCount: 3
 ---
 
-Hi, I'm Glenn. I'm a hands-on engineer (and a former CTO). I join your team,
-write the code and get it into production, from the app down to the cloud it
-runs on.
+Hi, I'm Glenn, an engineer and former co-founder and CTO. I work out what your
+product needs, then build it and ship it, from the agents in the app down to
+the cloud it runs on.

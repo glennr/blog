@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #MISE description="Draw a post's header image into its page bundle as feature.webp"
 #USAGE arg "<bundle>" help="The post's page bundle, e.g. content/posts/<slug>"
-#USAGE flag "--style <name>" help="A house style from assets/illustration/styles/ (default: risograph)"
+#USAGE flag "--style <name>" help="A house style from assets/illustration/styles/ (default: ember)"
 #
 # Draws a header for one post and writes it to <bundle>/feature.webp, the one
 # name the hero, the list thumbnail and og:image all pick up.
@@ -13,7 +13,7 @@
 # the optional `illustration.subject` from the front matter, which says what
 # the picture should show when the title alone does not. The style comes from
 # --style, else from `illustration.style` in the front matter, else it is
-# risograph, the house default. A style with a reference image beside it,
+# ember, the house default. A style with a reference image beside it,
 # <name>.png, sends that image along too.
 #
 # The image comes from Codex CLI, which draws it on the ChatGPT plan, so no API
@@ -64,7 +64,7 @@ title=$(field title)
 description=$(field description)
 subject=$(field illustration.subject)
 [ -n "$style" ] || style=$(field illustration.style)
-[ -n "$style" ] || style=risograph
+[ -n "$style" ] || style=ember
 [ -n "$title" ] || { echo "$page has no title." >&2; exit 1; }
 
 style_file="assets/illustration/styles/$style.md"

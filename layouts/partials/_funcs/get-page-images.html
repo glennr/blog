@@ -1,0 +1,29 @@
+{{/* The og:image and twitter:image for Hugo's built-in OpenGraph and Twitter
+     card templates: one 1200x630 JPEG per page. A page bundle's feature
+     image is cropped to that size; any other page gets a card on
+     assets/images/social-base.png with its title, my name and role on the
+     left and the portrait on the right. images.Text wraps only at the
+     image's edge, so the text is drawn on a left-hand crop of the base and
+     laid back over it, which keeps it clear of the portrait. */}}
+{{ $img := "" }}
+{{ $feature := "" }}
+{{ range slice "*feature*" "*cover*" "*thumbnail*" }}
+  {{ $feature = $feature | default (($.Resources.ByType "image").GetMatch .) }}
+{{ end }}
+{{ with $feature }}
+  {{ $img = .Fill "1200x630 Center jpg q85" }}
+{{ else }}
+  {{ $font := resources.Get "fonts/space-grotesk.ttf" }}
+  {{ $title := .Title }}
+  {{ if .IsHome }}{{ $title = printf "%s %s" .Params.heroTitle .Params.heroAccent }}{{ end }}
+  {{ $base := resources.Get "images/social-base.png" }}
+  {{ $text := ($base.Crop "760x630 TopLeft").Filter
+    (images.Text $title (dict "font" $font "size" 60 "color" "#f7f4f2" "x" 80 "y" 140 "linespacing" 10))
+    (images.Text site.Title (dict "font" $font "size" 36 "color" "#fb794a" "x" 80 "y" 460))
+    (images.Text "Engineer and former co-founder and CTO" (dict "font" $font "size" 26 "color" "#b8b2ad" "x" 80 "y" 512))
+  }}
+  {{ $portrait := (resources.Get site.Params.Author.image).Fill "360x360 Center" }}
+  {{ $img = $base.Filter (images.Overlay $text 0 0) (images.Overlay $portrait 790 135) }}
+  {{ $img = $img.Process "jpg q85" }}
+{{ end }}
+{{ return (slice $img) }}

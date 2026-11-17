@@ -11,15 +11,12 @@
 # ordered by weight from lowest to highest.
 
 [[main]]
-  name = "Blog"
+  name = "Writing"
   pageRef = "posts"
-  weight = 10
+  weight = 30
 
-# The consulting call to action, styled as a button in assets/css/custom.css.
-[[main]]
-  name = "Work with me"
-  url = "/about/#working-together"
-  weight = 40
+  # Experience (10), Projects (20) and Contact (40) set their entries in their
+  # own front matter. Contact is styled as a button in assets/css/custom.css.
 
 
   # -- Footer Menu --
@@ -30,8 +27,3 @@
   #   name = "Tags"
   #   pageRef = "tags"
   #   weight = 10
-
-[[footer]]
-  name = "RSS"
-  url = "/index.xml"
-  weight = 20

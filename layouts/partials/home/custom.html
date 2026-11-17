@@ -1,27 +1,28 @@
 {{/* Home page.
 
-     It leads with the consulting work. Top to bottom: a hero with the intro
-     and the line to email on the left and the portrait on the right, the
-     problems I help with as numbered cards, how I work, a closing call to email, then recent writing.
+     Top to bottom: a hero with the intro and buttons on the left and the
+     portrait on the right, the companies in a scrolling strip,
+     what I offer as numbered cards, how I work, recent writing,
+     then a closing call to message me. The skills are not shown; they feed
+     the JSON-LD only.
 
-     The consulting copy (problems, principles, the reply line,
-     the email user) lives in
-     data/work.toml, which About shares through the `work` shortcode. The rest
-     comes from content/_index.md. Its body is the intro prose, and these
-     front matter fields control the rest:
+     The shared copy (offers, companies, principles, the
+     LinkedIn URL) lives in data/work.toml, which Experience
+     and Contact share through the `work` shortcode. The rest comes from
+     content/_index.md. Its body is the intro prose, and these front matter
+     fields control the rest:
 
+       eyebrow          the availability badge above the h1
        heroTitle        the h1, defaults to the author name
+       heroAccent       the h1's closing phrase, in the accent colour
+       heroTyping       the phrases the mono line under the intro types and
+                        deletes in turn; the first is the static line
+       portraitTag      the small label on the portrait's corner
        heroLinks        the author links to show as icons, by name, in order;
                         defaults to all of them
        bio              the paragraph above the principles
        writingLead      the line under the "Recent writing" heading
        recentPostCount  rows in the posts list, defaults to 5
-
-     The page never prints a whole email address, so a scraper finds none:
-     the fallback line says "hello@ this domain", and the Email me buttons build the
-     mailto link from the user and emailDomain in data/work.toml when
-     clicked. Without
-     JavaScript they go to About.
 
      The rows come from partials/post-row.html, which the section lists use
      too. The styles live in assets/css/custom.css under the .home- and
@@ -35,18 +36,56 @@
 
 <article class="home">
   <section class="home-hero">
+    <div class="bg-grid" aria-hidden="true"></div>
     <div class="home-hero__text">
+      {{ with .Params.eyebrow }}
+        <p class="home-hero__badge"><span class="home-hero__dot" aria-hidden="true"></span>{{ . }}</p>
+      {{ end }}
       <h1 class="home-hero__title">
         {{ .Params.heroTitle | default .Site.Params.Author.name | default .Site.Title | markdownify | emojify }}
+        {{ with .Params.heroAccent }}<span class="home-hero__accent">{{ . | markdownify }}</span>{{ end }}
       </h1>
       <div class="home-hero__lead prose dark:prose-invert">
         {{ .Content }}
       </div>
+      {{ with .Params.heroTyping }}
+        {{/* A screen reader gets every phrase once; the typing is hidden
+             from it so nothing is announced as it changes. */}}
+        <p class="home-hero__typing">
+          <span class="sr-only">Currently: {{ delimit . ", " ", and " }}.</span>
+          <span aria-hidden="true">$ currently: <span class="home-hero__typed" data-words="{{ . | jsonify }}">{{ index . 0 }}</span></span>
+        </p>
+        {{/* Types each phrase, holds it, deletes it, then the next. Without
+             the script, or with less motion asked for, the first phrase
+             stays. */}}
+        <script>
+          (() => {
+            if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            const el = document.querySelector(".home-hero__typed");
+            const words = JSON.parse(el.dataset.words);
+            let w = 0;
+            let n = 0;
+            let deleting = false;
+            const tick = () => {
+              const word = words[w];
+              if (!deleting && n < word.length) n++;
+              else if (!deleting) deleting = true;
+              else if (n > 0) n--;
+              else {
+                deleting = false;
+                w = (w + 1) % words.length;
+              }
+              el.textContent = words[w].slice(0, n);
+              setTimeout(tick, !deleting && n === words[w].length ? 1800 : deleting ? 35 : 70);
+            };
+            tick();
+          })();
+        </script>
+      {{ end }}
       <div class="home-hero__actions">
-        <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ $work.emailUser }}">Email me</a>
-        <a class="home-hero__secondary" href="#where-i-help">Where I can help</a>
+        <a class="btn btn--primary" href="{{ "contact/" | relLangURL }}">Get in touch</a>
+        <a class="btn btn--ghost" href="{{ "experience/" | relLangURL }}">See my experience</a>
       </div>
-      <p class="home-hero__fallback">No mail app? Write to {{ $work.emailUser }}@ this domain.</p>
       {{ $show := .Params.heroLinks }}
       {{ with .Site.Params.Author.links }}
         <ul class="home-hero__links">
@@ -92,53 +131,77 @@
             loading="eager"
             fetchpriority="high"
             class="nozoom" />
+          {{ with $.Params.portraitTag }}<figcaption class="home-hero__tag">{{ . }}</figcaption>{{ end }}
         </figure>
       {{ end }}
     {{ end }}
   </section>
 
-  <section class="home-section" id="where-i-help">
-    <h2 class="home-section__title">Where I can help</h2>
+
+  <section class="home-section" aria-labelledby="track-record">
+    <p class="eyebrow">Track record</p>
+    <h2 class="home-section__title" id="track-record">Companies I've worked with.</h2>
+    <p class="home-section__lead">From global telecoms to early-stage startups.</p>
+    {{/* The list runs twice so the strip can loop; the copy is hidden from
+         screen readers. */}}
+    <div class="home-marquee" data-reveal>
+      <ul class="home-marquee__track">
+        {{ range $work.companies }}<li>{{ partial "company.html" . }}</li>{{ end }}
+        {{ range $work.companies }}<li aria-hidden="true">{{ partial "company.html" . }}</li>{{ end }}
+      </ul>
+    </div>
+  </section>
+
+  <section class="home-section" id="where-i-help" aria-labelledby="where-i-help-title">
+    <p class="eyebrow">Where I help</p>
+    <h2 class="home-section__title" id="where-i-help-title">What I build.</h2>
     <ol class="home-cards">
-      {{ range $work.problems }}
-        <li class="home-card">
-          <h3 class="home-card__title">{{ .title | markdownify }}</h3>
-          {{ with .fix }}<p class="home-card__fix">{{ . }}</p>{{ end }}
-          <p>{{ partial "work-text.html" . }}</p>
+      {{ range $i, $p := $work.offers }}
+        {{/* The reveal sits on the item so the card's hover keeps its own
+             transition. */}}
+        <li data-reveal style="--reveal-delay: {{ mul $i 60 }}ms">
+          <div class="card home-card">
+            <span class="home-card__number" aria-hidden="true">{{ printf "%02d" (add $i 1) }}</span>
+            <h3 class="home-card__title">{{ $p.title | markdownify }}</h3>
+            <p>{{ partial "work-text.html" $p }}</p>
+          </div>
         </li>
       {{ end }}
     </ol>
+    <a class="btn btn--ghost" href="{{ $work.linkedinMessage }}" rel="noopener noreferrer" target="_blank">Tell me which one you need, on LinkedIn</a>
   </section>
 
-  <section class="home-section">
-    <h2 class="home-section__title">How I work</h2>
+  <section class="home-section" aria-labelledby="how-i-work">
+    <p class="eyebrow">How I work</p>
+    <h2 class="home-section__title" id="how-i-work">Code isn't cheap. Bad code is expensive.</h2>
     {{ with .Params.bio }}<p class="home-section__lead">{{ . | markdownify }}</p>{{ end }}
-    <ul class="home-list">
-      {{ range $work.principles }}<li><span class="work-list__lead">{{ .title }}</span>: {{ partial "work-text.html" . }}</li>{{ end }}
+    <ul class="home-principles">
+      {{ range $i, $p := $work.principles }}
+        <li data-reveal style="--reveal-delay: {{ mul $i 60 }}ms">
+          <h3 class="home-principles__title">{{ $p.title }}</h3>
+          <p>{{ partial "work-text.html" $p }}</p>
+        </li>
+      {{ end }}
     </ul>
-    <a class="home-button" href="{{ "about/" | relLangURL }}">More about me</a>
-  </section>
-
-  <section class="home-section home-close">
-    <h2 class="home-section__title">Want help?</h2>
-    <p class="home-section__lead">{{ "Email me a paragraph on what you're building and what you need. That's plenty to start with." | markdownify }}</p>
-    <a class="home-hero__cta-button" href="{{ "about/#working-together" | relLangURL }}" data-mail-user="{{ $work.emailUser }}">Email me</a>
-    <p class="home-section__lead">{{ $work.reply | markdownify }}</p>
+    <a class="btn btn--ghost" href="{{ "projects/" | relLangURL }}">See the projects</a>
   </section>
 
   {{ $posts := where .Site.RegularPages "Type" "posts" }}
   {{ with first $postCount $posts }}
-    <section class="home-section">
-      <h2 class="home-section__title">Recent writing</h2>
+    <section class="home-section" aria-labelledby="writing">
+      <p class="eyebrow">Writing</p>
+      <h2 class="home-section__title" id="writing">Notes from the work.</h2>
       {{ with $.Params.writingLead }}<p class="home-section__lead">{{ . | markdownify }}</p>{{ end }}
-      <div class="post-list">
-        {{ range . }}
-          {{ partial "post-row.html" (dict "page" . "showSummary" true) }}
+      <div class="post-list home-posts">
+        {{ range $i, $p := . }}
+          <div data-reveal style="--reveal-delay: {{ mul $i 60 }}ms">
+            {{ partial "post-row.html" (dict "page" $p "showSummary" true) }}
+          </div>
         {{ end }}
       </div>
-      <a class="home-button" href="{{ "posts/" | relLangURL }}">All writing</a>
+      <a class="btn btn--ghost" href="{{ "posts/" | relLangURL }}">All writing</a>
     </section>
   {{ end }}
 
+  {{ partial "cta-panel.html" (dict) }}
 </article>
-
