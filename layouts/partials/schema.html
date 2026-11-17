@@ -1,0 +1,80 @@
+{{/* JSON-LD for every page, in place of the theme's. The home page has the
+     WebSite and the Person, from the author params and data/work.toml. A
+     post is a BlogPosting with its image; the marketing pages are a
+     ProfilePage, ContactPage or WebPage about that Person; a list is a
+     CollectionPage. Every page but home has a BreadcrumbList from Home. */}}
+{{ $author := site.Params.Author }}
+{{ $personID := printf "%s#person" site.Home.Permalink }}
+{{ $person := dict "@type" "Person" "@id" $personID "name" $author.name "url" site.Home.Permalink }}
+{{ $graph := slice }}
+{{ if .IsHome }}
+  {{ $work := hugo.Data.work }}
+  {{ $sameAs := slice }}
+  {{ range $author.links }}{{ range $_, $url := . }}{{ $sameAs = $sameAs | append $url }}{{ end }}{{ end }}
+  {{ $knows := slice }}
+  {{ range $work.skills }}{{ $knows = $knows | append .items }}{{ end }}
+  {{ $alumni := slice }}
+  {{ range $work.companies }}{{ $alumni = $alumni | append (dict "@type" "Organization" "name" .) }}{{ end }}
+  {{ $person = merge $person (dict
+    "description" $author.bio
+    "jobTitle" "Software engineer and former CTO"
+    "address" (dict "@type" "PostalAddress" "addressCountry" "AU")
+    "alumniOf" $alumni
+    "knowsAbout" $knows
+    "sameAs" $sameAs
+  ) }}
+  {{ with resources.Get $author.image }}{{ $person = merge $person (dict "image" .Permalink) }}{{ end }}
+  {{ $graph = $graph | append (dict
+    "@type" "WebSite"
+    "@id" (printf "%s#website" site.Home.Permalink)
+    "name" site.Title
+    "url" site.Home.Permalink
+    "inLanguage" site.Language.Locale
+    "description" .Description
+    "publisher" (dict "@id" $personID)
+  ) $person }}
+{{ else }}
+  {{ $type := "WebPage" }}
+  {{ if eq .Section "posts" }}
+    {{ $type = cond .IsPage "BlogPosting" "CollectionPage" }}
+  {{ else if not .IsPage }}
+    {{ $type = "CollectionPage" }}
+  {{ else if eq .File.ContentBaseName "experience" }}
+    {{ $type = "ProfilePage" }}
+  {{ else if eq .File.ContentBaseName "contact" }}
+    {{ $type = "ContactPage" }}
+  {{ end }}
+  {{ $page := dict
+    "@type" $type
+    "@id" .Permalink
+    "url" .Permalink
+    "name" .Title
+    "inLanguage" site.Language.Locale
+    "isPartOf" (dict "@id" (printf "%s#website" site.Home.Permalink))
+  }}
+  {{ with .Description }}{{ $page = merge $page (dict "description" .) }}{{ end }}
+  {{ if eq $type "BlogPosting" }}
+    {{ $page = merge $page (dict
+      "headline" .Title
+      "author" $person
+      "publisher" $person
+      "datePublished" (.PublishDate.Format "2006-01-02T15:04:05-07:00")
+      "dateModified" (.Lastmod.Format "2006-01-02T15:04:05-07:00")
+      "mainEntityOfPage" .Permalink
+      "wordCount" .WordCount
+    ) }}
+    {{ with .Params.tags }}{{ $page = merge $page (dict "keywords" .) }}{{ end }}
+    {{ with partial "_funcs/get-page-images" . }}{{ $page = merge $page (dict "image" (index . 0).Permalink) }}{{ end }}
+  {{ else if in (slice "ProfilePage" "ContactPage") $type }}
+    {{ $page = merge $page (dict "mainEntity" (dict "@id" $personID)) }}
+  {{ end }}
+  {{ $crumbs := slice (dict "@type" "ListItem" "position" 1 "name" "Home" "item" site.Home.Permalink) }}
+  {{ range .Ancestors.Reverse }}
+    {{ if not .IsHome }}
+      {{ $crumbs = $crumbs | append (dict "@type" "ListItem" "position" (add (len $crumbs) 1) "name" .Title "item" .Permalink) }}
+    {{ end }}
+  {{ end }}
+  {{ $crumbs = $crumbs | append (dict "@type" "ListItem" "position" (add (len $crumbs) 1) "name" .Title "item" .Permalink) }}
+  {{ $graph = $graph | append $page (dict "@type" "BreadcrumbList" "itemListElement" $crumbs) }}
+{{ end }}
+<script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $graph | jsonify | safeJS }}</script>

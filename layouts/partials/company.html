@@ -1,0 +1,6 @@
+{{/* A company tile's content: its mark from data/work.toml's `logos`, if it
+     has one, then its name. The mark is inline so it takes the text colour. */}}
+{{ with index hugo.Data.work.logos (lower .) }}
+  {{ with resources.Get . }}{{ .Content | safeHTML }}{{ else }}{{ errorf "data/work.toml: no asset at %q" . }}{{ end }}
+{{ end }}
+<span>{{ . }}</span>

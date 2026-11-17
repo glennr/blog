@@ -5,21 +5,35 @@
      before the page body, so a flag set by the render hook would come too
      late. Reading the source is order-free. The bundle is the theme's own
      mermaid plus assets/js/mermaid.js. */}}
-{{/* An "Email me" link carries data-mail-user and goes to About without
-     JavaScript. With it, the link becomes a mailto at emailDomain in
-     data/work.toml, joined only on click, so no page prints a whole address
-     for a scraper to find. The domain is fixed, not the page's host, so a
-     preview on another host still mails the real address. */}}
+{{/* Reveal on scroll: an element with data-reveal fades up once, the first
+     time it enters the viewport. The .reveal class on <html> is what hides
+     it until then, and it is set only when the browser can watch for that
+     and the reader has not asked for less motion, so the page never depends
+     on this script to show its content. The styles are under "Entrance and
+     reveal on scroll" in assets/css/custom.css. */}}
+{{/* shortcut: an element taller than about six screens never reaches the
+     15% threshold and stays hidden; reveal by rootMargin if one appears. */}}
 <script>
-  document.addEventListener("DOMContentLoaded", () =>
-    document.querySelectorAll("a[data-mail-user]").forEach((a) =>
-      a.addEventListener("click", (event) => {
-        event.preventDefault();
-        location.href = "mailto:" + a.dataset.mailUser + "@" + {{ hugo.Data.work.emailDomain }};
-      }),
-    ),
-  );
+  if ("IntersectionObserver" in window && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.documentElement.classList.add("reveal");
+    document.addEventListener("DOMContentLoaded", () => {
+      const observer = new IntersectionObserver(
+        (entries) =>
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add("is-revealed");
+            observer.unobserve(entry.target);
+          }),
+        { threshold: 0.15 },
+      );
+      document.querySelectorAll("[data-reveal]").forEach((el) => observer.observe(el));
+    });
+  }
 </script>
+{{/* The heading and body faces, fetched before the stylesheet asks for
+     them. The serif and mono faces load when a page uses them. */}}
+<link rel="preload" href="/fonts/space-grotesk-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/dm-sans-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 {{ if and (not (.HasShortcode "mermaid")) (strings.Contains .RawContent "```mermaid") }}
   {{ $lib := resources.Get "lib/mermaid/mermaid.min.js" }}
   {{ $config := resources.Get "js/mermaid.js" | resources.Minify }}

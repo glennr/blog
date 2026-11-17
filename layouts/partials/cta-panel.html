@@ -1,0 +1,22 @@
+{{/* The closing call to action: a centred panel on the drifting grid, with
+     a title whose second phrase is in the accent colour, a lead and the
+     LinkedIn and email buttons from data/work.toml. Every page ends
+     on this one panel.
+
+     Usage: {{ partial "cta-panel.html" (dict "title" "Building something?"
+     "accent" "Let's talk." "lead" "…") }}. Each key is optional and falls
+     back to the default below. Styles under .cta-panel in
+     assets/css/custom.css. */}}
+{{ $work := hugo.Data.work }}
+{{ $title := .title | default "Building something?" }}
+{{ $accent := .accent | default "Let's talk." }}
+{{ $lead := .lead | default "Send me a few lines on what you're building. I'd love to hear about it, and I'll help however I can." }}
+<section class="cta-panel not-prose" data-reveal>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="cta-panel__body">
+    <h2 class="cta-panel__title">{{ $title }} <span class="cta-panel__accent">{{ $accent }}</span></h2>
+    <p class="cta-panel__lead">{{ $lead | markdownify }}</p>
+    <a class="btn btn--primary" href="mailto:{{ $work.email }}">Email me</a>
+    <a class="btn btn--ghost" href="{{ $work.linkedinMessage }}" rel="noopener noreferrer" target="_blank">Message me on LinkedIn</a>
+  </div>
+</section>
