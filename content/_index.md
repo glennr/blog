@@ -1,5 +1,5 @@
 ---
-title: "Glenn Roberts"
+title: "Glenn Roberts · Engineer and former co-founder and CTO"
 description: "Glenn Roberts is an engineer and former co-founder and CTO in Australia, consulting on agentic products, multi-tenant SaaS platforms and the cloud they run on."
 eyebrow: "Taking on consulting work"
 heroTitle: "I build the systems"
