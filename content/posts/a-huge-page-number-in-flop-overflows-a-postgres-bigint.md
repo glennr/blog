@@ -14,7 +14,7 @@ tags:
 ---
 
 A huge `?page=` makes [`Flop`](https://hexdocs.pm/flop/) build an offset that
-`Postgrex` can't encode. Flop only checks that `page` is
+`Postgrex` can't encode. `Flop` only checks that `page` is
 [greater than zero](https://github.com/woylie/flop/blob/0.28.0/lib/flop/validation.ex#L279-L281),
 then computes the offset as
 [`(page - 1) * page_size`](https://github.com/woylie/flop/blob/0.28.0/lib/flop/adapter/ecto.ex#L537).
