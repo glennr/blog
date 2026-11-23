@@ -21,8 +21,8 @@ then computes the offset as
 [`(page - 1) * page_size`](https://github.com/woylie/flop/blob/0.28.0/lib/flop/adapter/ecto.ex#L537).
 So `?page=1000000000000000000000000000000`, a 1 and thirty zeros, on any paged
 list in our app returned a 500 error. At a page size of 25, the offset came to
-a 32-digit number, the `got` value below, and `Postgrex`, the Postgres driver,
-would not encode it:
+a 32-digit number, and `Postgrex`, the Postgres driver, would not encode it
+outside the bigint range the error prints:
 
 ```text
 %DBConnection.EncodeError{message: "Postgrex expected an integer in -9223372036854775808..9223372036854775807, got 24999999999999999999999999999975. Please make sure the value you are passing matches the definition in your table or in your query or convert the value accordingly."}
@@ -38,4 +38,4 @@ defp rest_param?({key, value}, _filterable) when key in ~w(page page_size),
 ```
 
 With our `max_limit` of 100, the biggest offset stays under 100 billion, far
-inside the bigint range in the error above.
+inside a bigint.
