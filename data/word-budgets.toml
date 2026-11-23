@@ -8,7 +8,7 @@
 # ceiling before the gate does. Change both together.
 guide = 1100
 fix = 900
-explainer = 900
+explainer = 1300
 build-log = 900
 comparison = 1200
 til = 150
