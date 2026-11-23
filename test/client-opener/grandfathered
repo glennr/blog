@@ -1,0 +1,13 @@
+# Published posts that predate the rule. Skipped until fixed; drop a line
+# once its post is clean.
+content/posts/409-from-racing-oban-jobs-means-re-fetch.md
+content/posts/a-huge-page-number-in-flop-overflows-a-postgres-bigint.md
+content/posts/fast-tests-and-mutation-testing-in-elixir/index.md
+content/posts/impeccables-detector-scans-phoenix-ex-files-by-regex-only.md
+content/posts/let-claude-code-design-in-the-running-app/index.md
+content/posts/mcp-before-rest-when-the-caller-is-an-agent/index.md
+content/posts/monitor-elixir-app-in-k8s-with-promex/index.md
+content/posts/neuroevolution-with-mario/index.md
+content/posts/pass-the-time-as-now-not-on-the-phoenix-scope.md
+content/posts/render-pdfs-in-elixir-with-the-typst-nif/index.md
+content/posts/testing-liveview-with-k6.md

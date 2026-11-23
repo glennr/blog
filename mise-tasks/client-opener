@@ -1,37 +1,67 @@
 #!/usr/bin/env bash
-#MISE description="A client post's opener says what the team faced, not whose app it is"
+#MISE description="A post speaks generally: no unnamed 'we' or 'our app', and a client post never says whose app it is"
 #MISE sources=["content/**", "test/client-opener/**", "mise-tasks/client-opener"]
 #MISE outputs={ auto = true }
 #
-# In a post marked `client: true`, the team builds the app, so it is "our
-# app" and "we"; Glenn's own part is "I". The opener (the description, the
-# TL;DR callout and the first prose paragraph) never says whose app it is:
-# no "a client's app", "my client", "I'm building", "an app I work on" or "my app". Glenn fixed
-# "I'm building a client's Phoenix LiveView app" to "We're building a
-# Phoenix LiveView app ... My part is ...". Later paragraphs are the
-# reviewers' business; a regex cannot tell the team's "I" from Glenn's.
+# I build several apps, for clients and for myself, so an unnamed "we",
+# "our app" or "our team" leaves the reader asking who. A post describes the
+# code or the case on its own, with "the app" for the app and "I" for what I
+# did.
 #
-# test/client-opener/fire/ and pass/ pin the cases, one opener a file; this
-# fails if either drifts, then checks every client post.
+# Every post: no "we" (or its contractions), "our", "ours", "ourselves" or
+# "us" in the title, the description or the prose, headings and callouts
+# included. Fenced code, inline code, URLs and double-quoted text are
+# skipped, so a quote can still say "we".
+#
+# A post marked `client: true` also never says whose app it is: no "an app
+# I build for a client", "a client's app", "my client", "I'm building", "my
+# app" or "the team".
+#
+# test/client-opener/fire/ and pass/ pin the cases, one trigger a file.
+# test/client-opener/grandfathered lists published posts that predate the
+# rule. They are skipped, and a listed post that no longer hits fails, so
+# the list only shrinks.
 set -euo pipefail
 
 scan() {
   awk '
-    BEGIN { re = "(^|[^[:alnum:]_])((a|my|our|the|for a) client(.s)?( [[:alnum:]-]+)? (app|application|codebase|project|system|product|team)|my client|a client.s|for a client|i.m building|i am building|(app|codebase) i (work on|build|maintain)|my (app|codebase|product)([^[:alnum:]_]|$))" }
-    FNR == 1 { fm = ($0 == "---"); state = 0; para = 0; fence = 0; next }
-    fm && $0 == "---" { fm = 0; next }
-    fm { if ($0 ~ /^description:/ && tolower($0) ~ re) printf "%s:%d: description: %s\n", FILENAME, FNR, $0; next }
-    state == 2 { next }
-    /^```/ { fence = !fence; next }
-    fence { next }
-    /^> / { line = $0; gsub(/`[^`]*`/, "", line); if (line ~ /TLDR/) { state = 1; next } }
-    state == 1 && /^>/ { if (tolower(line) ~ re) printf "%s:%d: TL;DR: %s\n", FILENAME, FNR, $0; next }
-    /^[A-Za-z"`(\[]/ {
-      line = $0; gsub(/`[^`]*`/, "", line)
-      if (tolower(line) ~ re) printf "%s:%d: first paragraph: %s\n", FILENAME, FNR, $0
-      para = 1; next
+    BEGIN {
+      we = "(^|[^[:alnum:]_])(we|our|ours|ourselves)([^[:alnum:]_]|$)"
+      us = "(^|[^[:alnum:]_])us([^[:alnum:]_]|$)"
+      own = "(^|[^[:alnum:]_])((a|my|our|the|for a) client(.s)?( [[:alnum:]-]+)? (app|application|codebase|project|system|product|team)|my clients?|a client.s|for (a|one of my) clients?|i.m building|i am building|(app|codebase|product|project) i (work on|build|maintain|look after)|my (app|codebase|product)|(the|my) team)([^[:alnum:]_]|$)"
     }
-    para && /^[[:space:]]*$/ { state = 2 }
+    function strip(s) {
+      gsub(/`[^`]*`/, "", s)
+      gsub(/\]\([^)]*\)/, "]", s)
+      gsub(/https?:\/\/[^[:space:])>]*/, "", s)
+      gsub(/"[^"]*"/, "", s)
+      gsub(/“[^”]*”/, "", s)
+      return s
+    }
+    function check(where, raw, s) {
+      if (tolower(s) ~ we || s ~ us) printf "%s:%d: %s: we/our/us: %s\n", FILENAME, FNR, where, raw
+      if (client && tolower(s) ~ own) printf "%s:%d: %s: whose app: %s\n", FILENAME, FNR, where, raw
+    }
+    FNR == 1 {
+      fm = ($0 == "---"); fence = 0
+      client = 0
+      cmd = "grep -qx \"client: true\" \"" FILENAME "\""
+      client = (system(cmd) == 0)
+      if (fm) next
+    }
+    fm && $0 == "---" { fm = 0; next }
+    fm {
+      if ($0 ~ /^(title|description):/) {
+        s = $0; sub(/^[a-z]+:[[:space:]]*/, "", s); sub(/^"/, "", s); sub(/"[[:space:]]*$/, "", s)
+        gsub(/`[^`]*`/, "", s)
+        check(substr($0, 1, index($0, ":") - 1), $0, s)
+      }
+      next
+    }
+    /^[[:space:]]*```/ { fence = !fence; next }
+    fence { next }
+    /^[[:space:]]*\{\{/ { next }
+    { check("body", $0, strip($0)) }
   ' "$@"
 }
 
@@ -45,8 +75,18 @@ for f in test/client-opener/pass/*.md; do
 done
 [ "$status" -eq 0 ] || exit 1
 
-mapfile -t files < <(grep -rlx --include='*.md' 'client: true' content || true)
-[ "${#files[@]}" -gt 0 ] || { echo "No post is marked client: true."; exit 0; }
+mapfile -t old < <(grep -v '^[[:space:]]*\(#\|$\)' test/client-opener/grandfathered)
+for f in "${old[@]}"; do
+  [ -f "$f" ] || { echo "$f: grandfathered but missing; drop it from test/client-opener/grandfathered"; status=1; continue; }
+  [ -n "$(scan "$f")" ] || { echo "$f: grandfathered but clean now; drop it from test/client-opener/grandfathered"; status=1; }
+done
+[ "$status" -eq 0 ] || exit 1
+
+mapfile -t files < <(find content/posts -name '*.md' | sort | grep -vxF -f <(printf '%s\n' "${old[@]}"))
 hits=$(scan "${files[@]}")
-[ -z "$hits" ] || { printf '%s\n' "$hits"; echo "Say what the team faced; the app is 'our app', and 'I' is your own part."; exit 1; }
-echo "Client openers name no owner in ${#files[@]} post(s)."
+[ -z "$hits" ] || {
+  printf '%s\n' "$hits"
+  echo "Speak generally: describe the code or the case, 'the app' for the app, 'I' only for what you did. No unnamed 'we' or 'our', and no saying whose app it is."
+  exit 1
+}
+echo "No unnamed 'we' or whose-app framing in ${#files[@]} post(s); ${#old[@]} grandfathered."
