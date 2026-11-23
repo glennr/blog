@@ -71,7 +71,8 @@
   <aside class="post-cta" aria-labelledby="post-cta-title">
     <p class="post-cta__title" id="post-cta-title">Work with me</p>
     <p class="post-cta__text">{{ . }}</p>
-    <a class="btn btn--primary" href="{{ hugo.Data.work.linkedinMessage }}" rel="noopener noreferrer" target="_blank">Message me on LinkedIn</a>
+    <a class="btn btn--primary" href="mailto:{{ hugo.Data.work.email }}">Email me</a>
+    <a class="btn btn--ghost" href="{{ hugo.Data.work.linkedinMessage }}" rel="noopener noreferrer" target="_blank">Message me on LinkedIn</a>
   </aside>
   {{ end }}
 {{ end }}
