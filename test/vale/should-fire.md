@@ -222,6 +222,18 @@ This pays for the extra table.
 
 ### What it costs
 
+What it bought was the step no test took.
+
+### What the model buys
+
+That bought a second chance.
+
+## Slop.Claudeish
+
+It found the step no test took.
+
+That was the case no reviewer caught.
+
 ## Slop.StagedLabel
 
 Timing matters too.

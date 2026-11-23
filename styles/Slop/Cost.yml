@@ -15,3 +15,6 @@ tokens:
   # "What it costs" as a heading, from broadcast-audit-events-after-commit.
   - '\bwhat\s+(?:it|this|that)\s+costs?\b'
   - '\b(?:that|this|which)\s+(?:earns|pays\s+for)\b'
+  # "What it bought was...", "What the model buys" as a heading.
+  - '\bwhat\s+(?:it|this|that|the\s+\w+)\s+(?:buys|bought)\b'
+  - '\b(?:it|this|that|which)\s+bought\b'

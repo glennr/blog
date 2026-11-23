@@ -201,3 +201,7 @@ The agents used about 1.2M output tokens to write it.
 On a phone, one link sat alone on a second row.
 
 Three of 35 runs passed.
+
+She bought a second monitor for the build box.
+
+No test killed a request between the two transactions.
