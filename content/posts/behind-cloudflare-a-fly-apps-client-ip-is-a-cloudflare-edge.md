@@ -16,13 +16,13 @@ tags:
 Put Cloudflare in front of a Fly app, and the client IP Fly hands you is a
 Cloudflare edge. Fly's docs say so for
 [`Fly-Client-IP`](https://docs.fly.io/networking/request-headers#fly-client-ip),
-and the last hop in `x-forwarded-for` goes the same way. Our app's rate limits
-read that last hop, so they would have lumped together everyone who came
-through the same Cloudflare edge.
+and the last hop in `x-forwarded-for` goes the same way. A rate limit that reads
+that last hop lumps together everyone who comes through the same Cloudflare
+edge.
 
 The client is the hop Cloudflare appended before its own.
 [`remote_ip`](https://hexdocs.pm/remote_ip/) reads `x-forwarded-for` right to
-left and skips the proxies you give it, so we give it
+left and skips the proxies you give it, so give it
 [Cloudflare's published ranges](https://www.cloudflare.com/ips/):
 
 ```elixir
@@ -39,7 +39,7 @@ that isn't Cloudflare:
 assert ClientIP.from_conn(conn("198.51.100.9, 203.0.113.7, 172.70.1.2")) == "203.0.113.7"
 ```
 
-Anyone can send `cf-ipcountry` and `cf-ipcity` too, so we believe them only
+Anyone can send `cf-ipcountry` and `cf-ipcity` too, so believe them only
 when the request came through Cloudflare, which is when skipping Cloudflare's
 ranges changes the answer:
 
