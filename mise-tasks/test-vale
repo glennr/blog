@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #MISE description="The regex House and Slop rules against their fixtures"
-#MISE sources=["test/vale/**", "styles/House/TimeAnchor.yml", "styles/House/ClientScale.yml", "styles/House/ClientNumbers.yml", "styles/House/ClientPractice.yml", "styles/House/AgentSpend.yml", "styles/House/ProcessDetail.yml", "styles/Slop/Cost.yml", "styles/Slop/StagedLabel.yml", "styles/Slop/SloganHeading.yml", "styles/Slop/Archaeology.yml", ".vale.ini", "mise-tasks/test-vale"]
+#MISE sources=["test/vale/**", "styles/House/TimeAnchor.yml", "styles/House/ClientScale.yml", "styles/House/ClientNumbers.yml", "styles/House/ClientPractice.yml", "styles/House/AgentSpend.yml", "styles/House/ProcessDetail.yml", "styles/Slop/Cost.yml", "styles/Slop/Claudeish.yml", "styles/Slop/StagedLabel.yml", "styles/Slop/SloganHeading.yml", "styles/Slop/Archaeology.yml", ".vale.ini", "mise-tasks/test-vale"]
 #MISE outputs={ auto = true }
 #
 # These rules are regexes over prose, written from a handful of examples, so
@@ -14,7 +14,7 @@
 # House.ClientPractice, which .vale.ini turns on only there.
 set -euo pipefail
 
-filter='.Name matches "^(House[.](TimeAnchor|ClientScale|ClientNumbers|ClientPractice|AgentSpend|ProcessDetail)|Slop[.](Cost|StagedLabel|SloganHeading|Archaeology))$"'
+filter='.Name matches "^(House[.](TimeAnchor|ClientScale|ClientNumbers|ClientPractice|AgentSpend|ProcessDetail)|Slop[.](Claudeish|Cost|StagedLabel|SloganHeading|Archaeology))$"'
 status=0
 
 for dir in test/vale test/vale/client; do

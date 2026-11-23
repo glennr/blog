@@ -22,3 +22,6 @@ tokens:
   # "That buys three things": Glenn says "that has a couple of benefits".
   - '\b(?:that|this|it|which)\s+buys\b'
   - '\bbuys\s+(?:you|us|me|them)\b'
+  # "the step no test took": a closer that sums the point up as an aphorism.
+  # Glenn says what happened: "none of the tests killed a request there".
+  - '\bthe\s+\w+\s+no\s+\w+\s+(?:took|caught|saw|ran|reached|tried|found|covered|hit|made)\b'
