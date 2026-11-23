@@ -35,6 +35,7 @@ Ollama
 Omakub
 Omarchy
 OpenSSH
+Ory
 pacman
 pipx
 plaintext
